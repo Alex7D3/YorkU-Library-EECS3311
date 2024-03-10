@@ -1,1 +1,1 @@
-# Library application for course EECS3311
+Library application for course EECS3311
