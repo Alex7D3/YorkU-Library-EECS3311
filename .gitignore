@@ -1,9 +1,10 @@
 /target/
 # Compiled class file
 *.class
-*.classpath
-*.settings
 *.project
+*.settings
+*.classpath
+*.DS_Store
 
 # Log file
 *.log
