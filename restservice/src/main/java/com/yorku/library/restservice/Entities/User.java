@@ -1,6 +1,8 @@
 package com.yorku.library.restservice.Entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -9,13 +11,31 @@ import jakarta.persistence.Table;
 public class User {
 	
 	@Id
-	private Integer userID;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	private String username;
 	private String pw;
 	private String email;
 	
+	public User(String name, String pw, String email) {
+		username = name;
+		this.pw = pw;
+		this.email = email;
+	}
+	
+	public User(Integer id, String name, String pw, String email) {
+		this.id = id;
+		username = name;
+		this.pw = pw;
+		this.email = email;
+	}
+	
+	public User() {
+		
+	}
+	
 	public int getUserID() {
-		return userID;
+		return id;
 	}
 	public String getUsername() {
 		return username;
@@ -28,7 +48,7 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [userID=" + userID + ", username=" + username + ", pw=" + pw + ", email=" + email + "]";
+		return "User [userID=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + "]";
 	}
 	
 	
