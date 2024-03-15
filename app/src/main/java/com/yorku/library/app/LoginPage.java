@@ -1,6 +1,7 @@
 package com.yorku.library.app;
 
 import java.awt.EventQueue;
+
 import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,6 +14,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LoginPage {
 
@@ -103,6 +106,10 @@ public class LoginPage {
 		frame.getContentPane().add(lblPassword);
 		
 		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnLogin.setBorder(new RoundedBorder(10));
 		btnLogin.setForeground(SystemColor.menu);
 		btnLogin.setBackground(new Color(50, 205, 50));
