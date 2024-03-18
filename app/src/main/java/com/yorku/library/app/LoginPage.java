@@ -39,7 +39,7 @@ public class LoginPage {
 		});
 	}
 	// To make rounded components
-	private static class RoundedBorder implements Border {
+	public static class RoundedBorder implements Border {
 
 	    private int radius;
 
