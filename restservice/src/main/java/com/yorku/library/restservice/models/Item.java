@@ -1,9 +1,10 @@
-package com.yorku.library.restservice.Entities;
+package com.yorku.library.restservice.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PostUpdate;
 import jakarta.persistence.Table;
 
 @Entity
@@ -57,6 +58,11 @@ public class Item {
 	}
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	@PostUpdate
+	public void updateNotification() {
+		
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package com.yorku.library.restservice.Entities;
+package com.yorku.library.restservice.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +18,7 @@ public class User {
 	private String email;
 	
 	public User(String name, String pw, String email) {
-		username = name;
+		this.username = name;
 		this.pw = pw;
 		this.email = email;
 	}
