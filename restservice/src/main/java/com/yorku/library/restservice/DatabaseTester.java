@@ -1,7 +1,5 @@
 package com.yorku.library.restservice;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,10 +23,8 @@ public class DatabaseTester implements CommandLineRunner {
     }
     
     @Override
-    public void run(String... args) throws Exception{
-    	
-    	User user1 = new User("alexx", "123x4", "mail6ee"); //change email before testing
-        userRepo.save(user1);
-    	userRepo.findByUsername("alex").forEach(user -> System.out.println(user));
+    public void run(String... args) throws Exception {
+    	userRepo.findAll().forEach(user -> System.out.println(user));
+    	itemRepo.findAll().forEach(item -> System.out.println(item));
     }
 }
