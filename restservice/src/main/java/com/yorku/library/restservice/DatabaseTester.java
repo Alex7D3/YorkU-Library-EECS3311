@@ -24,6 +24,7 @@ public class DatabaseTester implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
+
     	userRepo.findAll().forEach(user -> System.out.println(user));
     	itemRepo.findAll().forEach(item -> System.out.println(item));
     }
