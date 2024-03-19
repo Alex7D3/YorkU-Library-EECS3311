@@ -1,9 +1,15 @@
-package com.yorku.library.restservice.entities;
+package com.yorku.library.restservice.models;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PostUpdate;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,6 +22,9 @@ public class Item {
 	private String name;
 	private String description;
 	private String location;
+	
+	@ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
+	private Set<User> users = new HashSet<>();
 	
 	public Item(Integer id, String name, String desc, String location) {
 		this.id = id;
@@ -33,37 +42,31 @@ public class Item {
 	public Item() {
 		
 	}
-	
+
 	public Integer getItemID() {
 		return id;
 	}
-	public void setItemID(Integer itemID) {
-		this.id = itemID;
-	}
+
 	public String getItemName() {
 		return name;
 	}
-	public void setItemName(String itemName) {
-		this.name = itemName;
-	}
+	
 	public String getItemDescription() {
 		return description;
 	}
-	public void setItemDescription(String itemDescription) {
-		this.description = itemDescription;
-	}
+	
 	public String getLocation() {
 		return location;
 	}
-	public void setLocation(String location) {
-		this.location = location;
-	}
 	
+	@PostUpdate
+	public void updateNotification() {
+		
+	}
+
 	@Override
 	public String toString() {
-		return "Item [itemID=" + id + ", itemName=" + name + ", itemDescription=" + description
-				+ ", location=" + location + "]";
+		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", location=" + location + "]";
 	}
-	
 	
 }
