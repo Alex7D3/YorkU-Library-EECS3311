@@ -49,6 +49,26 @@ public class User {
 		
 	}
 	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setItems(Set<Item> items) {
+		this.items = items;
+	}
+
 	public Set<Item> getItems() {
 		return items;
 	}

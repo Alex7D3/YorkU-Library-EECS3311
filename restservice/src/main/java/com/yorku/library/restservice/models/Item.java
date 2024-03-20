@@ -43,6 +43,22 @@ public class Item {
 		
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 	public Integer getItemID() {
 		return id;
 	}
@@ -57,6 +73,19 @@ public class Item {
 	
 	public String getLocation() {
 		return location;
+	}
+	
+	public void addUser(User user) {
+		this.users.add(user);
+		user.getItems().add(this);
+	}
+	
+	public void removeUser(Integer id) {
+		User user = this.users.stream().filter(u -> u.getUserID() == id).findFirst().orElse(null);
+		if (user != null) {
+			this.users.remove(user);
+			user.getItems().remove(this);
+		}
 	}
 	
 	@PostUpdate
