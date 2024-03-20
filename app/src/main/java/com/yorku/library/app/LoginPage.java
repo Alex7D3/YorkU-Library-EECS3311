@@ -76,6 +76,7 @@ public class LoginPage {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 700, 550);
+        frame.getContentPane().setForeground(new Color(0, 0, 0));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		

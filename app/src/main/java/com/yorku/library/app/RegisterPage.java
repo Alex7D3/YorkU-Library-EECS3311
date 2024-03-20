@@ -50,7 +50,7 @@ public class RegisterPage extends JFrame {
 	    txtEmail.setBounds(454, 117, 200, 30);
 	    frame.getContentPane().add(txtEmail);
 
-	    JLabel lblPassword = new JLabel("Password:");
+	    JLabel lblPassword = new JLabel("Password");
 	    lblPassword.setBounds(454, 147, 100, 30);
 	    frame.getContentPane().add(lblPassword);
 
@@ -94,7 +94,7 @@ public class RegisterPage extends JFrame {
         userTypeGroup.add(rdbtnFaculty);
         userTypeGroup.add(rdbtnVisitor);
         
-        JLabel lblConfirmPassword = new JLabel("Confirm Password:");
+        JLabel lblConfirmPassword = new JLabel("Confirm Password");
         lblConfirmPassword.setBounds(454, 208, 200, 30);
         frame.getContentPane().add(lblConfirmPassword);
         
