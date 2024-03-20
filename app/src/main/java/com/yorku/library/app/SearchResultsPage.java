@@ -58,7 +58,7 @@ public class SearchResultsPage {
 
         // Load the original image icon
         ImageIcon originalIcon = new ImageIcon(SearchResultsPage.class.getResource("/images/61088.png"));
-        ImageIcon bookIcon = new ImageIcon(SearchResultsPage.class.getResource("images/bookplaceholder.png"));
+        ImageIcon bookIcon = new ImageIcon(SearchResultsPage.class.getResource("/images/bookplaceholder.png"));
         ImageIcon yorkIcon = new ImageIcon(SearchResultsPage.class.getResource("/images/yorku.png"));
 
         
