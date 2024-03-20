@@ -1,9 +1,14 @@
 package com.yorku.library.restservice.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.Table;
 
@@ -17,6 +22,9 @@ public class Item {
 	private String name;
 	private String description;
 	private String location;
+	
+	@ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
+	private Set<User> users = new HashSet<>();
 	
 	public Item(Integer id, String name, String desc, String location) {
 		this.id = id;
@@ -34,42 +42,60 @@ public class Item {
 	public Item() {
 		
 	}
-	
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
 	public Integer getItemID() {
 		return id;
 	}
-	public void setItemID(Integer itemID) {
-		this.id = itemID;
-	}
+
 	public String getItemName() {
 		return name;
 	}
-	public void setItemName(String itemName) {
-		this.name = itemName;
-	}
+	
 	public String getItemDescription() {
 		return description;
 	}
-	public void setItemDescription(String itemDescription) {
-		this.description = itemDescription;
-	}
+	
 	public String getLocation() {
 		return location;
 	}
-	public void setLocation(String location) {
-		this.location = location;
+	
+	public void addUser(User user) {
+		this.users.add(user);
+		user.getItems().add(this);
+	}
+	
+	public void removeUser(Integer id) {
+		User user = this.users.stream().filter(u -> u.getUserID() == id).findFirst().orElse(null);
+		if (user != null) {
+			this.users.remove(user);
+			user.getItems().remove(this);
+		}
 	}
 	
 	@PostUpdate
 	public void updateNotification() {
 		
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Item [itemID=" + id + ", itemName=" + name + ", itemDescription=" + description
-				+ ", location=" + location + "]";
+		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", location=" + location + "]";
 	}
-	
 	
 }

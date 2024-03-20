@@ -1,9 +1,18 @@
 package com.yorku.library.restservice.models;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,6 +25,17 @@ public class User {
 	private String username;
 	private String pw;
 	private String email;
+	
+	//@Enumerated(EnumType.STRING)
+	//private String type;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "user_items",
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
+			)
+	private Set<Item> items = new HashSet<>();
 	
 	public User(String name, String pw, String email) {
 		this.username = name;
@@ -34,6 +54,30 @@ public class User {
 		
 	}
 	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setItems(Set<Item> items) {
+		this.items = items;
+	}
+
+	public Set<Item> getItems() {
+		return items;
+	}
+
 	public int getUserID() {
 		return id;
 	}
@@ -46,10 +90,13 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
+
 	@Override
 	public String toString() {
-		return "User [userID=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + "]";
+		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", items=" + items
+				+ "]";
 	}
+	
 	
 	
 	

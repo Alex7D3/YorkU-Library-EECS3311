@@ -24,6 +24,11 @@ public class DatabaseTester implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
+    	Item item1 = itemRepo.findById(15).get();
+    	User user1 = userRepo.findById(2).get();
+    	item1.addUser(user1);
+    	itemRepo.save(item1);
+    	userRepo.save(user1);
     	userRepo.findAll().forEach(user -> System.out.println(user));
     	itemRepo.findAll().forEach(item -> System.out.println(item));
     }
