@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,6 +24,9 @@ public class User {
 	private String username;
 	private String pw;
 	private String email;
+	
+	@OneToMany(mappedBy="user")
+	private Set<Request> requests;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(

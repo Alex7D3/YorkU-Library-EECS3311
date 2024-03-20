@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.Table;
 
@@ -22,6 +23,9 @@ public class Item {
 	private String name;
 	private String description;
 	private String location;
+	
+	@OneToOne(mappedBy="item")
+	private Request request;
 	
 	@ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
 	private Set<User> users = new HashSet<>();
