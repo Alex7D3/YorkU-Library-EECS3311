@@ -1,4 +1,4 @@
-package com.yorku.library.restservice.controller;
+package com.yorku.library.restservice.controllers;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yorku.library.restservice.entities.User;
+import com.yorku.library.restservice.models.User;
 import com.yorku.library.restservice.repositories.UserRepo;
 
 @RestController
