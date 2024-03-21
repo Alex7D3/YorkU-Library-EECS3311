@@ -4,16 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -31,8 +25,16 @@ public class User {
 	private String pw;
 	private String email;
 	
-	//@Enumerated(EnumType.STRING)
-	//private String type;
+	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+	private Set<Request> requests = new HashSet<>();
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "coursebooks",
+			joinColumns = @JoinColumn(name="course_id", referencedColumnName="id"),
+			inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName="id")
+			)
+	private Set<Course> courses = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -41,9 +43,6 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
 			)
 	private Set<Item> items = new HashSet<>();
-	
-	@OneToMany(mappedBy="user")
-	private Set<Request> requests;
 	
 	public User(String name, String pw, String email) {
 		this.username = name;
@@ -101,11 +100,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", items=" + items
-				+ "]";
+		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", requests="
+				+ requests + ", courses=" + courses + ", items=" + items + "]";
 	}
-	
-	
-	
 	
 }

@@ -8,10 +8,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.Table;
@@ -27,12 +26,15 @@ public class Item {
 	private String description;
 	private String location;
 	
-	@ManyToMany(mappedBy = "items", fetch = FetchType.EAGER)
-	private Set<User> users = new HashSet<>();
-	
 	@OneToOne(mappedBy="item")
 	private Request request;
 	
+	@ManyToOne
+	@JoinColumn(name="course_id")
+	private Course course;
+	
+	@ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
+	private Set<User> users = new HashSet<>();
 	
 	public Item(Integer id, String name, String desc, String location) {
 		this.id = id;
