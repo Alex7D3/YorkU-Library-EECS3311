@@ -7,13 +7,8 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
+
 @Entity
 @DiscriminatorValue("book")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -25,6 +20,13 @@ public class Book extends Item {
 		super(id, name, description, location, users, request);
 		this.isbn = isbn;
 	}
-	
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
 	
 }

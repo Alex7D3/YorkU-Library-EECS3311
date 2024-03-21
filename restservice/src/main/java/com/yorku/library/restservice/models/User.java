@@ -5,9 +5,6 @@ import java.util.Set;
 
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,22 +13,11 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.InheritanceType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
@@ -56,6 +42,18 @@ public class User {
 			)
 	private Set<Item> items = new HashSet<>();
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "coursebooks",
+			joinColumns = @JoinColumn(name="course_id", referencedColumnName="id"),
+			inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName="id")
+			)
+	private Set<Course> courses = new HashSet<>();
+	
+	public User() {
+		
+	}
+	
 	public User(Integer id, String username, String pw, String email, Set<Item> items, Set<Request> requests) {
 		super();
 		this.id = id;
@@ -65,4 +63,51 @@ public class User {
 		this.items = items;
 		this.requests = requests;
 	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public Set<Request> getRequests() {
+		return requests;
+	}
+
+	public Set<Item> getItems() {
+		return items;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", requests="
+				+ requests + ", items=" + items + "]";
+	}
+	
 }

@@ -1,7 +1,5 @@
 package com.yorku.library.restservice.models;
 
-import java.util.Set;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,11 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
 @Entity
 @Table(name = "requests")
 public class Request {
@@ -31,4 +25,27 @@ public class Request {
 	@OneToOne
 	@JoinColumn(name="item_id")
 	private Item item;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	@Override
+	public String toString() {
+		return "Request [id=" + id + ", priority=" + priority + "]";
+	}
+	
+	
 }
