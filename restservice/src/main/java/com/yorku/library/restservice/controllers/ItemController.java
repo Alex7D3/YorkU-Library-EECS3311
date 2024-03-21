@@ -93,8 +93,8 @@ public class ItemController {
 	public ResponseEntity<Item> updateItem(@PathVariable Integer id, @RequestBody Item item) throws Exception {
 		Item item1 = itemRepo.findById(id).get();
 		if (item1 != null) {
-			item1.setName(item.getItemName());
-			item1.setDescription(item.getItemDescription());
+			item1.setName(item.getName());
+			item1.setDescription(item.getDescription());
 			item1.setLocation(item.getLocation());
 			return new ResponseEntity<Item>(itemRepo.save(item1), HttpStatus.OK);
 		}

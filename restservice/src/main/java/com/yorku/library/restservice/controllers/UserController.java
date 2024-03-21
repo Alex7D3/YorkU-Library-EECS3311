@@ -65,7 +65,7 @@ public class UserController {
 		User user1 = userRepo.findById(id).get();
 		if (user1 != null) {
 			user1.setUsername(user.getUsername());
-			user1.setPw(user.getPw());
+			user1.setPw(user.getPassword());
 			user1.setEmail(user.getEmail());
 			return new ResponseEntity<User>(userRepo.save(user1), HttpStatus.OK);
 		}

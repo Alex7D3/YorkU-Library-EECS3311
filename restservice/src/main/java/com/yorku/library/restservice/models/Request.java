@@ -25,4 +25,27 @@ public class Request {
 	@OneToOne
 	@JoinColumn(name="item_id")
 	private Item item;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	@Override
+	public String toString() {
+		return "Request [id=" + id + ", priority=" + priority + "]";
+	}
+	
+	
 }
