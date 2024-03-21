@@ -45,7 +45,16 @@ public class User {
 	private String pw;
 	private String email;
 	
+	@OneToMany(mappedBy="user")
+	private Set<Request> requests;
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "user_items",
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
+			)
+	private Set<Item> items = new HashSet<>();
 	
 	public User(Integer id, String username, String pw, String email, Set<Item> items, Set<Request> requests) {
 		super();
@@ -56,16 +65,4 @@ public class User {
 		this.items = items;
 		this.requests = requests;
 	}
-
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "user_items",
-			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
-			)
-	private Set<Item> items = new HashSet<>();
-	
-	@OneToMany(mappedBy="user")
-	private Set<Request> requests;
-	
 }
