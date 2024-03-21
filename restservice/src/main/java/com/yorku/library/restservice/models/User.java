@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,6 +17,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -25,12 +27,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.InheritanceType;
+
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
 @Table(name = "users")
 public class User implements UserDetails {
 	
@@ -44,16 +50,8 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
-	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
-	private Set<Request> requests = new HashSet<>();
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "coursebooks",
-			joinColumns = @JoinColumn(name="course_id", referencedColumnName="id"),
-			inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName="id")
-			)
-	private Set<Course> courses = new HashSet<>();
+	@OneToMany(mappedBy="user")
+	private Set<Request> requests;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -63,23 +61,28 @@ public class User implements UserDetails {
 			)
 	private Set<Item> items = new HashSet<>();
 	
-	public User(String name, String pw, String email) {
-		this.username = name;
-		this.pw = pw;
-		this.email = email;
-	}
-	
-	public User(Integer id, String name, String pw, String email) {
-		this.id = id;
-		username = name;
-		this.pw = pw;
-		this.email = email;
-	}
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "coursebooks",
+			joinColumns = @JoinColumn(name="course_id", referencedColumnName="id"),
+			inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName="id")
+			)
+	private Set<Course> courses = new HashSet<>();
 	
 	public User() {
 		
 	}
 	
+	public User(Integer id, String username, String pw, String email, Set<Item> items, Set<Request> requests) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.pw = pw;
+		this.email = email;
+		this.items = items;
+		this.requests = requests;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -96,8 +99,21 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
-	public void setItems(Set<Item> items) {
-		this.items = items;
+	public Integer getId() {
+		return id;
+	}
+
+
+	public String getPw() {
+		return pw;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public Set<Request> getRequests() {
+		return requests;
 	}
 
 	public Set<Item> getItems() {
@@ -117,14 +133,12 @@ public class User implements UserDetails {
 	public String getPassword() {
 		return pw;
 	}
-	public String getEmail() {
-		return email;
-	}
+	
 
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", requests="
-				+ requests + ", courses=" + courses + ", items=" + items + "]";
+				+ requests + ", items=" + items + "]";
 	}
 
 	@Override

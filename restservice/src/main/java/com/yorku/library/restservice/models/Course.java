@@ -30,6 +30,42 @@ public class Course {
 	@ManyToMany(mappedBy="courses", fetch = FetchType.LAZY)
 	private Set<User> users = new HashSet<>();
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCourseTitle() {
+		return courseTitle;
+	}
+
+	public void setCourseTitle(String courseTitle) {
+		this.courseTitle = courseTitle;
+	}
+
+	public String getCourseCode() {
+		return courseCode;
+	}
+
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Set<Item> getTextbooks() {
+		return textbooks;
+	}
+
 	@Override
 	public String toString() {
 		return "Course [id=" + id + ", courseTitle=" + courseTitle + ", courseCode=" + courseCode + ", endDate="
