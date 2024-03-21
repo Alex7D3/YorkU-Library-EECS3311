@@ -58,7 +58,7 @@ public class SearchResultsPage {
 
         // Load the original image icon
         ImageIcon originalIcon = new ImageIcon(SearchResultsPage.class.getResource("/images/61088.png"));
-        ImageIcon bookIcon = new ImageIcon(SearchResultsPage.class.getResource("images/bookplaceholder.png"));
+        ImageIcon bookIcon = new ImageIcon(SearchResultsPage.class.getResource("/images/bookplaceholder.png"));
         ImageIcon yorkIcon = new ImageIcon(SearchResultsPage.class.getResource("/images/yorku.png"));
 
         
@@ -178,11 +178,6 @@ public class SearchResultsPage {
 		searchButton_1_3.setBackground(new Color(50, 205, 50));
 		searchButton_1_3.setBounds(608, 363, 117, 29);
 		frame.getContentPane().add(searchButton_1_3);
-		
-		
-		
-
-		
 		
 		JLabel bookPlaceholder1_2 = new JLabel("");
 		bookPlaceholder1_2.setBounds(50, 463, 72, 116);
