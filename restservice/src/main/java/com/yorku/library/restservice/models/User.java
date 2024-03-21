@@ -7,12 +7,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -36,6 +41,9 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
 			)
 	private Set<Item> items = new HashSet<>();
+	
+	@OneToMany(mappedBy="user")
+	private Set<Request> requests;
 	
 	public User(String name, String pw, String email) {
 		this.username = name;
