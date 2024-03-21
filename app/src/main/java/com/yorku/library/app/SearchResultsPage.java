@@ -260,7 +260,7 @@ public class SearchResultsPage {
 		Login.setVerticalAlignment(SwingConstants.BOTTOM);
 		Login.setFont(new Font("Apple Braille", Font.PLAIN, 13));
 		Login.setBackground(new Color(50, 205, 50));
-		Login.setBounds(728, 20, 90, 29);
+		Login.setBounds(757, 20, 90, 29);
 		frame.getContentPane().add(Login);
 		
 		JLabel YorkU = new JLabel("");
