@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,6 +24,17 @@ public class User {
 	private String username;
 	private String pw;
 	private String email;
+	
+	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
+	private Set<Request> requests = new HashSet<>();
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "coursebooks",
+			joinColumns = @JoinColumn(name="course_id", referencedColumnName="id"),
+			inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName="id")
+			)
+	private Set<Course> courses = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -88,11 +100,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", items=" + items
-				+ "]";
+		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", requests="
+				+ requests + ", courses=" + courses + ", items=" + items + "]";
 	}
-	
-	
-	
 	
 }
