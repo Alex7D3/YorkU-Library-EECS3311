@@ -3,6 +3,7 @@ package com.yorku.library.restservice.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -19,8 +21,20 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.InheritanceType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
 @Table(name = "users")
 public class User {
 	
@@ -31,9 +45,18 @@ public class User {
 	private String pw;
 	private String email;
 	
-	//@Enumerated(EnumType.STRING)
-	//private String type;
 	
+	
+	public User(Integer id, String username, String pw, String email, Set<Item> items, Set<Request> requests) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.pw = pw;
+		this.email = email;
+		this.items = items;
+		this.requests = requests;
+	}
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "user_items",
@@ -44,68 +67,5 @@ public class User {
 	
 	@OneToMany(mappedBy="user")
 	private Set<Request> requests;
-	
-	public User(String name, String pw, String email) {
-		this.username = name;
-		this.pw = pw;
-		this.email = email;
-	}
-	
-	public User(Integer id, String name, String pw, String email) {
-		this.id = id;
-		username = name;
-		this.pw = pw;
-		this.email = email;
-	}
-	
-	public User() {
-		
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public void setPw(String pw) {
-		this.pw = pw;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setItems(Set<Item> items) {
-		this.items = items;
-	}
-
-	public Set<Item> getItems() {
-		return items;
-	}
-
-	public int getUserID() {
-		return id;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public String getPw() {
-		return pw;
-	}
-	public String getEmail() {
-		return email;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", items=" + items
-				+ "]";
-	}
-	
-	
-	
 	
 }

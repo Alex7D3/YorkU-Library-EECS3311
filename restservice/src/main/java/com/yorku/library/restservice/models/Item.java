@@ -15,7 +15,17 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "items")
 public class Item {
@@ -33,54 +43,14 @@ public class Item {
 	@OneToOne(mappedBy="item")
 	private Request request;
 	
-	
-	public Item(Integer id, String name, String desc, String location) {
+	public Item(Integer id, String name, String description, String location, Set<User> users, Request request) {
+		super();
 		this.id = id;
 		this.name = name;
-		this.description = desc;
-		this.location = location;
-	}
-	
-	public Item(String name, String desc, String location) {
-		this.name = name;
-		this.description = desc;
-		this.location = location;
-	}
-	
-	public Item() {
-		
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public Integer getItemID() {
-		return id;
-	}
-
-	public String getItemName() {
-		return name;
-	}
-	
-	public String getItemDescription() {
-		return description;
-	}
-	
-	public String getLocation() {
-		return location;
+		this.users = users;
+		this.request = request;
 	}
 	
 	public void addUser(User user) {
@@ -89,7 +59,7 @@ public class Item {
 	}
 	
 	public void removeUser(Integer id) {
-		User user = this.users.stream().filter(u -> u.getUserID() == id).findFirst().orElse(null);
+		User user = this.users.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
 		if (user != null) {
 			this.users.remove(user);
 			user.getItems().remove(this);
@@ -100,10 +70,4 @@ public class Item {
 	public void updateNotification() {
 		
 	}
-
-	@Override
-	public String toString() {
-		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", location=" + location + "]";
-	}
-	
 }
