@@ -10,8 +10,8 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("visitor")
 public class Visitor extends User{
 
-	public Visitor(Integer id, String username, String pw, String email, Set<Item> items, Set<Request> requests) {
-		super(id, username, pw, email, items, requests);
+	public Visitor(String username, String pw, String email) {
+		super(username, pw, email);
 		// TODO Auto-generated constructor stub
 	}
 

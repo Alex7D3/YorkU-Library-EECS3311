@@ -35,10 +35,6 @@ public class Item {
 	@OneToOne(mappedBy="item")
 	private Request request;
 	
-	@ManyToOne
-	@JoinColumn(name="course_id")
-	private Course course;
-	
 	@ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
 	private Set<User> users = new HashSet<>();
 	public Item(Integer id, String name, String description, String location, Set<User> users, Request request) {
@@ -87,10 +83,6 @@ public class Item {
 
 	public void setRequest(Request request) {
 		this.request = request;
-	}
-
-	public void setCourse(Course course) {
-		this.course = course;
 	}
 
 	public Integer getId() {

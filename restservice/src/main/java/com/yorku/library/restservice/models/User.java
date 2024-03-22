@@ -23,17 +23,11 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 import jakarta.persistence.InheritanceType;
 
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
@@ -73,14 +67,24 @@ public class User implements UserDetails {
 		
 	}
 	
-	public User(Integer id, String username, String pw, String email, Set<Item> items, Set<Request> requests) {
+	public User(String username, String pw, String email) {
 		super();
-		this.id = id;
 		this.username = username;
 		this.pw = pw;
 		this.email = email;
-		this.items = items;
-		this.requests = requests;
+	}
+
+	public void addRequest(Request req) {
+		this.requests.add(req);
+		req.setUser(this);
+	}
+	
+	public void removeRequest(Integer reqId) {
+		Request request = this.requests.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
+		if (request != null) {
+			this.requests.remove(request);
+			request.setUser(null);
+		}
 	}
 
 	public void setId(Integer id) {
@@ -91,7 +95,7 @@ public class User implements UserDetails {
 		this.username = username;
 	}
 
-	public void setPw(String pw) {
+	public void setPassword(String pw) {
 		this.pw = pw;
 	}
 
@@ -101,11 +105,6 @@ public class User implements UserDetails {
 
 	public Integer getId() {
 		return id;
-	}
-
-
-	public String getPw() {
-		return pw;
 	}
 	
 	public String getEmail() {
@@ -124,6 +123,10 @@ public class User implements UserDetails {
 		return id;
 	}
 	
+	public Set<Course> getCourses() {
+		return courses;
+	}
+
 	@Override
 	public String getUsername() {
 		return username;
@@ -134,7 +137,6 @@ public class User implements UserDetails {
 		return pw;
 	}
 	
-
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", requests="

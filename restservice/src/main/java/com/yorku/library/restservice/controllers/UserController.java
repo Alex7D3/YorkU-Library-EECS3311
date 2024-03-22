@@ -1,7 +1,7 @@
 package com.yorku.library.restservice.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yorku.library.restservice.models.Course;
+import com.yorku.library.restservice.models.Item;
+import com.yorku.library.restservice.models.Request;
 import com.yorku.library.restservice.models.User;
+import com.yorku.library.restservice.repositories.CourseRepo;
+import com.yorku.library.restservice.repositories.ItemRepo;
+import com.yorku.library.restservice.repositories.RequestRepo;
 import com.yorku.library.restservice.repositories.UserRepo;
 
 @RestController
@@ -23,61 +28,161 @@ public class UserController {
 
 	@Autowired
     private UserRepo userRepo;
+	@Autowired
+	private CourseRepo courseRepo;
+	@Autowired
+	private RequestRepo requestRepo;
+	@Autowired
+	private ItemRepo itemRepo;
 	
-	@GetMapping("/users") 
-	public ResponseEntity<List<User>> getAllUsers() {
-	
-		return new ResponseEntity<>(userRepo.findAll(), HttpStatus.OK);
+	@GetMapping("/user/login/{email}/{pw}")
+	public ResponseEntity<User> userLogin(@PathVariable String email, @PathVariable String pw) throws Exception{
+		User user = userRepo.findByEmail(email).get(0);
+		if (user.getPassword().equals(pw)) {
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		}
+		else {
+			throw new Exception("Incorrect Password");
+		}
 	}
 	
-	@GetMapping("/users/id/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) throws Exception {
-
-        Optional<User> user = userRepo.findById(id);
-        if (user.isPresent()) {
-            return new ResponseEntity<User>(user.get(), HttpStatus.OK);
-        } 
-        else {
-            throw new Exception("User Doesnt Exist");
-        }
+	@GetMapping("/user/logout")
+	public void userLogout() {
+		
 	}
 	
-	@GetMapping("/users/{name}")
-	public ResponseEntity<List<User>> getUsersByName(@PathVariable String name) throws Exception {
-		List<User> user = userRepo.findByUsername(name);
-        if (user.size() != 0) {
-            return new ResponseEntity<List<User>>(user, HttpStatus.OK);
-        } 
-        else {
-            throw new Exception("User Doesnt Exist");
-        }
+	@PostMapping("/user/signup/{username}/{email}/{password}")
+	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw) {
+		User user1 = new User(username, email, pw);
+		return new ResponseEntity<User>(user1, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/users")
-	public ResponseEntity<User> addUser(@RequestParam String username, @RequestParam String pw, @RequestParam String email) {
-		User user = new User(username, pw, email);
-		userRepo.save(user);
-		return new ResponseEntity<User>(user, HttpStatus.CREATED);
+	@GetMapping("/user/refresh/{token}")
+	public void userRefresh(@PathVariable String token) {
+		
 	}
 	
-	@PutMapping("/users/id/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
-		User user1 = userRepo.findById(id).get();
-		if (user1 != null) {
-			user1.setUsername(user.getUsername());
-			user1.setPw(user.getPassword());
-			user1.setEmail(user.getEmail());
-			return new ResponseEntity<User>(userRepo.save(user1), HttpStatus.OK);
+	@GetMapping("/user/{id}/items")
+	public ResponseEntity<List<Item>> getUserItems(@PathVariable Integer id) throws Exception{
+		User user = userRepo.findById(id).get();
+		if (user != null) {
+			List<Item> itemlist = new ArrayList<>();
+			itemlist.addAll(user.getItems());
+			return new ResponseEntity<List<Item>>(itemlist, HttpStatus.OK);
+		}
+		else {
+			throw new Exception("User Doesnt Exist");
+		}
+	}
+	
+	@GetMapping("/user/{id}/courses")
+	public ResponseEntity<List<Course>> getUserCourses(@PathVariable Integer id) throws Exception{
+		User user = userRepo.findById(id).get();
+		if (user != null) {
+			List<Course> courselist = new ArrayList<>();
+			courselist.addAll(user.getCourses());
+			return new ResponseEntity<List<Course>>(courselist, HttpStatus.OK);
+		}
+		else {
+			throw new Exception("User Doesnt Exist");
+		}
+	}
+	
+	@PostMapping("/user/addcourse/{code}")
+	public ResponseEntity<Course> addCourse(@PathVariable String code, @RequestBody User user) throws Exception{
+		User user1 = user;
+		Course course = courseRepo.findByCourseCode(code).get(0);
+		if (course != null) {
+			course.addUser(user1);
+			userRepo.save(user1);
+			courseRepo.save(course);
+			return new ResponseEntity<Course>(course, HttpStatus.CREATED);
+		}
+		else {
+			throw new Exception("Course Doesnt Exist");
+		}
+	}
+	
+	@DeleteMapping("/user/dropcourse/{code}")
+	public ResponseEntity<Course> removeCourse(@PathVariable String code, @RequestBody User user) throws Exception {
+		User user1 = user;
+		Course course = courseRepo.findByCourseCode(code).get(0);
+		if (user1.getCourses().contains(course)) {
+			course.removeUser(user1.getId());
+			courseRepo.save(course);
+			userRepo.save(user1);
+			return new ResponseEntity<Course>(course, HttpStatus.OK);
+		}
+		else {
+			throw new Exception("Course Doesnt Exist or User Not Enrolled");
+		}
+	}
+	
+	@PostMapping("/user/request/{id}/{priority}")
+	public ResponseEntity<Request> requestItem(@PathVariable Integer id, Integer priority, @RequestBody User user) throws Exception{
+		User user1 = user;
+		Item item = itemRepo.findById(id).get();
+		if (item != null) {
+			Request req = new Request(priority, user1, item);
+			user1.addRequest(req);
+			item.setRequest(req);
+			itemRepo.save(item);
+			userRepo.save(user1);
+			requestRepo.save(req);
+			return new ResponseEntity<Request>(req, HttpStatus.CREATED);
 		}
 		else {
 			throw new Exception("Item Doesnt Exist");
 		}
 	}
 	
-	//idk if this is right, tentative method
-	@DeleteMapping("users/delete/{id}")
-	public String deleteUser(@PathVariable Integer id) {
-		userRepo.deleteById(id);
-		return "User " + id + " Deleted";
+	@GetMapping("/user/notifs")
+	public void userNotifs() {
+		
+	}
+	
+	@PostMapping("/user/item/add/{relation}/{id}")
+	public ResponseEntity<Item> addItemToUser(@PathVariable String relation, @PathVariable Integer id, @RequestBody User user) throws Exception{
+		//I don't know what relation means (the type of item?), will fix eventually
+		Item item = itemRepo.findById(id).get();
+		User user1 = user;
+		if (item != null) {
+			item.addUser(user1);
+			itemRepo.save(item);
+			userRepo.save(user1);
+			return new ResponseEntity<Item>(item, HttpStatus.CREATED);
+		}
+		else {
+			throw new Exception("Item Doesnt Exist");
+		}
+	}
+	
+	@DeleteMapping("/user/item/delete/{id}")
+	public ResponseEntity<Item> removeItemFromUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
+		Item item = itemRepo.findById(id).get();
+		User user1 = user;
+		if (user1.getItems().contains(item)) {
+			item.removeUser(user1.getId());
+			itemRepo.save(item);
+			userRepo.save(user1);
+			return new ResponseEntity<Item>(item, HttpStatus.OK);
+		}
+		else {
+			throw new Exception("Item Doesnt Exist or User Doesnt Own");
+		}
+	}
+	
+	@PutMapping("/user/update/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
+		User user1 = userRepo.findById(id).get();
+		if (user1 != null) {
+			user1.setUsername(user.getUsername());
+			user1.setPassword(user.getPassword());
+			user1.setEmail(user.getEmail());
+			return new ResponseEntity<User>(userRepo.save(user1), HttpStatus.OK);
+		}
+		else {
+			throw new Exception("User Doesnt Exist");
+		}
 	}
 }

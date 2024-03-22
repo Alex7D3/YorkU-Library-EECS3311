@@ -26,6 +26,12 @@ public class Request {
 	@JoinColumn(name="item_id")
 	private Item item;
 
+	public Request(Integer priority, User user, Item item) {
+		this.priority = priority;
+		this.user = user;
+		this.item = item;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -40,6 +46,14 @@ public class Request {
 
 	public void setPriority(Integer priority) {
 		this.priority = priority;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
 	}
 
 	@Override
