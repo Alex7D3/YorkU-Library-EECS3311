@@ -6,8 +6,10 @@ import com.yorku.library.restservice.models.Item;
 
 public interface ItemRepo extends JpaRepository<Item, Integer>{
 
-	List<Item> findByName(String name);
+	List<Item> findByTitle(String name);
 	
-	void deleteByName(String name);
+	void deleteByTitle(String name);
+	
+	List<Item> findByType(String type);
 	
 }

@@ -38,6 +38,22 @@ public class UserItem {
 	
 	@Enumerated(EnumType.ORDINAL)
 	private Ownership owntype;
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public Ownership getOwntype() {
+		return owntype;
+	}
+
+	public void setOwntype(Ownership owntype) {
+		this.owntype = owntype;
+	}
 	
 	
 }
