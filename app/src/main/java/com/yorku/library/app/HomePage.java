@@ -94,13 +94,7 @@ public class HomePage {
         frame.getContentPane().add(txtSearchForBooks);
         txtSearchForBooks.setColumns(10);
         
-        JButton searchButton = new JButton("Search");
-        searchButton.setVerticalAlignment(SwingConstants.BOTTOM);
-        
-        searchButton.setFont(new Font("Apple Braille", Font.PLAIN, 13));
-        searchButton.setBackground(new Color(50, 205, 50));
-        searchButton.setBounds(586, 96, 117, 29);
-        frame.getContentPane().add(searchButton);
+     
         
         JLabel lblBackground = new JLabel("New label");
 		lblBackground.setBounds(6, 0, 888, 154);
@@ -171,7 +165,13 @@ public class HomePage {
 		frame.getContentPane().add(lblCourses);
 		lblCourses.setHorizontalAlignment(SwingConstants.CENTER);
 	
-		
+		JButton searchButton = new JButton("Search");
+        searchButton.setVerticalAlignment(SwingConstants.BOTTOM);
+        
+        searchButton.setFont(new Font("Apple Braille", Font.PLAIN, 13));
+        searchButton.setBackground(new Color(50, 205, 50));
+        searchButton.setBounds(586, 96, 117, 29);
+        frame.getContentPane().add(searchButton);
 		//search function
         searchButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {

@@ -68,11 +68,11 @@ public class CheckoutPage {
 	    
 	    
 	    cartModel = new DefaultListModel<>();
-	    JList<ListItems> cartList = new JList<>(cartModel);
+	    JList<ListItems> cartList = new JList<>(cartModel); // the List containing the Listitems
 	    cartList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	    cartList.setLayoutOrientation(JList.VERTICAL_WRAP);
-        cartList.setFixedCellHeight(50); // Set the height of each item
-        cartList.setFixedCellWidth(230); // Set the width of each item
+        cartList.setFixedCellHeight(50); 
+        cartList.setFixedCellWidth(230); 
         
         ItemPainter painter = new ItemPainter();
         cartList.setCellRenderer(painter);
@@ -164,6 +164,10 @@ public class CheckoutPage {
 	    JSeparator separator = new JSeparator();
 	    separator.setBounds(108, 237, 209, 12);
 	    frame.getContentPane().add(separator);
+	    
+	    JButton btnBack = new JButton("Back");
+	    btnBack.setBounds(17, 21, 72, 29);
+	    frame.getContentPane().add(btnBack);
 	    
 	    // Add some sample items to the cart
 	    cartModel.addElement(new ListItems("Book", new ImageIcon(CheckoutPage.class.getResource("/images/book.png"))));
