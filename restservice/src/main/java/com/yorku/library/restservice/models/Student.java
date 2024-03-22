@@ -8,9 +8,12 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue("student")
 public class Student extends User{
+	
+	private String studentNum;
 
-	public Student(Integer id, String username, String pw, String email, Set<Item> items, Set<Request> requests) {
-		super(id, username, pw, email, items, requests);
+	public Student(String username, String pw, String email, String studentNum) {
+		super(username, pw, email);
+		this.studentNum = studentNum;
 		// TODO Auto-generated constructor stub
 	}
 

@@ -11,8 +11,6 @@ import jakarta.persistence.InheritanceType;
 
 @Entity
 @DiscriminatorValue("book")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "booktype")
 public class Book extends Item {
 	private String isbn;
 

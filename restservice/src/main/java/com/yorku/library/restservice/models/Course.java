@@ -25,10 +25,36 @@ public class Course {
 	private Date endDate;
 	//change to textbook when inheritance setup
 	@OneToMany(mappedBy="course")
-	private Set<Item> textbooks = new HashSet<>();
+	private Set<TextBook> textbooks = new HashSet<>();
 	
 	@ManyToMany(mappedBy="courses", fetch = FetchType.LAZY)
 	private Set<User> users = new HashSet<>();
+	
+	public void addUser(User user) {
+		this.users.add(user);
+		user.getCourses().add(this);
+	}
+	
+	public void removeUser(Integer id) {
+		User user = this.users.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
+		if (user != null) {
+			this.users.remove(user);
+			user.getCourses().remove(this);
+		}
+	}
+	
+	public void addBook(TextBook book) {
+		this.textbooks.add(book);
+		book.setCourse(this);
+	}
+	
+	public void removeBook(Integer reqId) {
+		TextBook book = this.textbooks.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
+		if (book != null) {
+			this.textbooks.remove(book);
+			book.setCourse(null);
+		}
+	}
 
 	public Integer getId() {
 		return id;
@@ -62,7 +88,7 @@ public class Course {
 		this.endDate = endDate;
 	}
 
-	public Set<Item> getTextbooks() {
+	public Set<TextBook> getTextbooks() {
 		return textbooks;
 	}
 
