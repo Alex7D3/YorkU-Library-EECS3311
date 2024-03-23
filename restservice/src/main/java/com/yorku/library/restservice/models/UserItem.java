@@ -39,6 +39,13 @@ public class UserItem {
 	@Enumerated(EnumType.ORDINAL)
 	private Ownership owntype;
 
+	public UserItem(User user, Item item, Date timestamp, Ownership owntype) {
+		this.user = user;
+		this.item = item;
+		this.timestamp = timestamp;
+		this.owntype = owntype;
+	}
+
 	public Date getTimestamp() {
 		return timestamp;
 	}
@@ -54,6 +61,21 @@ public class UserItem {
 	public void setOwntype(Ownership owntype) {
 		this.owntype = owntype;
 	}
-	
+
+	public User getUser() {
+		return user;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
 	
 }

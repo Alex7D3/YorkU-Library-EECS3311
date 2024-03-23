@@ -47,13 +47,8 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy="user")
 	private Set<Request> requests;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "user_items",
-			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id")
-			)
-	private Set<Item> items = new HashSet<>();
+	@OneToMany(mappedBy = "user")
+	private Set<UserItem> useritems = new HashSet<UserItem>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -126,8 +121,8 @@ public class User implements UserDetails {
 		return requests;
 	}
 
-	public Set<Item> getItems() {
-		return items;
+	public Set<UserItem> getItems() {
+		return useritems;
 	}
 
 	public int getUserID() {
@@ -152,7 +147,7 @@ public class User implements UserDetails {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", requests="
-				+ requests + ", items=" + items + "]";
+				+ requests + ", items=" + useritems + "]";
 	}
 
 	@Override

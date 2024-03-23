@@ -14,6 +14,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.Table;
@@ -35,28 +36,29 @@ public class Item {
 	@OneToOne(mappedBy="item")
 	private Request request;
 	
-	@ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
-	private Set<User> users = new HashSet<>();
-	public Item(Integer id, String title, String description, String location, Set<User> users, Request request) {
-		super();
-		this.id = id;
+	@OneToMany(mappedBy = "item")
+	private Set<UserItem> useritems = new HashSet<UserItem>();
+	
+	
+	public Item(String title, String description, String location) {
 		this.title = title;
 		this.description = description;
 		this.location = location;
-		this.users = users;
-		this.request = request;
 	}
 	
-	public void addUser(User user) {
-		this.users.add(user);
-		user.getItems().add(this);
+	public void addUser(User user, Ownership owntype) {
+		UserItem useritem = new UserItem(user, this, null, owntype);
+		useritems.add(useritem);
+		user.getItems().add(useritem);
 	}
 	
 	public void removeUser(Integer id) {
-		User user = this.users.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
-		if (user != null) {
-			this.users.remove(user);
-			user.getItems().remove(this);
+		UserItem useritem = this.useritems.stream().filter(u -> u.getItem().getId() == id).findFirst().orElse(null);
+		if (useritem != null) {
+			this.useritems.remove(useritem);
+			useritem.getUser().getItems().remove(useritem);
+			useritem.setItem(null);
+			useritem.setUser(null);
 		}
 	}
 	
