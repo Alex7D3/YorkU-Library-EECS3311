@@ -63,15 +63,18 @@ public class User implements UserDetails {
 			)
 	private Set<Course> courses = new HashSet<>();
 	
+    
+	
 	public User() {
 		
 	}
 	
-	public User(String username, String pw, String email) {
+	public User(String username, String pw, String email, Role role) {
 		super();
 		this.username = username;
 		this.pw = pw;
 		this.email = email;
+		this.role = role;
 	}
 
 	public void addRequest(Request req) {
@@ -90,7 +93,7 @@ public class User implements UserDetails {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -101,6 +104,14 @@ public class User implements UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	
+	public Role getRole() {
+		return role;
 	}
 
 	public Integer getId() {
@@ -132,6 +143,7 @@ public class User implements UserDetails {
 		return username;
 	}
 	
+	
 	@Override
 	public String getPassword() {
 		return pw;
@@ -147,7 +159,7 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
-
+	
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
