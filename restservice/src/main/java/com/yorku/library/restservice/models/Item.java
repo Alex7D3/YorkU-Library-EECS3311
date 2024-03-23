@@ -1,19 +1,18 @@
 package com.yorku.library.restservice.models;
 
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostUpdate;
@@ -22,7 +21,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "items")
 public class Item {
 	
@@ -32,6 +31,9 @@ public class Item {
 	private String title;
 	private String description;
 	private String location;
+	private byte[] image;
+	@Column(name="type", insertable = false, updatable = false)
+	private String itemType;
 	
 	@OneToOne(mappedBy="item")
 	private Request request;
@@ -40,25 +42,29 @@ public class Item {
 	private Set<UserItem> useritems = new HashSet<UserItem>();
 	
 	
-	public Item(String title, String description, String location) {
+	public Item(String title, String description, String location, byte[] image) {
 		this.title = title;
 		this.description = description;
 		this.location = location;
+		this.image = image;
 	}
 	
-	public void addUser(User user, Ownership owntype) {
-		UserItem useritem = new UserItem(user, this, null, owntype);
+	public void addUser(User user, Ownership owntype, Date date) {
+		UserItem useritem = new UserItem(user, this, date, owntype);
 		useritems.add(useritem);
 		user.getItems().add(useritem);
 	}
 	
-	public void removeUser(Integer id) {
+	public void removeUser(Integer id) throws Exception{
 		UserItem useritem = this.useritems.stream().filter(u -> u.getItem().getId() == id).findFirst().orElse(null);
 		if (useritem != null) {
 			this.useritems.remove(useritem);
 			useritem.getUser().getItems().remove(useritem);
 			useritem.setItem(null);
 			useritem.setUser(null);
+		}
+		else {
+			throw new Exception("Item Doesnt exist or User Doesnt Own Item");
 		}
 	}
 	
@@ -106,13 +112,23 @@ public class Item {
 	public Request getRequest() {
 		return request;
 	}
+	
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public String getItemType() {
+		return itemType;
+	}
 
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + title + ", description=" + description + ", location=" + location
 				+ ", request=" + request + "]";
 	}
-	
-	
-	
+
 }

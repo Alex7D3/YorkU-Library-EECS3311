@@ -1,7 +1,5 @@
 package com.yorku.library.restservice.models;
 
-import java.util.Set;
-
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -11,7 +9,7 @@ import jakarta.persistence.Entity;
 public class Visitor extends User{
 
 	public Visitor(String username, String pw, String email) {
-		super(username, pw, email);
+		super(username, pw, email, Role.VISITOR);
 		// TODO Auto-generated constructor stub
 	}
 

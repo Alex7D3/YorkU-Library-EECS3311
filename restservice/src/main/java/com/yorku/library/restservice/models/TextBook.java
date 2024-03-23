@@ -1,6 +1,5 @@
 package com.yorku.library.restservice.models;
 
-import java.util.Set;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -15,9 +14,8 @@ public class TextBook extends Item {
 	@JoinColumn(name="course_id")
 	private Course course;
 	
-	public TextBook(Integer id, String name, String description, String location, Set<User> users, Request request,
-			Course course) {
-		super(id, name, description, location, users, request);
+	public TextBook(String name, String description, String location, byte[] image, Course course) {
+		super(name, description, location, image);
 		this.course = course;
 		// TODO Auto-generated constructor stub
 	}

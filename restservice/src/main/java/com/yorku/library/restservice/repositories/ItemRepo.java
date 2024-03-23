@@ -10,6 +10,6 @@ public interface ItemRepo extends JpaRepository<Item, Integer>{
 	
 	void deleteByTitle(String name);
 	
-	List<Item> findByType(String type);
+	List<Item> findByItemType(String type);
 	
 }

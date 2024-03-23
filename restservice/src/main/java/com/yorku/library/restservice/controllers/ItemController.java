@@ -3,24 +3,18 @@ package com.yorku.library.restservice.controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yorku.library.restservice.models.Item;
-import com.yorku.library.restservice.models.User;
 import com.yorku.library.restservice.repositories.ItemRepo;
-import com.yorku.library.restservice.repositories.UserRepo;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class ItemController {
@@ -45,7 +39,7 @@ public class ItemController {
 	
 	@GetMapping("/item/search/by/{type}")
 	public ResponseEntity<List<Item>> getItemsByType(@PathVariable String type) {
-		return new ResponseEntity<List<Item>>(itemRepo.findByType(type), HttpStatus.OK);
+		return new ResponseEntity<List<Item>>(itemRepo.findByItemType(type), HttpStatus.OK);
 	}
 	
 	@GetMapping("/item/all")

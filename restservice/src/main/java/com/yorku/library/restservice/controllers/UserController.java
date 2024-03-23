@@ -20,6 +20,7 @@ import com.yorku.library.restservice.models.Course;
 import com.yorku.library.restservice.models.Item;
 import com.yorku.library.restservice.models.Ownership;
 import com.yorku.library.restservice.models.Request;
+import com.yorku.library.restservice.models.Role;
 import com.yorku.library.restservice.models.User;
 import com.yorku.library.restservice.repositories.CourseRepo;
 import com.yorku.library.restservice.repositories.ItemRepo;
@@ -55,8 +56,8 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/signup/{username}/{email}/{password}")
-	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw) {
-		User user1 = new User(username, email, pw);
+	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw, @RequestParam Role role) {
+		User user1 = new User(username, email, pw, role);
 		return new ResponseEntity<User>(user1, HttpStatus.CREATED);
 	}
 	
@@ -70,7 +71,7 @@ public class UserController {
 		User user = userRepo.findById(id).get();
 		if (user != null) {
 			List<Item> itemlist = new ArrayList<>();
-			itemlist.addAll(user.getItems());
+			user.getItems().forEach(useritem -> itemlist.add(useritem.getItem()));
 			return new ResponseEntity<List<Item>>(itemlist, HttpStatus.OK);
 		}
 		else {
@@ -149,7 +150,7 @@ public class UserController {
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
 		if (item != null) {
-			item.addUser(user1);
+			item.addUser(user1, relation, date);
 			itemRepo.save(item);
 			userRepo.save(user1);
 			return new ResponseEntity<Item>(item, HttpStatus.CREATED);
@@ -163,15 +164,15 @@ public class UserController {
 	public ResponseEntity<Item> removeItemFromUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
-		if (user1.getItems().contains(item)) {
+		try {
 			item.removeUser(user1.getId());
-			itemRepo.save(item);
-			userRepo.save(user1);
-			return new ResponseEntity<Item>(item, HttpStatus.OK);
 		}
-		else {
-			throw new Exception("Item Doesnt Exist or User Doesnt Own");
+		catch (Exception e) {
+			throw e;
 		}
+		itemRepo.save(item);
+		userRepo.save(user1);
+		return new ResponseEntity<Item>(item, HttpStatus.OK);
 	}
 	
 	@PutMapping("/user/update/{id}")

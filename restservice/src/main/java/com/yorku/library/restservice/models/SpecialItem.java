@@ -1,6 +1,6 @@
 package com.yorku.library.restservice.models;
 
-import java.util.Set;
+
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -11,8 +11,8 @@ public class SpecialItem extends Item{
 	
 	private String mediaType;
 	
-	public SpecialItem(Integer id, String name, String description, String location, Set<User> users, Request request, String mediaType) {
-		super(id, name, description, location, users, request);
+	public SpecialItem(String name, String description, String location, byte[] image, String mediaType) {
+		super(name, description, location, image);
 		this.mediaType = mediaType;
 	}
 
