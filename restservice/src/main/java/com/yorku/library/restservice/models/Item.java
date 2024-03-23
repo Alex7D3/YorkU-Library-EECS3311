@@ -32,6 +32,7 @@ public class Item {
 	private String description;
 	private String location;
 	private byte[] image;
+	private int stock;
 	@Column(name="type", insertable = false, updatable = false)
 	private String itemType;
 	
@@ -47,12 +48,17 @@ public class Item {
 		this.description = description;
 		this.location = location;
 		this.image = image;
+		this.stock = 20;
 	}
 	
-	public void addUser(User user, Ownership owntype, Date date) {
+	public void addUser(User user, Ownership owntype, Date date) throws Exception{
+		if (stock < 1) {
+			throw new Exception("Out Of Stock");
+		}
 		UserItem useritem = new UserItem(user, this, date, owntype);
 		useritems.add(useritem);
 		user.getItems().add(useritem);
+		this.stock--;
 	}
 	
 	public void removeUser(Integer id) throws Exception{
@@ -62,6 +68,7 @@ public class Item {
 			useritem.getUser().getItems().remove(useritem);
 			useritem.setItem(null);
 			useritem.setUser(null);
+			this.stock++;
 		}
 		else {
 			throw new Exception("Item Doesnt exist or User Doesnt Own Item");
@@ -123,6 +130,14 @@ public class Item {
 
 	public String getItemType() {
 		return itemType;
+	}
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 	@Override

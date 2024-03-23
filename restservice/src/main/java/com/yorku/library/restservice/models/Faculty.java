@@ -9,18 +9,18 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("faculty")
 public class Faculty extends User {
 	
-	private String faculty;
+	private String staffNum;
 	
-	public Faculty(String username, String pw, String email, String faculty) {
+	public Faculty(String username, String pw, String email, String staffNum) {
 		super(username, pw, email, Role.FACULTY);
-		this.faculty = faculty;
+		this.staffNum = staffNum;
 	}
 
-	public String getFaculty() {
-		return faculty;
+	public String getStaffNum() {
+		return staffNum;
 	}
 
-	public void setFaculty(String faculty) {
-		this.faculty = faculty;
+	public void setStaffNum(String staffNum) {
+		this.staffNum = staffNum;
 	}
 }

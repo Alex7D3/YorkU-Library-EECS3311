@@ -149,6 +149,9 @@ public class UserController {
 	public ResponseEntity<Item> addItemToUser(@PathVariable Ownership relation, @PathVariable Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
+		if (user1.getItems().size() >= 10) {
+			throw new Exception("User Has Too Many Items Rented");
+		}
 		if (item != null) {
 			item.addUser(user1, relation, date);
 			itemRepo.save(item);

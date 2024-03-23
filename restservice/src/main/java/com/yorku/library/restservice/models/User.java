@@ -40,6 +40,7 @@ public class User implements UserDetails {
 	private String username;
 	private String pw;
 	private String email;
+	private boolean verified;
 	
 	@Enumerated(EnumType.STRING)
 	private Role role;
@@ -70,6 +71,7 @@ public class User implements UserDetails {
 		this.pw = pw;
 		this.email = email;
 		this.role = role;
+		this.verified = false;
 	}
 
 	public void addRequest(Request req) {
@@ -144,6 +146,14 @@ public class User implements UserDetails {
 		return pw;
 	}
 	
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", pw=" + pw + ", email=" + email + ", requests="
