@@ -1,4 +1,4 @@
-package com.yorku.library.restservice.security;
+package com.yorku.library.restservice.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
 

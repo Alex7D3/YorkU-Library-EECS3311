@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import com.yorku.library.restservice.models.User;
 import com.yorku.library.restservice.services.JWTService;
+import com.yorku.library.restservice.services.UserDetailsServiceImp;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
