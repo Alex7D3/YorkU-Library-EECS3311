@@ -48,7 +48,7 @@ public class Course {
 		book.setCourse(this);
 	}
 	
-	public void removeBook(Integer reqId) {
+	public void removeBook(Integer id) {
 		TextBook book = this.textbooks.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
 		if (book != null) {
 			this.textbooks.remove(book);

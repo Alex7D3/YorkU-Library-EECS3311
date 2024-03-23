@@ -77,7 +77,7 @@ public class User implements UserDetails {
 		req.setUser(this);
 	}
 	
-	public void removeRequest(Integer reqId) {
+	public void removeRequest(Integer id) {
 		Request request = this.requests.stream().filter(u -> u.getId() == id).findFirst().orElse(null);
 		if (request != null) {
 			this.requests.remove(request);
