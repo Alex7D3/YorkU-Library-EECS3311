@@ -1,5 +1,6 @@
 package com.yorku.library.restservice.controllers;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yorku.library.restservice.models.Course;
 import com.yorku.library.restservice.models.Item;
+import com.yorku.library.restservice.models.Ownership;
 import com.yorku.library.restservice.models.Request;
 import com.yorku.library.restservice.models.User;
 import com.yorku.library.restservice.repositories.CourseRepo;
@@ -35,7 +38,7 @@ public class UserController {
 	@Autowired
 	private ItemRepo itemRepo;
 	
-	@GetMapping("/user/login/{email}/{pw}")
+	@GetMapping("/user/login/{username}/{pw}")
 	public ResponseEntity<User> userLogin(@PathVariable String email, @PathVariable String pw) throws Exception{
 		User user = userRepo.findByEmail(email).get(0);
 		if (user.getPassword().equals(pw)) {
@@ -142,8 +145,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/item/add/{relation}/{id}")
-	public ResponseEntity<Item> addItemToUser(@PathVariable String relation, @PathVariable Integer id, @RequestBody User user) throws Exception{
-		//I don't know what relation means (the type of item?), will fix eventually
+	public ResponseEntity<Item> addItemToUser(@PathVariable Ownership relation, @PathVariable Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
 		if (item != null) {

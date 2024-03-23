@@ -57,7 +57,7 @@ public class User implements UserDetails {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			name = "coursebooks",
+			name = "user_courses",
 			joinColumns = @JoinColumn(name="course_id", referencedColumnName="id"),
 			inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName="id")
 			)

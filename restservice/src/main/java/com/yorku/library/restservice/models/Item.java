@@ -28,7 +28,7 @@ public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String name;
+	private String title;
 	private String description;
 	private String location;
 	
@@ -37,10 +37,10 @@ public class Item {
 	
 	@ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
 	private Set<User> users = new HashSet<>();
-	public Item(Integer id, String name, String description, String location, Set<User> users, Request request) {
+	public Item(Integer id, String title, String description, String location, Set<User> users, Request request) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.title = title;
 		this.description = description;
 		this.location = location;
 		this.users = users;
@@ -69,8 +69,8 @@ public class Item {
 		this.id = id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public void setDescription(String description) {
@@ -89,8 +89,8 @@ public class Item {
 		return id;
 	}
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
 	public String getDescription() {
@@ -107,7 +107,7 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", location=" + location
+		return "Item [id=" + id + ", name=" + title + ", description=" + description + ", location=" + location
 				+ ", request=" + request + "]";
 	}
 	
