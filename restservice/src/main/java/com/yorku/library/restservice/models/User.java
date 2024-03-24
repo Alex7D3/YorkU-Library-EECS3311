@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -32,7 +29,7 @@ import jakarta.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -135,13 +132,11 @@ public class User implements UserDetails {
 		return courses;
 	}
 
-	@Override
 	public String getUsername() {
 		return username;
 	}
 	
 	
-	@Override
 	public String getPassword() {
 		return pw;
 	}
@@ -160,29 +155,7 @@ public class User implements UserDetails {
 				+ requests + ", items=" + useritems + "]";
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(role.name()));
-	}
 	
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
 	
 }

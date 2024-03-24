@@ -1,6 +1,7 @@
 package com.yorku.library.restservice.controllers;
 
 import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.yorku.library.restservice.repositories.CourseRepo;
 import com.yorku.library.restservice.repositories.ItemRepo;
 import com.yorku.library.restservice.repositories.RequestRepo;
 import com.yorku.library.restservice.repositories.UserRepo;
+import com.yorku.library.restservice.security.AES;
 
 @RestController
 public class UserController {
@@ -38,33 +40,37 @@ public class UserController {
 	private RequestRepo requestRepo;
 	@Autowired
 	private ItemRepo itemRepo;
+	@Autowired
+	private AES aes;
 	
-	@GetMapping("/user/login/{username}/{pw}")
-	public ResponseEntity<User> userLogin(@PathVariable String email, @PathVariable String pw) throws Exception{
-		User user = userRepo.findByEmail(email).get(0);
-		if (user.getPassword().equals(pw)) {
-			return new ResponseEntity<User>(user, HttpStatus.OK);
+	@GetMapping("/user/login/{email}/{pw}")
+	public ResponseEntity<User> userLogin(@PathVariable String email, @PathVariable String pw) throws Exception {	
+		
+			for (User user : userRepo.findByEmail(email)) {
+				aes.encrypt(pw);
+				if (user.getPassword().equals(pw)) {
+					return new ResponseEntity<User>(user, HttpStatus.OK);
+				} else {
+					throw new Exception("User Doesnt Exist");
+				}
+			}
+		    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); 
 		}
-		else {
-			throw new Exception("Incorrect Password");
-		}
-	}
+	
 	
 	@GetMapping("/user/logout")
 	public void userLogout() {
 		
 	}
 	
-	@PostMapping("/user/signup/{username}/{email}/{password}")
-	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw, @RequestParam Role role) {
-		User user1 = new User(username, email, pw, role);
-		return new ResponseEntity<User>(user1, HttpStatus.CREATED);
+	@PostMapping("/user/register/{username}/{email}/{password}/{role}")
+	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw, @PathVariable Role role) throws Exception {
+		String encryptedPass = aes.encrypt(pw);
+		User user = new User(username, email, encryptedPass, STUDENT);
+		userRepo.save(user);
+		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/user/refresh/{token}")
-	public void userRefresh(@PathVariable String token) {
-		
-	}
 	
 	@GetMapping("/user/{id}/items")
 	public ResponseEntity<List<Item>> getUserItems(@PathVariable Integer id) throws Exception{

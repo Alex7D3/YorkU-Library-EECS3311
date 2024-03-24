@@ -1,6 +1,7 @@
 package com.yorku.library.restservice.security;
 
 import java.security.NoSuchAlgorithmException;
+
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
@@ -10,6 +11,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.GCMParameterSpec;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class AES {
 	private SecretKey key;
 	private int KEY_SIZE = 256;
@@ -31,14 +35,6 @@ public class AES {
 		
 	}
 	
-	public String decrypt(String encryptedMsg) throws Exception {
-		byte[] msgBytes = decode(encryptedMsg);
-		Cipher decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
-		GCMParameterSpec spec = new GCMParameterSpec(T_LEN, encryptionCipher.getIV());
-		decryptionCipher.init(Cipher.DECRYPT_MODE, key, spec);
-		byte[] decryptedBytes = decryptionCipher.doFinal(msgBytes);
-		return new String(decryptedBytes);
-	}
 	
 
 	private String encode(byte[] data) {
