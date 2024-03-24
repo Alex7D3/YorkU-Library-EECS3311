@@ -47,6 +47,9 @@ public class Item {
 	@OneToMany(mappedBy = "item")
 	private Set<UserItem> useritems = new HashSet<UserItem>();
 	
+	public Item() {
+		
+	}
 	
 	public Item(String title, String description, String location, byte[] image) {
 		this.title = title;

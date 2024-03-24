@@ -34,7 +34,7 @@ public class ItemController {
 	
 	@GetMapping("/item/search/{title}")
 	public ResponseEntity<List<Item>> getItemsByTitle(@PathVariable String title) {
-		return new ResponseEntity<List<Item>>(itemRepo.findByTitle(title), HttpStatus.OK);
+		return new ResponseEntity<List<Item>>(itemRepo.findByTitleContaining(title), HttpStatus.OK);
 	}
 	
 	@GetMapping("/item/search/by/{type}")

@@ -14,6 +14,10 @@ public class TextBook extends Item {
 	@JoinColumn(name="course_id")
 	private Course course;
 	
+	public TextBook() {
+		
+	}
+	
 	public TextBook(String name, String description, String location, byte[] image, Course course) {
 		super(name, description, location, image);
 		this.course = course;

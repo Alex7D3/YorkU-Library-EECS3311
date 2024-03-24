@@ -7,6 +7,10 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("staff")
 public class Staff extends User {
 	
+	public Staff() {
+		
+	}
+	
 	public Staff(String username, String pw, String email) {
 		super(username, pw, email, Role.NON_FACULTY_STAFF);
 		// TODO Auto-generated constructor stub

@@ -11,6 +11,10 @@ public class SpecialItem extends Item{
 	
 	private String mediaType;
 	
+	public SpecialItem() {
+		
+	}
+	
 	public SpecialItem(String name, String description, String location, byte[] image, String mediaType) {
 		super(name, description, location, image);
 		this.mediaType = mediaType;

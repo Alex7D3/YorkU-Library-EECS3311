@@ -11,6 +11,10 @@ public class Faculty extends User {
 	
 	private String staffNum;
 	
+	public Faculty() {
+		
+	}
+	
 	public Faculty(String username, String pw, String email, String staffNum) {
 		super(username, pw, email, Role.FACULTY);
 		this.staffNum = staffNum;

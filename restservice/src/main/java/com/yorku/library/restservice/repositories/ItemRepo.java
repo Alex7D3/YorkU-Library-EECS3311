@@ -6,7 +6,7 @@ import com.yorku.library.restservice.models.Item;
 
 public interface ItemRepo extends JpaRepository<Item, Integer>{
 
-	List<Item> findByTitle(String name);
+	List<Item> findByTitleContaining(String name);
 	
 	void deleteByTitle(String name);
 	

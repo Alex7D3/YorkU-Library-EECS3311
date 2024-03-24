@@ -45,10 +45,10 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
 	private Set<Request> requests;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private Set<UserItem> useritems = new HashSet<UserItem>();
 	
 	@ManyToMany(fetch = FetchType.EAGER)

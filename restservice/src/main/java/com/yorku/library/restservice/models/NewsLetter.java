@@ -13,6 +13,10 @@ public class NewsLetter extends Item{
 	
 	private String source;
 
+	public NewsLetter() {
+		
+	}
+	
 	public NewsLetter(String name, String description, String location, byte[] image, String source) {
 		super(name, description, location, image);
 		this.source = source;

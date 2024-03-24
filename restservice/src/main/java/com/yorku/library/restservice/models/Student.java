@@ -9,6 +9,10 @@ import jakarta.persistence.Entity;
 public class Student extends User{
 	
 	private String studentNum;
+	
+	public Student() {
+		
+	}
 
 	public Student(String username, String pw, String email, String studentNum) {
 		super(username, pw, email, Role.STUDENTS);
