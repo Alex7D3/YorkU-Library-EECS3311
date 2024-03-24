@@ -11,7 +11,7 @@ import com.yorku.library.app.services.gui.items.ItemComponent;
 
 public class ItemBridge extends JScrollPane {
 	public static final int TABLE = 0;
-	public static final int LIST = 2;
+	public static final int LIST = 1;
 	
 	public ItemBridge(List<ItemComponent> items, int tableType) {
 		

@@ -27,9 +27,9 @@
 //	public AuthenticationResponse register(User request) {
 //		User user = new User();
 //
-//		//if (repo.findByUsername(request.getUsername().isPresent())) {
-//		//	return new AuthenticationResponse(null, "User already exists.");
-//		//}
+////		if (repo.findByUsername(request.getUsername()).isPresent()) {
+////			return new AuthenticationResponse(null, "User already exists.");
+////		}
 //		
 //		user.setUsername(request.getUsername());
 //		// user.setEmail(request.getEmail());

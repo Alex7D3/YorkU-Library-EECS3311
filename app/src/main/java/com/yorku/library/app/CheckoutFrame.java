@@ -16,9 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 
-public class CheckoutPage {
+public class CheckoutFrame extends JFrame {
 
-	private JFrame frame;
 	private JTextField tfEmail;
 	private DefaultListModel<ListItems> cartModel;
 	private JTextField tfCardNumber;
@@ -26,42 +25,14 @@ public class CheckoutPage {
 	private JTextField textField;
 	private JTextField tfDiscount;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CheckoutPage window = new CheckoutPage();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public CheckoutPage() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-	    frame.setBounds(100, 100, 700, 585);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.getContentPane().setLayout(null);
+	
+	public CheckoutFrame() {
+		setLayout(null);
 	    
 	    JLabel lblContactInformation = new JLabel("Contact Information");
 	    lblContactInformation.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 	    lblContactInformation.setBounds(146, 83, 148, 16);
-	    frame.getContentPane().add(lblContactInformation);
+	    getContentPane().add(lblContactInformation);
 	    
 	    JLabel lblSummary = new JLabel("Your order summary");
 	    lblSummary.setHorizontalAlignment(SwingConstants.CENTER);
@@ -80,81 +51,81 @@ public class CheckoutPage {
 	    
         JScrollPane scrollPane = new JScrollPane(cartList);
 	    scrollPane.setBounds(442, 6, 252, 315);
-	    frame.getContentPane().add(scrollPane);
+	    getContentPane().add(scrollPane);
 	    scrollPane.setColumnHeaderView(lblSummary);
 	    scrollPane.setViewportView(cartList);
 	    
 	    tfEmail = new JTextField();
 	    tfEmail.setBounds(108, 141, 209, 26);
-	    frame.getContentPane().add(tfEmail);
+	    getContentPane().add(tfEmail);
 	    tfEmail.setColumns(10);
 	    
 	    JLabel lblEmail = new JLabel("Email");
 	    lblEmail.setBounds(115, 123, 61, 16);
-	    frame.getContentPane().add(lblEmail);
+	    getContentPane().add(lblEmail);
 	    
 	    JLabel lblPayment = new JLabel("Payment");
 	    lblPayment.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 	    lblPayment.setBounds(146, 185, 132, 16);
-	    frame.getContentPane().add(lblPayment);
+	    getContentPane().add(lblPayment);
 	    lblPayment.setHorizontalAlignment(SwingConstants.CENTER);
 	    
 	    tfCardNumber = new JTextField();
 	    tfCardNumber.setBounds(108, 271, 209, 26);
-	    frame.getContentPane().add(tfCardNumber);
+	    getContentPane().add(tfCardNumber);
 	    tfCardNumber.setColumns(10);
 	    
 	    JLabel lblCardNumber = new JLabel("Card Number");
 	    lblCardNumber.setBounds(115, 254, 138, 16);
-	    frame.getContentPane().add(lblCardNumber);
+	    getContentPane().add(lblCardNumber);
 	    
 	    tfExpiryDate = new JTextField();
 	    tfExpiryDate.setBounds(108, 336, 79, 26);
-	    frame.getContentPane().add(tfExpiryDate);
+	    getContentPane().add(tfExpiryDate);
 	    tfExpiryDate.setColumns(10);
 	    tfExpiryDate.setText("MM/YY");
 	    
 	    JLabel lblExpiryDate = new JLabel("Expiry Date ");
 	    lblExpiryDate.setBounds(115, 309, 79, 16);
-	    frame.getContentPane().add(lblExpiryDate);
+	    getContentPane().add(lblExpiryDate);
 	    
 	    textField = new JTextField();
 	    textField.setColumns(10);
 	    textField.setBounds(238, 336, 79, 26);
-	    frame.getContentPane().add(textField);
+	    getContentPane().add(textField);
 	    
 	    JLabel lblSecurityCode = new JLabel("Security Code");
 	    lblSecurityCode.setBounds(235, 309, 92, 16);
-	    frame.getContentPane().add(lblSecurityCode);
+	    getContentPane().add(lblSecurityCode);
 	    
 	    JButton btnPay = new JButton("Pay");
 	    btnPay.setBounds(155, 371, 117, 29);
-	    frame.getContentPane().add(btnPay);
+	    getContentPane().add(btnPay);
 	    
 	    JLabel lblDiscount = new JLabel("Discount Code");
 	    lblDiscount.setBounds(450, 347, 104, 16);
-	    frame.getContentPane().add(lblDiscount);
+	    getContentPane().add(lblDiscount);
 	    
 	    tfDiscount = new JTextField();
 	    tfDiscount.setBounds(442, 361, 130, 26);
-	    frame.getContentPane().add(tfDiscount);
+	    getContentPane().add(tfDiscount);
 	    tfDiscount.setColumns(10);
 	    
 	    JLabel lblTotal = new JLabel("Total");
 	    lblTotal.setBounds(450, 412, 61, 16);
-	    frame.getContentPane().add(lblTotal);
+	    getContentPane().add(lblTotal);
 	    
 	    JLabel lblMoney = new JLabel("$0");
 	    lblMoney.setBounds(493, 412, 182, 16);
-	    frame.getContentPane().add(lblMoney);
+	    getContentPane().add(lblMoney);
 	    
 	    JRadioButton rdbtnCredit = new JRadioButton("Credit");
 	    rdbtnCredit.setBounds(238, 213, 79, 23);
-	    frame.getContentPane().add(rdbtnCredit);
+	    getContentPane().add(rdbtnCredit);
 	    
 	    JRadioButton rdbtnDebit = new JRadioButton("Debit");
 	    rdbtnDebit.setBounds(108, 213, 72, 23);
-	    frame.getContentPane().add(rdbtnDebit);
+	    getContentPane().add(rdbtnDebit);
 	    
 	    // group the payment methods together
 	    ButtonGroup paymentTypeGroup = new ButtonGroup();
@@ -163,14 +134,16 @@ public class CheckoutPage {
 	    
 	    JSeparator separator = new JSeparator();
 	    separator.setBounds(108, 237, 209, 12);
-	    frame.getContentPane().add(separator);
+	    getContentPane().add(separator);
 	    
 	    JButton btnBack = new JButton("Back");
 	    btnBack.setBounds(17, 21, 72, 29);
-	    frame.getContentPane().add(btnBack);
+	    getContentPane().add(btnBack);
 	    
 	    // Add some sample items to the cart
-	    cartModel.addElement(new ListItems("Book", new ImageIcon(CheckoutPage.class.getResource("/images/book.png"))));
-	    cartModel.addElement(new ListItems("No Longer Human", new ImageIcon(CheckoutPage.class.getResource("/images/NoLongerHuman.jpeg"))));
+	    cartModel.addElement(new ListItems("Book", new ImageIcon(CheckoutFrame.class.getResource("/images/book.png"))));
+	    cartModel.addElement(new ListItems("No Longer Human", new ImageIcon(CheckoutFrame.class.getResource("/images/NoLongerHuman.jpeg"))));
+		
 	}
+
 }
