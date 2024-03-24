@@ -13,15 +13,16 @@ public class SearchPanel extends JPanel {
 
 	private JTextField txtSearchForBooks;
 	private DefaultListModel<ListItems> SearchModel;
+	private JComboBox comboBox;
+	String [] itemCategories = {"All Items", "Textbooks", "Books", "Special Items", "News Letter"};
 	/**
 	 * Launch the application.
 	 */
 	public SearchPanel() {
 		
         setLayout(null);
-
-       
-
+                
+        
         // Load the original image icon
         ImageIcon originalIcon = new ImageIcon(SearchPanel.class.getResource("/images/61088.png"));
         ImageIcon bookIcon = new ImageIcon(SearchPanel.class.getResource("/images/bookplaceholder.png"));
@@ -54,14 +55,6 @@ public class SearchPanel extends JPanel {
         add(txtSearchForBooks);
         txtSearchForBooks.setColumns(10);
         
-        JButton searchButton = new JButton("Search");
-        searchButton.setVerticalAlignment(SwingConstants.BOTTOM);
-        
-        searchButton.setFont(new Font("Apple Braille", Font.PLAIN, 13));
-        searchButton.setBackground(new Color(50, 205, 50));
-        searchButton.setBounds(586, 96, 117, 29);
-        add(searchButton);
-        
         JLabel lblBackground = new JLabel("New label");
 		lblBackground.setBounds(6, 0, 888, 154);
 		
@@ -82,6 +75,27 @@ public class SearchPanel extends JPanel {
 		redpanel.setBackground(new Color(241, 71, 83));
 		redpanel.setBounds(6, -8, 888, 132);
 		add(redpanel);
+		redpanel.setLayout(null);
+		
+		comboBox = new JComboBox(itemCategories);
+		comboBox.setBounds(571, 105, 107, 27);
+		redpanel.add(comboBox);
+		
+		JButton searchButton = new JButton("Search");
+		searchButton.setBounds(674, 103, 117, 29);
+		redpanel.add(searchButton);
+		searchButton.setVerticalAlignment(SwingConstants.BOTTOM);
+		
+		searchButton.setFont(new Font("Apple Braille", Font.PLAIN, 13));
+		searchButton.setBackground(new Color(50, 205, 50));
+		
+		
+		
+		//search function
+		searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(168, 49, 59));
@@ -89,7 +103,7 @@ public class SearchPanel extends JPanel {
 		add(panel);
 		
 		JPanel panelSearch = new JPanel();
-		panelSearch.setBounds(15, 214, 857, 313);
+		panelSearch.setBounds(2, 2, 853, 611);
 		add(panelSearch);
 		// change # of column to display
 		panelSearch.setLayout(new GridLayout(0,2, 50, 50));
@@ -99,9 +113,6 @@ public class SearchPanel extends JPanel {
 		lblSearchResult.setBounds(19, 174, 245, 35);
 		add(lblSearchResult);
 		
-       
-		
-//		Border blackline = BorderFactory.createLineBorder(Color.black);
 		
 		// Add jlabels(images) to the gridlayout
 		for(int i = 0; i < 3; i++) {
@@ -118,7 +129,7 @@ public class SearchPanel extends JPanel {
 
 			label.setHorizontalAlignment(JLabel.CENTER);
 		    label.setVerticalAlignment(JLabel.CENTER);
-//		    label.setBorder(blackline);
+
 		 
 		    // Add a hover effect
             label.addMouseListener(new MouseAdapter() {
@@ -137,22 +148,9 @@ public class SearchPanel extends JPanel {
 		
 		//scroll bar
 		JScrollPane spSearchResult = new JScrollPane(panelSearch);
-        spSearchResult.setBounds(15, 214, 857, 313);
+        spSearchResult.setBounds(15, 214, 857, 534);
         spSearchResult.setViewportBorder(null);
         add(spSearchResult);
-        
-        JLabel lblRelatedBooks = new JLabel("Similar Books");
-        lblRelatedBooks.setFont(new Font("Lucida Grande", Font.BOLD, 18));
-        lblRelatedBooks.setBounds(19, 539, 245, 35);
-        add(lblRelatedBooks);
-        
-		
-		
-		//search function
-        searchButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        	}
-        });
 	}
 
 	
