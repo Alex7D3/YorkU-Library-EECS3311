@@ -19,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
@@ -28,13 +29,16 @@ public class HomePanel extends JPanel {
 	private DefaultListModel<String> rentedModel;
 	private DefaultListModel<String> courseModel;
 
-
 	/**
 	 * Create the application.
 	 */
 	public HomePanel() {
 		// Load the original image icon
 		setLayout(null);
+		
+		
+        
+        
         ImageIcon originalIcon = new ImageIcon(HomePanel.class.getResource("/images/61088.png"));
         ImageIcon bookIcon = new ImageIcon(HomePanel.class.getResource("/images/bookplaceholder.png"));
         ImageIcon yorkIcon = new ImageIcon(HomePanel.class.getResource("/images/yorku.png"));
@@ -71,10 +75,6 @@ public class HomePanel extends JPanel {
         JLabel lblBackground = new JLabel("New label");
 		lblBackground.setBounds(6, 0, 888, 154);
 		
-		JLabel bookPlaceholder1_1 = new JLabel("");
-		bookPlaceholder1_1.setBounds(627, 179, 72, 116);
-		add(bookPlaceholder1_1);
-		
 		JLabel YorkU = new JLabel("");
 		YorkU.setIcon(resizedYork);
 		YorkU.setBounds(27, 16, 80, 80);
@@ -88,6 +88,13 @@ public class HomePanel extends JPanel {
 		redpanel.setBackground(new Color(241, 71, 83));
 		redpanel.setBounds(6, -8, 888, 132);
 		add(redpanel);
+		redpanel.setLayout(null);
+		
+		JLabel bookPlaceholder1_1 = new JLabel("");
+		bookPlaceholder1_1.setBounds(374, 18, 0, 0);
+		
+		redpanel.add(bookPlaceholder1_1);
+		
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(168, 49, 59));
@@ -144,6 +151,7 @@ public class HomePanel extends JPanel {
         searchButton.setBackground(new Color(50, 205, 50));
         searchButton.setBounds(586, 96, 117, 29);
         add(searchButton);
+        
         searchButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
