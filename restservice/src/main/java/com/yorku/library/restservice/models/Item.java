@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PostUpdate;
@@ -31,8 +32,12 @@ public class Item {
 	private String title;
 	private String description;
 	private String location;
-	private byte[] image;
 	private int stock;
+	
+	@Lob
+	@Column(name="image", columnDefinition="LONGBLOB")
+	private byte[] image;
+	
 	@Column(name="type", insertable = false, updatable = false)
 	private String itemType;
 	

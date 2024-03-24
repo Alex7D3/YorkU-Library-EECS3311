@@ -1,6 +1,8 @@
 package com.yorku.library.restservice.models;
 
 
+import com.mysql.cj.jdbc.Blob;
+
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
