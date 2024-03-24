@@ -16,6 +16,10 @@ public class CartPanel extends JPanel {
 		setLayout(null);
 	    JButton btnCheckout = new JButton("Checkout");
 	    btnCheckout.setBounds(540, 503, 117, 29);
+	    btnCheckout.addActionListener(e ->{
+	    	CheckoutPage checkoutPage = new CheckoutPage();
+	    	checkoutPage.getFrame().setVisible(true);
+	    });
 	    add(btnCheckout);
 
 	    // Create a DefaultListModel to store items in the cart

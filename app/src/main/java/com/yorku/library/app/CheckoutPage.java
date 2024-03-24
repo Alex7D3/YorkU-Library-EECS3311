@@ -29,30 +29,12 @@ public class CheckoutPage {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CheckoutPage window = new CheckoutPage();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
 
 	/**
 	 * Create the application.
 	 */
 	public CheckoutPage() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
 		frame = new JFrame();
 	    frame.setBounds(100, 100, 700, 585);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -127,8 +109,12 @@ public class CheckoutPage {
 	    lblSecurityCode.setBounds(235, 309, 92, 16);
 	    frame.getContentPane().add(lblSecurityCode);
 	    
+	    // PAY BUTTON
 	    JButton btnPay = new JButton("Pay");
 	    btnPay.setBounds(155, 371, 117, 29);
+	    btnPay.addActionListener(e -> {
+	    	frame.setVisible(false);
+	    });
 	    frame.getContentPane().add(btnPay);
 	    
 	    JLabel lblDiscount = new JLabel("Discount Code");
@@ -167,10 +153,18 @@ public class CheckoutPage {
 	    
 	    JButton btnBack = new JButton("Back");
 	    btnBack.setBounds(17, 21, 72, 29);
+	    btnBack.addActionListener(e -> {
+	    	frame.setVisible(false);
+	    });
 	    frame.getContentPane().add(btnBack);
 	    
 	    // Add some sample items to the cart
 	    cartModel.addElement(new ListItems("Book", new ImageIcon(CheckoutPage.class.getResource("/images/book.png"))));
 	    cartModel.addElement(new ListItems("No Longer Human", new ImageIcon(CheckoutPage.class.getResource("/images/NoLongerHuman.jpeg"))));
 	}
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+	
 }

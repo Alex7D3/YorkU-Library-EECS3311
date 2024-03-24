@@ -56,13 +56,6 @@ public class HomePanel extends JPanel {
         ImageIcon resizedIcon = new ImageIcon(newimg); 
         ImageIcon resizedBook = new ImageIcon(newbook);
         ImageIcon resizedYork = new ImageIcon(yorkNew);
-
-        
-        JLabel lblSearchImg = new JLabel("");
-        lblSearchImg.setHorizontalAlignment(SwingConstants.CENTER);
-        lblSearchImg.setIcon(resizedIcon);
-        lblSearchImg.setBounds(166, 96, 20, 20); 
-        add(lblSearchImg);
         
         txtSearchForBooks = new JTextField();
         txtSearchForBooks.setText("Search for books, textbooks, DVDs...");
