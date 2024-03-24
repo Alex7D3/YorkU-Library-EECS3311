@@ -2,6 +2,8 @@ package com.yorku.library.restservice.controllers;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import com.yorku.library.restservice.models.Ownership;
 import com.yorku.library.restservice.models.Request;
 import com.yorku.library.restservice.models.Role;
 import com.yorku.library.restservice.models.User;
+import com.yorku.library.restservice.models.UserItem;
 import com.yorku.library.restservice.repositories.CourseRepo;
 import com.yorku.library.restservice.repositories.ItemRepo;
 import com.yorku.library.restservice.repositories.RequestRepo;
@@ -77,6 +80,17 @@ public class UserController {
 		else {
 			throw new Exception("User Doesnt Exist");
 		}
+	}
+	
+	@GetMapping("/user/overdueitems")
+	public ResponseEntity<List<Item>> getOverdueItems(@RequestBody User user) {
+		GregorianCalendar dateDue = new GregorianCalendar();
+		dateDue.add(Calendar.MONTH, 1);
+		List<UserItem> list1 = user.getItems().stream().filter(i -> i.getTimestamp().toInstant().isAfter(dateDue.toInstant())).toList();
+		List<Item> itemlist = new ArrayList<>();
+		list1.forEach(u -> itemlist.add(u.getItem()));
+		return new ResponseEntity<List<Item>>(itemlist, HttpStatus.OK);
+		
 	}
 	
 	@GetMapping("/user/{id}/courses")
@@ -140,17 +154,37 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping("/user/notifs")
-	public void userNotifs() {
-		
+	@PostMapping("/user/notifs")
+	public ResponseEntity<List<String>> userNotifs(@RequestBody User user) {
+		List<String> notis = new ArrayList<>();
+		GregorianCalendar dateDue = new GregorianCalendar();
+		dateDue.add(Calendar.DATE, 30);
+		for (UserItem u : user.getItems()) {
+			if (u.getTimestamp().toInstant().isAfter(dateDue.toInstant())) {
+				notis.add("One of your items (" + u.getItem().getTitle() + ") are overdue/nearing its due date");
+			}
+		}
+		return new ResponseEntity<List<String>>(notis, HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/user/item/add/{relation}/{id}")
 	public ResponseEntity<Item> addItemToUser(@PathVariable Ownership relation, @PathVariable Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
+		GregorianCalendar dateDue = new GregorianCalendar();
+		int count = 0;
+		dateDue.add(Calendar.MONTH, 1);
+		
 		if (user1.getItems().size() >= 10) {
 			throw new Exception("User Has Too Many Items Rented");
+		}
+		for (UserItem u : user1.getItems()) {
+			if (u.getTimestamp().toInstant().isAfter(dateDue.toInstant())) {
+				count++;
+			}
+		}
+		if (count >= 3) {
+			throw new Exception("User Has Over 3 Items Overdue");
 		}
 		if (item != null) {
 			item.addUser(user1, relation, date);
