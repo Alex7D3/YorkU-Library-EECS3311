@@ -48,9 +48,6 @@ public class AppFrame extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("YorkU Library");
-		contentPanel.add(homePanel, HOME_PANEL);
-		contentPanel.add(searchPanel, SEARCH_PANEL);
-		contentPanel.add(cartPanel, CART_PANEL);
 		setJMenuBar(navMenu);
 		add(contentPanel);
 	}
