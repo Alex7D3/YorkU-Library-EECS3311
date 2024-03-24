@@ -25,7 +25,11 @@ public class Request {
 	@OneToOne
 	@JoinColumn(name="item_id")
 	private Item item;
-
+	
+	public Request() {
+		
+	}
+	
 	public Request(Integer priority, User user, Item item) {
 		this.priority = priority;
 		this.user = user;

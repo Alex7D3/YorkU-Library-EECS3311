@@ -2,6 +2,7 @@ package com.yorku.library.app.services.requests;
 
 import java.util.List;
 
+import com.yorku.library.app.auth.UserAuth;
 import com.yorku.library.app.dtos.*;
 
 public interface RequestService {
@@ -10,8 +11,8 @@ public interface RequestService {
 	void logout();
 	List<Item> searchItemsByTitle(String title, String category);
 	List<Item> searchItemsByTitle(String title);
-	List<Item> getUserItems(User user);
-	Notification makeBookRequest(User, user);
-	List<Course> getUserCourses(User user);
+	List<Item> getUserItems(UserAuth auth);
+	Notification makeBookRequest(UserAuth auth);
+	List<Course> getUserCourses(UserAuth auth);
 	
 }
