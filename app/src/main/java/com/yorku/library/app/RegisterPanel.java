@@ -84,16 +84,6 @@ public class RegisterPanel extends JPanel {
 		btnRegister.setBounds(491, 470, 117, 29);
 		add(btnRegister);
 		
-		JButton btnLogin = new JButton("Login");
-		btnLogin.setForeground(Color.blue);
-		btnLogin.setBorder(null);
-		btnLogin.setBounds(626, 505, 40, 29);
-		add(btnLogin);
-		
-		JLabel lblHaveAccount = new JLabel("Already have an account?");
-		lblHaveAccount.setBounds(466, 511, 169, 16);
-		add(lblHaveAccount);
-		
 		JPanel panel = new JPanel();
 		panel.setBounds(0, -13, 427, 570);
 		add(panel);
