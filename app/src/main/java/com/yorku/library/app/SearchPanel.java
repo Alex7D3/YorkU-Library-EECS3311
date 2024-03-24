@@ -149,7 +149,7 @@ public class SearchPanel extends JPanel {
 		
 		//scroll bar
 		JScrollPane spSearchResult = new JScrollPane(panelSearch);
-        spSearchResult.setBounds(10, 214, 876, 477);
+        spSearchResult.setBounds(10, 214, 876, 335);
         spSearchResult.setViewportBorder(null);
         add(spSearchResult);
 	}
