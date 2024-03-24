@@ -5,19 +5,16 @@ import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.http.HttpResponse;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
 import com.yorku.library.app.auth.UserAuth;
-import com.yorku.library.app.dtos.Course;
-import com.yorku.library.app.dtos.Item;
-import com.yorku.library.app.dtos.User;
 import java.io.IOException;	
 
 public class RequestServiceImpl implements RequestService {
-	
 	private HttpClient client;
 	private String host = "https://localhost:8080/";	//change in production
 	
@@ -52,49 +49,58 @@ public class RequestServiceImpl implements RequestService {
 	}
 	
 
-	public String signup(String username, String email, String pw) {
+	public String getRequest(String... path) {
 		HttpRequest request = HttpRequest
-				.newBuilder(createURI(host, "user", username, email, pw))
+				.newBuilder(createURI(host, path))
 				.GET()
 				.build();
 		HttpResponse<String> response = sendRequest(request, null);
 		return response.body();
 	}
-
-	public User login(String username, String password) {
-		
-		return null;
-	}
-
-	public void logout() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public List<Item> searchItemsByTitle(String title, String category) {
-		
-		return null;
-	}
-
-	public List<Item> searchItemsByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<Item> getUserItems(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Notification makeBookRequest(UserAuth auth) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<Course> getUserCourses(UserAuth auth) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public String postRequest(String... path) {
+		HttpRequest request = HttpRequest
+				.newBuilder(createURI(host, path))
+				.POST(BodyPublishers.noBody())
+				.build();
+		HttpResponse<String> response = sendRequest(request, null);
+		return response.body();
 	}
 	
+	public String postRequest(String body, String... path) {
+		HttpRequest request = HttpRequest
+				.newBuilder(createURI(host, path))
+				.POST(BodyPublishers.ofString(body))
+				.build();
+		HttpResponse<String> response = sendRequest(request, null);
+		return response.body();
+	}
 	
+	public String putRequest(String... path) {
+		HttpRequest request = HttpRequest
+				.newBuilder(createURI(host, path))
+				.PUT(BodyPublishers.noBody())
+				.build();
+		HttpResponse<String> response = sendRequest(request, null);
+		return response.body();
+	}
+	
+	public String putRequest(String body, String... path) {
+		HttpRequest request = HttpRequest
+				.newBuilder(createURI(host, path))
+				.POST(BodyPublishers.ofString(body))
+				.build();
+		HttpResponse<String> response = sendRequest(request, null);
+		return response.body();
+	}
+	
+	public String deleteRequest(String... path) {
+		HttpRequest request = HttpRequest
+				.newBuilder(createURI(host, path))
+				.DELETE()
+				.build();
+		HttpResponse<String> response = sendRequest(request, null);
+		return response.body();
+	}
+
 }

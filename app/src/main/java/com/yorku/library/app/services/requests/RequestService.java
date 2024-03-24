@@ -6,13 +6,10 @@ import com.yorku.library.app.auth.UserAuth;
 import com.yorku.library.app.dtos.*;
 
 public interface RequestService {
-	String signup(String username, String email, String password);
-	User login(String email, String password);
-	void logout();
-	List<Item> searchItemsByTitle(String title, String category);
-	List<Item> searchItemsByTitle(String title);
-	List<Item> getUserItems(UserAuth auth);
-	Notification makeBookRequest(UserAuth auth);
-	List<Course> getUserCourses(UserAuth auth);
-	
+	String getRequest(String... path);
+	String postRequest(String... path);
+	String postRequest(String body, String... path);
+	String putRequest(String... path);
+	String putRequest(String body, String... path);
+	String deleteRequest(String... path);
 }

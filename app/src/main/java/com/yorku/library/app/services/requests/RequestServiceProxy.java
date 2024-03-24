@@ -11,8 +11,37 @@ public class RequestServiceProxy implements RequestService {
 		this.realService = realService;
 		this.cache = new ConcurrentHashMap<>();
 	}
-	
-	private String cacheRequest(Function<>) {
-		
+
+
+	@Override
+	public String getRequest(String... path) {
+		String joinPath = String.join("/", path);
+		if(cache.containsKey(joinPath))
+			return cache.get(joinPath);
+		return realService.getRequest(path);
 	}
-}
+	
+	@Override
+	public String postRequest(String... path) {
+		return realService.postRequest(path);
+	}
+
+	@Override
+	public String postRequest(String body, String... path) {
+		return realService.postRequest(body, path);
+	}
+
+	@Override
+	public String putRequest(String... path) {
+		return realService.putRequest(path);
+	}
+
+	@Override
+	public String putRequest(String body, String... path) {
+		return realService.putRequest(body, path);
+	}
+
+	@Override
+	public String deleteRequest(String... path) {
+		return realService.putRequest(path);
+	}}
