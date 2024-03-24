@@ -77,12 +77,13 @@ public class SearchPanel extends JPanel {
 		add(redpanel);
 		redpanel.setLayout(null);
 		
+		// drop down menu
 		comboBox = new JComboBox(itemCategories);
-		comboBox.setBounds(571, 105, 107, 27);
+		comboBox.setBounds(574, 105, 139, 27);
 		redpanel.add(comboBox);
 		
 		JButton searchButton = new JButton("Search");
-		searchButton.setBounds(674, 103, 117, 29);
+		searchButton.setBounds(705, 103, 117, 29);
 		redpanel.add(searchButton);
 		searchButton.setVerticalAlignment(SwingConstants.BOTTOM);
 		
@@ -148,7 +149,7 @@ public class SearchPanel extends JPanel {
 		
 		//scroll bar
 		JScrollPane spSearchResult = new JScrollPane(panelSearch);
-        spSearchResult.setBounds(15, 214, 857, 534);
+        spSearchResult.setBounds(10, 214, 876, 477);
         spSearchResult.setViewportBorder(null);
         add(spSearchResult);
 	}
