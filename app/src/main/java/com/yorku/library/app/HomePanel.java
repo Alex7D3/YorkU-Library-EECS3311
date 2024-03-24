@@ -26,7 +26,7 @@ import javax.swing.JList;
 public class HomePanel extends JPanel {
 
 	private JTextField txtSearchForBooks;
-	private DefaultListModel<String> rentedModel;
+	private DefaultListModel<ListItems> rentedModel;
 	private DefaultListModel<String> courseModel;
 
 	/**
@@ -35,8 +35,6 @@ public class HomePanel extends JPanel {
 	public HomePanel() {
 		// Load the original image icon
 		setLayout(null);
-		
-		
         
         
         ImageIcon originalIcon = new ImageIcon(HomePanel.class.getResource("/images/61088.png"));
@@ -97,14 +95,21 @@ public class HomePanel extends JPanel {
 		
 		// User's rented books
 		rentedModel = new DefaultListModel<>();
-		JList<String> rentedList = new JList<>(rentedModel);
+		JList<ListItems> rentedList = new JList<>(rentedModel);
 	    rentedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	    rentedList.setLayoutOrientation(JList.VERTICAL_WRAP);
 	    rentedList.setFixedCellHeight(100); 
         rentedList.setFixedCellWidth(178); 
-        rentedModel.addElement("Image    				Due Date");
-	    rentedModel.addElement("Item 2    				IM GAY ");
-	    rentedModel.addElement("Item 3    				GIAS IS GAY");
+        
+        ItemPainter painter = new ItemPainter();
+        rentedList.setCellRenderer(painter);
+        
+        //sample
+        rentedModel.addElement(new ListItems("No Longer Human", new ImageIcon(HomePanel.class.getResource("/images/NoLongerHuman.jpeg"))));
+        rentedModel.addElement(new ListItems("No Longer Human", new ImageIcon(HomePanel.class.getResource("/images/NoLongerHuman.jpeg"))));
+        rentedModel.addElement(new ListItems("No Longer Human", new ImageIcon(HomePanel.class.getResource("/images/NoLongerHuman.jpeg"))));
+
+	    
 		
 		JScrollPane spRentedBooks = new JScrollPane(rentedList);
 		spRentedBooks.setBounds(6, 200, 183, 516);
