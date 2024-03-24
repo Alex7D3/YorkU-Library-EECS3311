@@ -54,5 +54,15 @@ public class AppFrame extends JFrame {
 	
 	private void changePanel(String panelName) {
 		((CardLayout) contentPanel.getLayout()).show(contentPanel, panelName);
+		switch(panelName) {
+			case HOME_PANEL:
+				// home panel functions here, make requests and update the home panel
+				
+				break;
+			case SEARCH_PANEL:
+				break;
+			case CART_PANEL:
+				break;
+		}
 	}
 }
