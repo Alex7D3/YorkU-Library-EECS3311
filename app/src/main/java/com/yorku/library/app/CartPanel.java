@@ -14,10 +14,11 @@ public class CartPanel extends JPanel {
 	public CartPanel() {
 		
 		setLayout(null);
+		
 	    JButton btnCheckout = new JButton("Checkout");
 	    btnCheckout.setBounds(540, 503, 117, 29);
 	    btnCheckout.addActionListener(e ->{
-	    	CheckoutPage checkoutPage = new CheckoutPage();
+	    	CheckoutFrame checkoutPage = new CheckoutFrame();
 	    	checkoutPage.getFrame().setVisible(true);
 	    });
 	    add(btnCheckout);
