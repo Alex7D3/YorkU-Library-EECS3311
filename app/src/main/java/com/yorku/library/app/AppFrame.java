@@ -1,14 +1,13 @@
 package com.yorku.library.app;
-
 import java.awt.CardLayout;
 import java.awt.Container;
-
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import com.yorku.library.app.services.requests.RequestServiceProxy;
 public class AppFrame extends JFrame {
 	private final int FRAME_HEIGHT = 700;
 	private final int FRAME_WIDTH = 900;
@@ -22,21 +21,25 @@ public class AppFrame extends JFrame {
 	private CartPanel cartPanel;
 	private CourseListPanel coursePanel;
 	private JMenuBar navMenu;
-	
-	
-	
+	private RequestServiceProxy reqService;
+
+	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel) {
+		
+	}
+
+
 	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel, CourseListPanel coursePanel) {
 		this.homePanel = homePanel;
 		this.cartPanel = cartPanel;
 		this.cartPanel = cartPanel;
 		this.coursePanel = coursePanel;
-		
+
 		contentPanel = new JPanel(new CardLayout());
 		contentPanel.add(homePanel, HOME_PANEL);
 		contentPanel.add(searchPanel, SEARCH_PANEL);
 		contentPanel.add(cartPanel, CART_PANEL);
 		contentPanel.add(coursePanel, COURSE_PANEL);
-		
+
 		navMenu = new JMenuBar();
 		JMenu menu = new JMenu("Navigate");
 		JMenuItem homeOption = new JMenuItem(HOME_PANEL);
@@ -52,7 +55,7 @@ public class AppFrame extends JFrame {
 		menu.add(cartOption);
 		menu.add(courseOption);
 		navMenu.add(menu);
-		
+
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,13 +68,32 @@ public class AppFrame extends JFrame {
 		((CardLayout) contentPanel.getLayout()).show(contentPanel, panelName);
 		switch(panelName) {
 			case HOME_PANEL:
-				
+
+				// home panel functions here, make requests and update the home panel
+				reqService.getRequest("/user/id/items");
+				reqService.getRequest("/user/id/overdueitems");
+				reqService.getRequest("/user/id/courses");
+				reqService.postRequest("/user/id/addcourse/code");
+				reqService.postRequest("/user/userid/request/itemid/priority");
+				reqService.postRequest("/user/item/add/relation/id");
+				reqService.postRequest("/user/id/notifs");
+				reqService.deleteRequest("/user/id/dropcourse/code");
+				reqService.deleteRequest("/user/userid/item/delete/itemid");
+				//needs put request for update functions (but ion even think we needa use them up to you alex my king)
+
 				
 				break;
 			case SEARCH_PANEL:
+				reqService.getRequest("/item/search/title");
+				reqService.getRequest("/item/search/by/type");
+				reqService.getRequest("/item/all");
+				//put request
+				
 				break;
 			case CART_PANEL:
+				reqService.getRequest("/item/id");
 				break;
 		}
 	}
 }
+

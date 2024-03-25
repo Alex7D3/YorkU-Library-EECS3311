@@ -3,7 +3,6 @@ package com.yorku.library.app.services.requests;
 import java.util.List;
 
 import com.yorku.library.app.auth.UserAuth;
-import com.yorku.library.app.dtos.*;
 
 public interface RequestService {
 	String getRequest(String path);

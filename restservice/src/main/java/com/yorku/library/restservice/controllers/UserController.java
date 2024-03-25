@@ -40,22 +40,18 @@ public class UserController {
 	private RequestRepo requestRepo;
 	@Autowired
 	private ItemRepo itemRepo;
-	@Autowired
-	private AES aes;
+	
 	
 	@GetMapping("/user/login/{email}/{pw}")
-	public ResponseEntity<User> userLogin(@PathVariable("email") String email, @PathVariable("pw") String pw) throws Exception {	
-		
-			for (User user : userRepo.findByEmail(email)) {
-				aes.encrypt(pw);
-				if (user.getPassword().equals(pw)) {
-					return new ResponseEntity<User>(user, HttpStatus.OK);
-				} else {
-					throw new Exception("User Doesnt Exist");
-				}
-			}
-		    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); 
+	public ResponseEntity<User> userLogin(@PathVariable("email") String email, @PathVariable("pw") String pw) throws Exception{
+		User user = userRepo.findByEmail(email).get(0);
+		if (user.getPassword().equals(pw)) {
+			return new ResponseEntity<User>(user, HttpStatus.OK);
 		}
+		else {
+			throw new Exception("Incorrect Password");
+		}
+	}
 	
 	
 	@GetMapping("/user/logout")
@@ -63,10 +59,12 @@ public class UserController {
 		
 	}
 	
-	@PostMapping("/user/register/{username}/{email}/{password}/{role}")
-	public ResponseEntity<User> userRegister(@PathVariable("username") String username, @PathVariable("email") String email, @PathVariable("pw") String pw, @PathVariable("role") Role role) throws Exception {
-		String encryptedPass = aes.encrypt(pw);
-		User user = new User(username, email, encryptedPass, role);
+	@PostMapping("/user/register/{username}/{email}/{pw}/{role}")
+	public ResponseEntity<User> userRegister(@PathVariable("username") String username, @PathVariable("email") String email, @PathVariable("pw") String pw, @PathVariable("role") String role)  throws Exception {
+		Role role1 = Role.valueOf(role);
+		System.out.println(role1);
+		
+		User user = new User(username, pw, email, role1);
 		userRepo.save(user);
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
@@ -129,7 +127,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/request/{id}/{priority}")
-	public ResponseEntity<Request> requestItem(@PathVariable("id") Integer id, @PathVariable("priority") Integer priority, @RequestBody User user) throws Exception{
+	public ResponseEntity<Request> requestItem(@PathVariable("id") Integer id, Integer priority, @RequestBody User user) throws Exception{
 		User user1 = user;
 		Item item = itemRepo.findById(id).get();
 		if (item != null) {
