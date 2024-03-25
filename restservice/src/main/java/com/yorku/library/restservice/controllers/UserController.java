@@ -47,7 +47,7 @@ public class UserController {
 	private AES aes;
 	
 	@GetMapping("/user/login/{email}/{pw}")
-	public ResponseEntity<User> userLogin(@PathVariable String email, @PathVariable String pw) throws Exception {	
+	public ResponseEntity<User> userLogin(@PathVariable("email") String email, @PathVariable("pw") String pw) throws Exception {	
 		
 			for (User user : userRepo.findByEmail(email)) {
 				aes.encrypt(pw);
@@ -67,7 +67,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/register/{username}/{email}/{password}/{role}")
-	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw, @PathVariable Role role) throws Exception {
+	public ResponseEntity<User> userRegister(@PathVariable("username") String username, @PathVariable("email") String email, @PathVariable("pw") String pw, @PathVariable("role") Role role) throws Exception {
 		String encryptedPass = aes.encrypt(pw);
 		User user = new User(username, email, encryptedPass, role);
 		userRepo.save(user);
@@ -76,7 +76,7 @@ public class UserController {
 	
 	
 	@GetMapping("/user/{id}/items")
-	public ResponseEntity<List<Item>> getUserItems(@PathVariable Integer id) throws Exception{
+	public ResponseEntity<List<Item>> getUserItems(@PathVariable("id") Integer id) throws Exception{
 		User user = userRepo.findById(id).get();
 		if (user != null) {
 			List<Item> itemlist = new ArrayList<>();
@@ -89,7 +89,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{id}/overdueitems")
-	public ResponseEntity<List<Item>> getOverdueItems(@PathVariable Integer id) {
+	public ResponseEntity<List<Item>> getOverdueItems(@PathVariable("id") Integer id) {
 		User user = userRepo.findById(id).get();
 		GregorianCalendar dateDue = new GregorianCalendar();
 		dateDue.add(Calendar.MONTH, 1);
@@ -101,7 +101,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{id}/courses")
-	public ResponseEntity<List<Course>> getUserCourses(@PathVariable Integer id) throws Exception{
+	public ResponseEntity<List<Course>> getUserCourses(@PathVariable("id") Integer id) throws Exception{
 		User user = userRepo.findById(id).get();
 		if (user != null) {
 			List<Course> courselist = new ArrayList<>();
@@ -114,7 +114,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/{id}/addcourse/{code}")
-	public ResponseEntity<Course> addCourse(@PathVariable String code, @PathVariable Integer id) throws Exception{
+	public ResponseEntity<Course> addCourse(@PathVariable("code") String code, @PathVariable("id") Integer id) throws Exception{
 		User user = userRepo.findById(id).get();
 		Course course = courseRepo.findByCourseCode(code).get(0);
 		if (course != null) {
@@ -129,7 +129,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/user/{id}/dropcourse/{code}")
-	public ResponseEntity<Course> removeCourse(@PathVariable String code, @PathVariable Integer id) throws Exception {
+	public ResponseEntity<Course> removeCourse(@PathVariable("code") String code, @PathVariable("id") Integer id) throws Exception {
 		User user = userRepo.findById(id).get();
 		Course course = courseRepo.findByCourseCode(code).get(0);
 		if (user.getCourses().contains(course)) {
@@ -144,7 +144,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/{userid}/request/{itemid}/{priority}")
-	public ResponseEntity<Request> requestItem(@PathVariable Integer itemid, Integer priority, @PathVariable Integer userid) throws Exception{
+	public ResponseEntity<Request> requestItem(@PathVariable("itemid") Integer itemid, Integer priority, @PathVariable("userid") Integer userid) throws Exception{
 		User user = userRepo.findById(userid).get();
 		Item item = itemRepo.findById(itemid).get();
 		if (item != null) {
@@ -162,7 +162,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/{id}/notifs")
-	public ResponseEntity<List<String>> userNotifs(@PathVariable Integer id) {
+	public ResponseEntity<List<String>> userNotifs(@PathVariable("id") Integer id) {
 		User user = userRepo.findById(id).get();
 		List<String> notis = new ArrayList<>();
 		GregorianCalendar dateDue = new GregorianCalendar();
@@ -176,7 +176,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/item/add/{relation}/{id}")
-	public ResponseEntity<Item> addItemToUser(@PathVariable Ownership relation, @PathVariable Integer id, @RequestBody User user) throws Exception{
+	public ResponseEntity<Item> addItemToUser(@PathVariable("relation") Ownership relation, @PathVariable("id") Integer id, @RequestBody User user) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
 		GregorianCalendar dateDue = new GregorianCalendar();
@@ -208,7 +208,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/user/{userid}/item/delete/{itemid}")
-	public ResponseEntity<Item> removeItemFromUser(@PathVariable Integer itemid, @PathVariable Integer userid) throws Exception{
+	public ResponseEntity<Item> removeItemFromUser(@PathVariable("itemid") Integer itemid, @PathVariable("userid") Integer userid) throws Exception{
 		Item item = itemRepo.findById(itemid).get();
 		User user = userRepo.findById(userid).get();
 		try {
@@ -223,7 +223,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/user/update/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
+	public ResponseEntity<User> updateUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
 		User user1 = userRepo.findById(id).get();
 		if (user1 != null) {
 			user1.setUsername(user.getUsername());

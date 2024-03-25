@@ -17,6 +17,8 @@ public class App {
 	private static LoginPanel login;
 	private static RegisterPanel register;
 	private static LoginRegisterFrame loginRegister;
+	private static CourseListPanel course;
+
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {	
@@ -29,7 +31,8 @@ public class App {
 		home = new HomePanel();
 		search = new SearchPanel();
 		cart = new CartPanel();
-		app = new AppFrame(home, search, cart);
+		course = new CourseListPanel();
+		app = new AppFrame(home, search, cart, course);
 		app.setVisible(true);
 	}
 	
