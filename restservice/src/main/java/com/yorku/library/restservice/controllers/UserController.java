@@ -69,7 +69,7 @@ public class UserController {
 	@PostMapping("/user/register/{username}/{email}/{password}/{role}")
 	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw, @PathVariable Role role) throws Exception {
 		String encryptedPass = aes.encrypt(pw);
-		User user = new User(username, email, encryptedPass, STUDENT);
+		User user = new User(username, email, encryptedPass, role);
 		userRepo.save(user);
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
@@ -88,8 +88,9 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping("/user/overdueitems")
-	public ResponseEntity<List<Item>> getOverdueItems(@RequestBody User user) {
+	@GetMapping("/user/{id}/overdueitems")
+	public ResponseEntity<List<Item>> getOverdueItems(@PathVariable Integer id) {
+		User user = userRepo.findById(id).get();
 		GregorianCalendar dateDue = new GregorianCalendar();
 		dateDue.add(Calendar.MONTH, 1);
 		List<UserItem> list1 = user.getItems().stream().filter(i -> i.getTimestamp().toInstant().isAfter(dateDue.toInstant())).toList();
@@ -112,13 +113,13 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/user/addcourse/{code}")
-	public ResponseEntity<Course> addCourse(@PathVariable String code, @RequestBody User user) throws Exception{
-		User user1 = user;
+	@PostMapping("/user/{id}/addcourse/{code}")
+	public ResponseEntity<Course> addCourse(@PathVariable String code, @PathVariable Integer id) throws Exception{
+		User user = userRepo.findById(id).get();
 		Course course = courseRepo.findByCourseCode(code).get(0);
 		if (course != null) {
-			course.addUser(user1);
-			userRepo.save(user1);
+			course.addUser(user);
+			userRepo.save(user);
 			courseRepo.save(course);
 			return new ResponseEntity<Course>(course, HttpStatus.CREATED);
 		}
@@ -127,14 +128,14 @@ public class UserController {
 		}
 	}
 	
-	@DeleteMapping("/user/dropcourse/{code}")
-	public ResponseEntity<Course> removeCourse(@PathVariable String code, @RequestBody User user) throws Exception {
-		User user1 = user;
+	@DeleteMapping("/user/{id}/dropcourse/{code}")
+	public ResponseEntity<Course> removeCourse(@PathVariable String code, @PathVariable Integer id) throws Exception {
+		User user = userRepo.findById(id).get();
 		Course course = courseRepo.findByCourseCode(code).get(0);
-		if (user1.getCourses().contains(course)) {
-			course.removeUser(user1.getId());
+		if (user.getCourses().contains(course)) {
+			course.removeUser(user.getId());
 			courseRepo.save(course);
-			userRepo.save(user1);
+			userRepo.save(user);
 			return new ResponseEntity<Course>(course, HttpStatus.OK);
 		}
 		else {
@@ -142,16 +143,16 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/user/request/{id}/{priority}")
-	public ResponseEntity<Request> requestItem(@PathVariable Integer id, Integer priority, @RequestBody User user) throws Exception{
-		User user1 = user;
-		Item item = itemRepo.findById(id).get();
+	@PostMapping("/user/{userid}/request/{itemid}/{priority}")
+	public ResponseEntity<Request> requestItem(@PathVariable Integer itemid, Integer priority, @PathVariable Integer userid) throws Exception{
+		User user = userRepo.findById(userid).get();
+		Item item = itemRepo.findById(itemid).get();
 		if (item != null) {
-			Request req = new Request(priority, user1, item);
-			user1.addRequest(req);
+			Request req = new Request(priority, user, item);
+			user.addRequest(req);
 			item.setRequest(req);
 			itemRepo.save(item);
-			userRepo.save(user1);
+			userRepo.save(user);
 			requestRepo.save(req);
 			return new ResponseEntity<Request>(req, HttpStatus.CREATED);
 		}
@@ -160,8 +161,9 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/user/notifs")
-	public ResponseEntity<List<String>> userNotifs(@RequestBody User user) {
+	@PostMapping("/user/{id}/notifs")
+	public ResponseEntity<List<String>> userNotifs(@PathVariable Integer id) {
+		User user = userRepo.findById(id).get();
 		List<String> notis = new ArrayList<>();
 		GregorianCalendar dateDue = new GregorianCalendar();
 		dateDue.add(Calendar.DATE, 30);
@@ -174,12 +176,14 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/item/add/{relation}/{id}")
-	public ResponseEntity<Item> addItemToUser(@PathVariable Ownership relation, @PathVariable Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
+	public ResponseEntity<Item> addItemToUser(@PathVariable Ownership relation, @PathVariable Integer id, @RequestBody User user) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
 		GregorianCalendar dateDue = new GregorianCalendar();
-		int count = 0;
+		Date dateToday = new Date(dateDue.getTimeInMillis());
 		dateDue.add(Calendar.MONTH, 1);
+		int count = 0;
+		
 		
 		if (user1.getItems().size() >= 10) {
 			throw new Exception("User Has Too Many Items Rented");
@@ -193,7 +197,7 @@ public class UserController {
 			throw new Exception("User Has Over 3 Items Overdue");
 		}
 		if (item != null) {
-			item.addUser(user1, relation, date);
+			item.addUser(user1, relation, dateToday);
 			itemRepo.save(item);
 			userRepo.save(user1);
 			return new ResponseEntity<Item>(item, HttpStatus.CREATED);
@@ -203,18 +207,18 @@ public class UserController {
 		}
 	}
 	
-	@DeleteMapping("/user/item/delete/{id}")
-	public ResponseEntity<Item> removeItemFromUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
-		Item item = itemRepo.findById(id).get();
-		User user1 = user;
+	@DeleteMapping("/user/{userid}/item/delete/{itemid}")
+	public ResponseEntity<Item> removeItemFromUser(@PathVariable Integer itemid, @PathVariable Integer userid) throws Exception{
+		Item item = itemRepo.findById(itemid).get();
+		User user = userRepo.findById(userid).get();
 		try {
-			item.removeUser(user1.getId());
+			item.removeUser(user.getId());
 		}
 		catch (Exception e) {
 			throw e;
 		}
 		itemRepo.save(item);
-		userRepo.save(user1);
+		userRepo.save(user);
 		return new ResponseEntity<Item>(item, HttpStatus.OK);
 	}
 	
