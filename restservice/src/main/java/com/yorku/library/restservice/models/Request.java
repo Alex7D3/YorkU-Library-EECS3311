@@ -29,7 +29,7 @@ public class Request {
 	public Request() {
 		
 	}
-	
+
 	public Request(Integer priority, User user, Item item) {
 		this.priority = priority;
 		this.user = user;
