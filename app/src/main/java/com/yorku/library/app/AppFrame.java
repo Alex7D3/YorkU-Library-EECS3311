@@ -15,33 +15,42 @@ public class AppFrame extends JFrame {
 	public static final String HOME_PANEL = "Home";
 	public static final String SEARCH_PANEL = "Search";
 	public static final String CART_PANEL = "Cart";
+	public static final String COURSE_PANEL = "Course";
 	private JPanel contentPanel;
 	private HomePanel homePanel;
 	private SearchPanel searchPanel;
 	private CartPanel cartPanel;
+	private CourseListPanel coursePanel;
 	private JMenuBar navMenu;
 	
-	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel) {
+	
+	
+	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel, CourseListPanel coursePanel) {
 		this.homePanel = homePanel;
 		this.cartPanel = cartPanel;
 		this.cartPanel = cartPanel;
+		this.coursePanel = coursePanel;
 		
 		contentPanel = new JPanel(new CardLayout());
 		contentPanel.add(homePanel, HOME_PANEL);
 		contentPanel.add(searchPanel, SEARCH_PANEL);
 		contentPanel.add(cartPanel, CART_PANEL);
+		contentPanel.add(coursePanel, COURSE_PANEL);
 		
 		navMenu = new JMenuBar();
 		JMenu menu = new JMenu("Navigate");
 		JMenuItem homeOption = new JMenuItem(HOME_PANEL);
 		JMenuItem searchOption = new JMenuItem(SEARCH_PANEL);
 		JMenuItem cartOption = new JMenuItem(CART_PANEL);
+		JMenuItem courseOption = new JMenuItem(COURSE_PANEL);
 		homeOption.addActionListener(e -> changePanel(HOME_PANEL));
 		searchOption.addActionListener(e -> changePanel(SEARCH_PANEL));
 		cartOption.addActionListener(e -> changePanel(CART_PANEL));
+		courseOption.addActionListener(e -> changePanel(COURSE_PANEL));
 		menu.add(homeOption);
 		menu.add(searchOption);
 		menu.add(cartOption);
+		menu.add(courseOption);
 		navMenu.add(menu);
 		
 		setSize(FRAME_WIDTH, FRAME_HEIGHT);
