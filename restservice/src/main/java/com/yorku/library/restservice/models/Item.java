@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -41,7 +42,7 @@ public class Item {
 	@Column(name="type", insertable = false, updatable = false)
 	private String itemType;
 	
-	@OneToOne(mappedBy="item")
+	@OneToOne(mappedBy="item", cascade=CascadeType.ALL)
 	private Request request;
 	
 	@OneToMany(mappedBy = "item")
@@ -67,20 +68,6 @@ public class Item {
 		useritems.add(useritem);
 		user.getItems().add(useritem);
 		this.stock--;
-	}
-	
-	public void removeUser(Integer id) throws Exception{
-		UserItem useritem = this.useritems.stream().filter(u -> u.getItem().getId() == id).findFirst().orElse(null);
-		if (useritem != null) {
-			this.useritems.remove(useritem);
-			useritem.getUser().getItems().remove(useritem);
-			useritem.setItem(null);
-			useritem.setUser(null);
-			this.stock++;
-		}
-		else {
-			throw new Exception("Item Doesnt exist or User Doesnt Own Item");
-		}
 	}
 	
 	@PostUpdate
