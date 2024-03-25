@@ -29,17 +29,17 @@ public class ItemController {
 	}
 	
 	@GetMapping("/item/{id}")
-	public ResponseEntity<Item> getItemById(@PathVariable Integer id) {
+	public ResponseEntity<Item> getItemById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<Item>(itemRepo.findById(id).get(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/item/search/{title}")
-	public ResponseEntity<List<Item>> getItemsByTitle(@PathVariable String title) {
+	public ResponseEntity<List<Item>> getItemsByTitle(@PathVariable("title") String title) {
 		return new ResponseEntity<List<Item>>(itemRepo.findByTitleContaining(title), HttpStatus.OK);
 	}
 	
 	@GetMapping("/item/search/by/{type}")
-	public ResponseEntity<List<Item>> getItemsByType(@PathVariable String type) {
+	public ResponseEntity<List<Item>> getItemsByType(@PathVariable("type") String type) {
 		return new ResponseEntity<List<Item>>(itemRepo.findByItemType(type), HttpStatus.OK);
 	}
 	
@@ -49,7 +49,7 @@ public class ItemController {
 	}
 	
 	@PutMapping("/items/update/{id}")
-	public ResponseEntity<Item> updateItem(@PathVariable Integer id, @RequestBody Item item) throws Exception {
+	public ResponseEntity<Item> updateItem(@PathVariable("id") Integer id, @RequestBody Item item) throws Exception {
 		Item item1 = itemRepo.findById(id).get();
 		if (item1 != null) {
 			item1.setTitle(item.getTitle());
