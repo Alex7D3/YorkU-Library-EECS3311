@@ -14,34 +14,33 @@ public class RequestServiceProxy implements RequestService {
 
 
 	@Override
-	public String getRequest(String... path) {
-		String joinPath = String.join("/", path);
-		if(cache.containsKey(joinPath))
-			return cache.get(joinPath);
+	public String getRequest(String path) {
+		if(cache.containsKey(path))
+			return cache.get(path);
 		return realService.getRequest(path);
 	}
 	
 	@Override
-	public String postRequest(String... path) {
+	public String postRequest(String path) {
 		return realService.postRequest(path);
 	}
 
 	@Override
-	public String postRequest(String body, String... path) {
+	public String postRequest(String body, String path) {
 		return realService.postRequest(body, path);
 	}
 
 	@Override
-	public String putRequest(String... path) {
+	public String putRequest(String path) {
 		return realService.putRequest(path);
 	}
 
 	@Override
-	public String putRequest(String body, String... path) {
+	public String putRequest(String body, String path) {
 		return realService.putRequest(body, path);
 	}
 
 	@Override
-	public String deleteRequest(String... path) {
+	public String deleteRequest(String path) {
 		return realService.putRequest(path);
 	}}

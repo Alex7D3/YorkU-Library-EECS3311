@@ -5,7 +5,7 @@ import java.awt.Component;
 public class UserComponentFactory extends LibraryComponentFactory {
 
 	@Override
-	public Component getComponent(String type) {
+	public Component getComponent(String json) {
 		// TODO Auto-generated method stub
 		return null;
 	}

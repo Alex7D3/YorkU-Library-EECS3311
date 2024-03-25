@@ -18,9 +18,9 @@ public class RequestServiceImpl implements RequestService {
 	private HttpClient client;
 	private String host = "https://localhost:8080/";	//change in production
 	
-	private URI createURI(String host, String... path) {
+	private URI createURI(String host, String path) {
 		try {
-			return new URI(host + String.join("/", path));
+			return new URI(host + path);
 		} catch(URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -49,7 +49,7 @@ public class RequestServiceImpl implements RequestService {
 	}
 	
 
-	public String getRequest(String... path) {
+	public String getRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.GET()
@@ -58,7 +58,7 @@ public class RequestServiceImpl implements RequestService {
 		return response.body();
 	}
 	
-	public String postRequest(String... path) {
+	public String postRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.POST(BodyPublishers.noBody())
@@ -67,7 +67,7 @@ public class RequestServiceImpl implements RequestService {
 		return response.body();
 	}
 	
-	public String postRequest(String body, String... path) {
+	public String postRequest(String body, String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.POST(BodyPublishers.ofString(body))
@@ -76,7 +76,7 @@ public class RequestServiceImpl implements RequestService {
 		return response.body();
 	}
 	
-	public String putRequest(String... path) {
+	public String putRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.PUT(BodyPublishers.noBody())
@@ -85,7 +85,7 @@ public class RequestServiceImpl implements RequestService {
 		return response.body();
 	}
 	
-	public String putRequest(String body, String... path) {
+	public String putRequest(String body, String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.POST(BodyPublishers.ofString(body))
@@ -94,7 +94,7 @@ public class RequestServiceImpl implements RequestService {
 		return response.body();
 	}
 	
-	public String deleteRequest(String... path) {
+	public String deleteRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.DELETE()

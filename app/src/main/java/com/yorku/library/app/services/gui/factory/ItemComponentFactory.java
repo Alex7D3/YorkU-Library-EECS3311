@@ -5,9 +5,8 @@ import java.awt.Component;
 public class ItemComponentFactory extends LibraryComponentFactory {
 
 	@Override
-	public Component getComponent(String type) {
+	public Component getComponent(String json) {
 		
-		return null;
 	}
 
 }
