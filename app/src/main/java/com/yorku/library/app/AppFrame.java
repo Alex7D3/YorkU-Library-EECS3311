@@ -24,6 +24,8 @@ public class AppFrame extends JFrame {
 	private RequestServiceProxy reqService;
 
 	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel) {
+		
+	}
 
 
 	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel, CourseListPanel coursePanel) {
@@ -69,12 +71,25 @@ public class AppFrame extends JFrame {
 				// home panel functions here, make requests and update the home panel
 				reqService.getRequest("/user/id/items");
 				reqService.getRequest("/user/id/overdueitems");
-				reqService.getRequest("user/id/courses");
+				reqService.getRequest("/user/id/courses");
+				reqService.postRequest("/user/id/addcourse/code");
+				reqService.postRequest("/user/userid/request/itemid/priority");
+				reqService.postRequest("/user/item/add/relation/id");
+				reqService.postRequest("/user/id/notifs");
+				reqService.deleteRequest("/user/{id}/dropcourse/{code}");
+				reqService.deleteRequest("/user/{userid}/item/delete/{itemid}");
+				//needs put request for update functions (but ion even think we needa use them up to you alex my king)
 				
 				break;
 			case SEARCH_PANEL:
+				reqService.getRequest("/item/search/{title}");
+				reqService.getRequest("/item/search/by/{type}");
+				reqService.getRequest("/item/all");
+				//put request
+				
 				break;
 			case CART_PANEL:
+				reqService.getRequest("/item/{id}");
 				break;
 		}
 	}
