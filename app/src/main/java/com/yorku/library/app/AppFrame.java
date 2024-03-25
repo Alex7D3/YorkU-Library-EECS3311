@@ -76,20 +76,20 @@ public class AppFrame extends JFrame {
 				reqService.postRequest("/user/userid/request/itemid/priority");
 				reqService.postRequest("/user/item/add/relation/id");
 				reqService.postRequest("/user/id/notifs");
-				reqService.deleteRequest("/user/{id}/dropcourse/{code}");
-				reqService.deleteRequest("/user/{userid}/item/delete/{itemid}");
+				reqService.deleteRequest("/user/id/dropcourse/code");
+				reqService.deleteRequest("/user/userid/item/delete/itemid");
 				//needs put request for update functions (but ion even think we needa use them up to you alex my king)
 				
 				break;
 			case SEARCH_PANEL:
-				reqService.getRequest("/item/search/{title}");
-				reqService.getRequest("/item/search/by/{type}");
+				reqService.getRequest("/item/search/title");
+				reqService.getRequest("/item/search/by/type");
 				reqService.getRequest("/item/all");
 				//put request
 				
 				break;
 			case CART_PANEL:
-				reqService.getRequest("/item/{id}");
+				reqService.getRequest("/item/id");
 				break;
 		}
 	}
