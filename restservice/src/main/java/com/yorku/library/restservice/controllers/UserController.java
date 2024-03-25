@@ -44,7 +44,7 @@ public class UserController {
 	private AES aes;
 	
 	@GetMapping("/user/login/{email}/{pw}")
-	public ResponseEntity<User> userLogin(@PathVariable String email, @PathVariable String pw) throws Exception {	
+	public ResponseEntity<User> userLogin(@PathVariable("email") String email, @PathVariable("pw") String pw) throws Exception {	
 		
 			for (User user : userRepo.findByEmail(email)) {
 				aes.encrypt(pw);
@@ -64,16 +64,16 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/register/{username}/{email}/{password}/{role}")
-	public ResponseEntity<User> userRegister(@PathVariable String username, @PathVariable String email, @PathVariable String pw, @PathVariable Role role) throws Exception {
+	public ResponseEntity<User> userRegister(@PathVariable("username") String username, @PathVariable("email") String email, @PathVariable("pw") String pw, @PathVariable("role") Role role) throws Exception {
 		String encryptedPass = aes.encrypt(pw);
-		User user = new User(username, email, encryptedPass, STUDENT);
+		User user = new User(username, email, encryptedPass, role);
 		userRepo.save(user);
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 	
 	
 	@GetMapping("/user/{id}/items")
-	public ResponseEntity<List<Item>> getUserItems(@PathVariable Integer id) throws Exception{
+	public ResponseEntity<List<Item>> getUserItems(@PathVariable("id") Integer id) throws Exception{
 		User user = userRepo.findById(id).get();
 		if (user != null) {
 			List<Item> itemlist = new ArrayList<>();
@@ -86,7 +86,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{id}/courses")
-	public ResponseEntity<List<Course>> getUserCourses(@PathVariable Integer id) throws Exception{
+	public ResponseEntity<List<Course>> getUserCourses(@PathVariable("id") Integer id) throws Exception{
 		User user = userRepo.findById(id).get();
 		if (user != null) {
 			List<Course> courselist = new ArrayList<>();
@@ -99,7 +99,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/addcourse/{code}")
-	public ResponseEntity<Course> addCourse(@PathVariable String code, @RequestBody User user) throws Exception{
+	public ResponseEntity<Course> addCourse(@PathVariable("code") String code, @RequestBody User user) throws Exception{
 		User user1 = user;
 		Course course = courseRepo.findByCourseCode(code).get(0);
 		if (course != null) {
@@ -114,7 +114,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/user/dropcourse/{code}")
-	public ResponseEntity<Course> removeCourse(@PathVariable String code, @RequestBody User user) throws Exception {
+	public ResponseEntity<Course> removeCourse(@PathVariable("code") String code, @RequestBody User user) throws Exception {
 		User user1 = user;
 		Course course = courseRepo.findByCourseCode(code).get(0);
 		if (user1.getCourses().contains(course)) {
@@ -129,7 +129,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/request/{id}/{priority}")
-	public ResponseEntity<Request> requestItem(@PathVariable Integer id, Integer priority, @RequestBody User user) throws Exception{
+	public ResponseEntity<Request> requestItem(@PathVariable("id") Integer id, @PathVariable("priority") Integer priority, @RequestBody User user) throws Exception{
 		User user1 = user;
 		Item item = itemRepo.findById(id).get();
 		if (item != null) {
@@ -152,7 +152,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/item/add/{relation}/{id}")
-	public ResponseEntity<Item> addItemToUser(@PathVariable Ownership relation, @PathVariable Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
+	public ResponseEntity<Item> addItemToUser(@PathVariable("relation") Ownership relation, @PathVariable("id") Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
 		if (user1.getItems().size() >= 10) {
@@ -170,7 +170,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/user/item/delete/{id}")
-	public ResponseEntity<Item> removeItemFromUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
+	public ResponseEntity<Item> removeItemFromUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
 		Item item = itemRepo.findById(id).get();
 		User user1 = user;
 		try {
@@ -185,7 +185,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/user/update/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User user) throws Exception{
+	public ResponseEntity<User> updateUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
 		User user1 = userRepo.findById(id).get();
 		if (user1 != null) {
 			user1.setUsername(user.getUsername());
