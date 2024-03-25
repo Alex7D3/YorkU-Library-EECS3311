@@ -61,8 +61,7 @@ public class UserController {
 	
 	@PostMapping("/user/register/{username}/{email}/{pw}/{role}")
 	public ResponseEntity<User> userRegister(@PathVariable("username") String username, @PathVariable("email") String email, @PathVariable("pw") String pw, @PathVariable("role") String role)  throws Exception {
-		String roleString = "STUDENTS";
-		Role role1 = Role.valueOf(roleString);
+		Role role1 = Role.valueOf(role);
 		System.out.println(role1);
 		
 		User user = new User(username, pw, email, role1);
