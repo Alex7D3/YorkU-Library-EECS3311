@@ -14,7 +14,7 @@ public class Book extends Item {
 		
 	}
 
-	public Book(Integer id, String name, String description, String location, String isbn, byte[] image) {
+	public Book(String name, String description, String location, String isbn, byte[] image) {
 		super(name, description, location, image);
 		this.isbn = isbn;
 	}

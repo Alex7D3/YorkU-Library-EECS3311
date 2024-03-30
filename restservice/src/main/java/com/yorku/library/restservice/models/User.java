@@ -123,10 +123,6 @@ public class User {
 	public Set<UserItem> getItems() {
 		return useritems;
 	}
-
-	public int getUserID() {
-		return id;
-	}
 	
 	public Set<Course> getCourses() {
 		return courses;
