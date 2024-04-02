@@ -93,6 +93,7 @@ public class Item {
 
 	public void setRequest(Request request) {
 		this.request = request;
+		request.setItem(this);
 	}
 
 	public Integer getId() {

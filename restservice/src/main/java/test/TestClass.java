@@ -1,8 +1,11 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.sql.Date;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,12 +14,15 @@ import com.yorku.library.restservice.models.Course;
 import com.yorku.library.restservice.models.Faculty;
 import com.yorku.library.restservice.models.Item;
 import com.yorku.library.restservice.models.NewsLetter;
+import com.yorku.library.restservice.models.Ownership;
+import com.yorku.library.restservice.models.Request;
 import com.yorku.library.restservice.models.Role;
 import com.yorku.library.restservice.models.SpecialItem;
 import com.yorku.library.restservice.models.Staff;
 import com.yorku.library.restservice.models.Student;
 import com.yorku.library.restservice.models.TextBook;
 import com.yorku.library.restservice.models.User;
+import com.yorku.library.restservice.models.UserItem;
 import com.yorku.library.restservice.models.Visitor;
 
 public class TestClass {
@@ -116,5 +122,85 @@ public class TestClass {
 		assertNull(tb0.getTitle());
 		TextBook tb1 = new TextBook("tb1", "tdesc", "tloc", null, null);
 		assertEquals(tb1.getTitle(), "tb1");
+	}
+	
+	@Test
+	public void courseTest() {
+		Date date = new Date(1);
+		Course course = new Course();
+		course.setCourseCode("CS1");
+		course.setCourseTitle("cs");
+		course.setId(20);
+		course.setEndDate(date);
+		assertEquals(course.getCourseCode(), "CS1");
+		assertEquals(course.getCourseTitle(), "cs");
+		assertEquals(course.getEndDate(), date);
+		assertTrue(course.getId() == 20);
+		User user1 = new User();
+		course.addUser(user1);
+		TextBook tb = new TextBook();
+		course.addBook(tb);
+		assertTrue(course.getTextbooks().size() == 1);
+		assertTrue(course.getTextbooks().contains(tb));
+		assertTrue(user1.getCourses().contains(course));
+		course.removeUser(user1.getId());
+		course.removeBook(tb.getId());
+		assertFalse(course.getTextbooks().contains(tb));
+		assertFalse(user1.getCourses().contains(course));
+		course.removeUser(user1.getId());
+		course.removeBook(tb.getId());
+		assertTrue(course.getTextbooks().size() == 0);
+		assertTrue(user1.getCourses().size() == 0);
+	}
+	
+	@Test
+	public void requestTest() {
+		Request req0 = new Request();
+		req0.setId(99);
+		req0.setPriority(9);
+		assertTrue(req0.getId() == 99);
+		assertTrue(req0.getPriority() == 9);
+		User user = new User();
+		Item item = new Item();
+		Request req1 = new Request(1, user, item);
+		assertTrue(req1.getPriority() == 1);
+		user.addRequest(req1);
+		item.setRequest(req1);
+		assertTrue(user.getRequests().size() == 1);
+		assertTrue(user.getRequests().contains(req1));
+		assertEquals(item.getRequest(), req1);
+		user.removeRequest(user.getId());
+		assertTrue(user.getRequests().size() == 0);
+		assertFalse(user.getRequests().contains(req1));
+	}
+	
+	@Test
+	public void userItemTest() {
+		Date date = new Date(12);
+		User user = new User();
+		Item item = new Item();
+		item.setStock(1);
+		UserItem ui1 = new UserItem();
+		ui1.setOwntype(Ownership.SUBSCRIBED);
+		assertEquals(ui1.getOwntype(), Ownership.SUBSCRIBED);
+		ui1.setItem(item);
+		ui1.setUser(user);
+		ui1.setTimestamp(date);
+		assertEquals(ui1.getTimestamp(), date);
+		assertEquals(ui1.getItem(), item);
+		assertEquals(ui1.getUser(), user);
+		try {
+			item.addUser(user, Ownership.PURCHASED, date);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertTrue(user.getItems().size() == 1);
+		try {
+			item.addUser(user, Ownership.PURCHASED, date);
+		} catch (Exception e) {
+			assertEquals(e.getMessage(), "Out Of Stock");
+		}
+		
 	}
 }

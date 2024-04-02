@@ -43,7 +43,7 @@ public class User {
 	private Role role;
 	
 	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
-	private Set<Request> requests;
+	private Set<Request> requests = new HashSet<Request>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private Set<UserItem> useritems = new HashSet<UserItem>();
