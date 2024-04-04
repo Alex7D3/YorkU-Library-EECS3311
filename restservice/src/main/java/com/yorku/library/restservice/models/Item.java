@@ -60,14 +60,17 @@ public class Item {
 		this.stock = 20;
 	}
 	
-	public void addUser(User user, Ownership owntype, Date date) throws Exception{
+	public UserItem addUser(User user, Ownership owntype, Date date) throws Exception{
 		if (stock < 1) {
 			throw new Exception("Out Of Stock");
 		}
+		UserItemPrimaryKey pk = new UserItemPrimaryKey(this.getId(), user.getId());
 		UserItem useritem = new UserItem(user, this, date, owntype);
+		useritem.setPk(pk);
 		useritems.add(useritem);
 		user.getItems().add(useritem);
 		this.stock--;
+		return useritem;
 	}
 	
 	@PostUpdate

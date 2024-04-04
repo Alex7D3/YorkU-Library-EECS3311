@@ -216,7 +216,8 @@ public class UserController {
 			throw new Exception("User Has Over 3 Items Overdue");
 		}
 		if (item.isPresent() && user1.isPresent()) {
-			item.get().addUser(user1.get(), Ownership.valueOf(relation), dateToday);
+			UserItem ui = item.get().addUser(user1.get(), Ownership.valueOf(relation), dateToday);
+			uiRepo.save(ui);
 			itemRepo.save(item.get());
 			userRepo.save(user1.get());
 			return new ResponseEntity<Item>(item.get(), HttpStatus.CREATED);
