@@ -22,14 +22,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import jakarta.persistence.InheritanceType;
-
+import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchConnectionDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type")
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +40,8 @@ public class User {
 	private String pw;
 	private String email;
 	private boolean verified;
-	
+	private String firstname;
+	private String lastname;
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
@@ -55,9 +58,9 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name="course_id", referencedColumnName="id")
 			)
 	private Set<Course> courses = new HashSet<>();
-	
-    
-	
+
+
+
 	public User() {
 		
 	}
@@ -128,11 +131,35 @@ public class User {
 		return courses;
 	}
 
+	@Override
 	public String getUsername() {
 		return username;
 	}
-	
-	
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null; // TODO Implement getAuthorities in role enum
+	}
+	@Override
 	public String getPassword() {
 		return pw;
 	}
@@ -151,7 +178,46 @@ public class User {
 				+ requests + ", items=" + useritems + "]";
 	}
 
+
+	public static class Builder {
+		private User user;
+
+		public Builder() {
+			user = new User();
+		}
+		public Builder withUsername(String username) {
+			user.username = username;
+			return this;
+		}
+		public Builder withFirstname(String firstname) {
+			user.firstname = firstname;
+			return this;
+		}
+
+		public Builder withLastname(String lastname) {
+			user.lastname = lastname;
+			return this;
+		}
+
+		public Builder withEmail(String email) {
+			user.email = email;
+			return this;
+		}
+
+		public Builder withPassword(String pw) {
+			user.pw = pw;
+			return this;
+		}
+
+		public Builder withRole(String role) {
+			user.role = Role.valueOf(role);
+			return this;
+		}
+
+		public User build() {
+			return user;
+		}
+	}
+}
 	
 
-	
-}

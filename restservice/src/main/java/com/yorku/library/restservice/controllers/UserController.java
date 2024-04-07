@@ -50,7 +50,7 @@ public class UserController {
 	
 	@GetMapping("/user/login/{email}/{pw}")
 	public ResponseEntity<User> userLogin(@PathVariable("email") String email, @PathVariable("pw") String pw) throws Exception{
-		User user = userRepo.findByEmail(email).get(0);
+		User user = userRepo.findByEmail(email).get();
 		if (user.getPassword().equals(pw)) {
 			return new ResponseEntity<User>(user, HttpStatus.OK);
 		}

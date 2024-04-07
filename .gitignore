@@ -30,3 +30,9 @@ replay_pid*
 
 secret.properties
 /bin/
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/misc.xml
+.idea/jarRepositories.xml
+.idea/encodings.xml
+.idea/compiler.xml
