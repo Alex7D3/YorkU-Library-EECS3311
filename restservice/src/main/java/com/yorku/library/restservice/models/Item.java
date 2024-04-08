@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -41,7 +42,7 @@ public class Item {
 	@Column(name="type", insertable = false, updatable = false)
 	private String itemType;
 	
-	@OneToOne(mappedBy="item")
+	@OneToOne(mappedBy="item", cascade=CascadeType.ALL)
 	private Request request;
 	
 	@OneToMany(mappedBy = "item")
@@ -59,28 +60,17 @@ public class Item {
 		this.stock = 20;
 	}
 	
-	public void addUser(User user, Ownership owntype, Date date) throws Exception{
+	public UserItem addUser(User user, Ownership owntype, Date date) throws Exception{
 		if (stock < 1) {
 			throw new Exception("Out Of Stock");
 		}
+		UserItemPrimaryKey pk = new UserItemPrimaryKey(this.getId(), user.getId());
 		UserItem useritem = new UserItem(user, this, date, owntype);
+		useritem.setPk(pk);
 		useritems.add(useritem);
 		user.getItems().add(useritem);
 		this.stock--;
-	}
-	
-	public void removeUser(Integer id) throws Exception{
-		UserItem useritem = this.useritems.stream().filter(u -> u.getItem().getId() == id).findFirst().orElse(null);
-		if (useritem != null) {
-			this.useritems.remove(useritem);
-			useritem.getUser().getItems().remove(useritem);
-			useritem.setItem(null);
-			useritem.setUser(null);
-			this.stock++;
-		}
-		else {
-			throw new Exception("Item Doesnt exist or User Doesnt Own Item");
-		}
+		return useritem;
 	}
 	
 	@PostUpdate
@@ -106,6 +96,7 @@ public class Item {
 
 	public void setRequest(Request request) {
 		this.request = request;
+		request.setItem(this);
 	}
 
 	public Integer getId() {

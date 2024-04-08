@@ -43,7 +43,7 @@ public class User {
 	private Role role;
 	
 	@OneToMany(mappedBy="user", fetch = FetchType.EAGER)
-	private Set<Request> requests;
+	private Set<Request> requests = new HashSet<Request>();
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private Set<UserItem> useritems = new HashSet<UserItem>();
@@ -51,8 +51,8 @@ public class User {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "user_courses",
-			joinColumns = @JoinColumn(name="course_id", referencedColumnName="id"),
-			inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName="id")
+			joinColumns = @JoinColumn(name="user_id", referencedColumnName="id"),
+			inverseJoinColumns = @JoinColumn(name="course_id", referencedColumnName="id")
 			)
 	private Set<Course> courses = new HashSet<>();
 	
@@ -122,10 +122,6 @@ public class User {
 
 	public Set<UserItem> getItems() {
 		return useritems;
-	}
-
-	public int getUserID() {
-		return id;
 	}
 	
 	public Set<Course> getCourses() {

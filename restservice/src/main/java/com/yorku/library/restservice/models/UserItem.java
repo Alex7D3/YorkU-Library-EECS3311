@@ -50,6 +50,10 @@ public class UserItem {
 		this.owntype = owntype;
 	}
 
+	public void setPk(UserItemPrimaryKey pk) {
+		this.pk = pk;
+	}
+
 	public Date getTimestamp() {
 		return timestamp;
 	}

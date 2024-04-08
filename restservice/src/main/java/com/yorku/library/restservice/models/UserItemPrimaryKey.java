@@ -15,4 +15,13 @@ public class UserItemPrimaryKey implements Serializable {
 	@Column(name = "item_id")
 	private Integer itemId;
 	
+	public UserItemPrimaryKey() {
+		
+	}
+	
+	public UserItemPrimaryKey(Integer itemid, Integer userid) {
+		this.userId = userid;
+		this.itemId = itemid;
+	}
+	
 }

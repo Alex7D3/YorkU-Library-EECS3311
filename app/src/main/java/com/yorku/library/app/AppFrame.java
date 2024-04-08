@@ -73,12 +73,12 @@ public class AppFrame extends JFrame {
 				reqService.getRequest("/user/id/items");
 				reqService.getRequest("/user/id/overdueitems");
 				reqService.getRequest("/user/id/courses");
-				reqService.postRequest("/user/id/addcourse/code");
-				reqService.postRequest("/user/userid/request/itemid/priority");
-				reqService.postRequest("/user/item/add/relation/id");
-				reqService.postRequest("/user/id/notifs");
-				reqService.deleteRequest("/user/id/dropcourse/code");
-				reqService.deleteRequest("/user/userid/item/delete/itemid");
+				reqService.getRequest("/user/id/addcourse/code");
+				reqService.getRequest("/user/userid/request/itemid/priority");
+				reqService.getRequest("/user/item/add/relation/id");
+				reqService.getRequest("/user/id/notifs");
+				reqService.getRequest("/user/id/dropcourse/code");
+				reqService.getRequest("/user/userid/item/delete/itemid");
 				//needs put request for update functions (but ion even think we needa use them up to you alex my king)
 
 				

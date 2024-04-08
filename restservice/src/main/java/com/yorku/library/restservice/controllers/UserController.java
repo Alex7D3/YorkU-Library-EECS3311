@@ -3,7 +3,10 @@ package com.yorku.library.restservice.controllers;
 import java.sql.Date;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +26,12 @@ import com.yorku.library.restservice.models.Ownership;
 import com.yorku.library.restservice.models.Request;
 import com.yorku.library.restservice.models.Role;
 import com.yorku.library.restservice.models.User;
+import com.yorku.library.restservice.models.UserItem;
 import com.yorku.library.restservice.repositories.CourseRepo;
 import com.yorku.library.restservice.repositories.ItemRepo;
 import com.yorku.library.restservice.repositories.RequestRepo;
+import com.yorku.library.restservice.repositories.UserItemRepo;
 import com.yorku.library.restservice.repositories.UserRepo;
-import com.yorku.library.restservice.security.AES;
 
 @RestController
 public class UserController {
@@ -40,6 +44,8 @@ public class UserController {
 	private RequestRepo requestRepo;
 	@Autowired
 	private ItemRepo itemRepo;
+	@Autowired
+	private UserItemRepo uiRepo;
 	
 	
 	@GetMapping("/user/login/{email}/{pw}")
@@ -72,10 +78,10 @@ public class UserController {
 	
 	@GetMapping("/user/{id}/items")
 	public ResponseEntity<List<Item>> getUserItems(@PathVariable("id") Integer id) throws Exception{
-		User user = userRepo.findById(id).get();
-		if (user != null) {
+		Optional<User> user = userRepo.findById(id);
+		if (user.isPresent()) {
 			List<Item> itemlist = new ArrayList<>();
-			user.getItems().forEach(useritem -> itemlist.add(useritem.getItem()));
+			user.get().getItems().forEach(useritem -> itemlist.add(useritem.getItem()));
 			return new ResponseEntity<List<Item>>(itemlist, HttpStatus.OK);
 		}
 		else {
@@ -85,10 +91,10 @@ public class UserController {
 	
 	@GetMapping("/user/{id}/courses")
 	public ResponseEntity<List<Course>> getUserCourses(@PathVariable("id") Integer id) throws Exception{
-		User user = userRepo.findById(id).get();
-		if (user != null) {
+		Optional<User> user = userRepo.findById(id);
+		if (user.isPresent()) {
 			List<Course> courselist = new ArrayList<>();
-			courselist.addAll(user.getCourses());
+			courselist.addAll(user.get().getCourses());
 			return new ResponseEntity<List<Course>>(courselist, HttpStatus.OK);
 		}
 		else {
@@ -96,100 +102,166 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/user/addcourse/{code}")
-	public ResponseEntity<Course> addCourse(@PathVariable("code") String code, @RequestBody User user) throws Exception{
-		User user1 = user;
-		Course course = courseRepo.findByCourseCode(code).get(0);
-		if (course != null) {
-			course.addUser(user1);
-			userRepo.save(user1);
+	@GetMapping("/user/{id}/overdueitems")
+	public ResponseEntity<List<Item>> getOverdueItems(@PathVariable("id") Integer id) throws Exception{
+		Optional<User> user = userRepo.findById(id);
+		if (user.isPresent() && user.get().getItems().size() > 0) {
+			GregorianCalendar dateDue = new GregorianCalendar();
+			dateDue.add(Calendar.MONTH, 1);
+			List<UserItem> list1 = user.get().getItems().stream().filter(i -> i.getTimestamp() != null).toList();
+			list1 = list1.stream().filter(i -> i.getTimestamp().toInstant().isAfter(dateDue.toInstant())).toList();
+			List<Item> itemlist = new ArrayList<>();
+			list1.forEach(u -> itemlist.add(u.getItem()));
+			return new ResponseEntity<List<Item>>(itemlist, HttpStatus.OK);
+		}
+		else {
+			throw new Exception("User Doesnt Exist or Doesnt Own Any Items");
+		}
+		
+	}
+	
+	@GetMapping("/user/{id}/addcourse/{code}")
+	public ResponseEntity<Course> addCourse(@PathVariable("code") String code, @PathVariable("id") Integer id) throws Exception{
+		Optional<User> user1 = userRepo.findById(id);
+		if (courseRepo.findByCourseCode(code).size() > 0 && user1.isPresent()) {
+			Course course = courseRepo.findByCourseCode(code).get(0);
+			course.addUser(user1.get());
+			userRepo.save(user1.get());
 			courseRepo.save(course);
 			return new ResponseEntity<Course>(course, HttpStatus.CREATED);
 		}
 		else {
-			throw new Exception("Course Doesnt Exist");
+			throw new Exception("Course or User Doesnt Exist");
 		}
 	}
 	
-	@DeleteMapping("/user/dropcourse/{code}")
-	public ResponseEntity<Course> removeCourse(@PathVariable("code") String code, @RequestBody User user) throws Exception {
-		User user1 = user;
-		Course course = courseRepo.findByCourseCode(code).get(0);
-		if (user1.getCourses().contains(course)) {
-			course.removeUser(user1.getId());
-			courseRepo.save(course);
-			userRepo.save(user1);
-			return new ResponseEntity<Course>(course, HttpStatus.OK);
+	@GetMapping("/user/{id}/dropcourse/{code}")
+	public ResponseEntity<Course> removeCourse(@PathVariable("code") String code, @PathVariable("id") Integer id) throws Exception {
+		Optional<User> user1 = userRepo.findById(id);
+		if (user1.isPresent() && courseRepo.findByCourseCode(code).size() > 0) {
+			Course course = courseRepo.findByCourseCode(code).get(0);
+			if (user1.get().getCourses().contains(course)) {
+				course.removeUser(user1.get().getId());
+				courseRepo.save(course);
+				userRepo.save(user1.get());
+				return new ResponseEntity<Course>(course, HttpStatus.OK);
+			}
+			else {
+				throw new Exception("User Not Enrolled");
+			}
 		}
 		else {
-			throw new Exception("Course Doesnt Exist or User Not Enrolled");
+			throw new Exception("User or Course Doesnt Exist");
 		}
-	}
-	
-	@PostMapping("/user/request/{id}/{priority}")
-	public ResponseEntity<Request> requestItem(@PathVariable("id") Integer id, Integer priority, @RequestBody User user) throws Exception{
-		User user1 = user;
-		Item item = itemRepo.findById(id).get();
-		if (item != null) {
-			Request req = new Request(priority, user1, item);
-			user1.addRequest(req);
-			item.setRequest(req);
-			itemRepo.save(item);
-			userRepo.save(user1);
-			requestRepo.save(req);
-			return new ResponseEntity<Request>(req, HttpStatus.CREATED);
-		}
-		else {
-			throw new Exception("Item Doesnt Exist");
-		}
-	}
-	
-	@GetMapping("/user/notifs")
-	public void userNotifs() {
 		
 	}
 	
-	@PostMapping("/user/item/add/{relation}/{id}")
-	public ResponseEntity<Item> addItemToUser(@PathVariable("relation") Ownership relation, @PathVariable("id") Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
-		Item item = itemRepo.findById(id).get();
-		User user1 = user;
-		if (user1.getItems().size() >= 10) {
-			throw new Exception("User Has Too Many Items Rented");
-		}
-		if (item != null) {
-			item.addUser(user1, relation, date);
-			itemRepo.save(item);
-			userRepo.save(user1);
-			return new ResponseEntity<Item>(item, HttpStatus.CREATED);
+	@GetMapping("/user/{userid}/request/{itemid}/{priority}")
+	public ResponseEntity<Request> requestItem(@PathVariable("itemid") Integer itemid, @PathVariable("priority") Integer priority, @PathVariable("userid") Integer userid) throws Exception{
+		Optional<User> user1 = userRepo.findById(userid);
+		Optional<Item> item = itemRepo.findById(itemid);
+		if (item.isPresent() && user1.isPresent()) {
+			Request req = new Request(priority, user1.get(), item.get());
+			if (item.get().getRequest() != null) {
+				throw new Exception("Request for Item Already Exists");
+			}
+			requestRepo.save(req);
+			user1.get().addRequest(req);
+			item.get().setRequest(req);
+			itemRepo.save(item.get());
+			userRepo.save(user1.get());
+			return new ResponseEntity<Request>(req, HttpStatus.CREATED);
 		}
 		else {
-			throw new Exception("Item Doesnt Exist");
+			throw new Exception("Item or User Doesnt Exist");
 		}
 	}
 	
-	@DeleteMapping("/user/item/delete/{id}")
-	public ResponseEntity<Item> removeItemFromUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
-		Item item = itemRepo.findById(id).get();
-		User user1 = user;
-		try {
-			item.removeUser(user1.getId());
+	@GetMapping("/user/{id}/notifs")
+	public ResponseEntity<List<String>> userNotifs(@PathVariable("id") Integer id) {
+		Optional<User> user = userRepo.findById(id);
+		List<String> notis = new ArrayList<>();
+		GregorianCalendar dateDue = new GregorianCalendar();
+		dateDue.add(Calendar.DATE, 30);
+		for (UserItem u : user.get().getItems()) {
+			if (u.getTimestamp() != null) {
+				if (u.getTimestamp().toInstant().isAfter(dateDue.toInstant())) {
+					notis.add("One of your items (" + u.getItem().getTitle() + ") are overdue/nearing its due date");
+				}
+			}
 		}
-		catch (Exception e) {
-			throw e;
-		}
-		itemRepo.save(item);
-		userRepo.save(user1);
-		return new ResponseEntity<Item>(item, HttpStatus.OK);
+		return new ResponseEntity<List<String>>(notis, HttpStatus.CREATED);
 	}
+	
+	@GetMapping("/user/{userid}/item/add/{relation}/{itemid}")
+	public ResponseEntity<Item> addItemToUser(@PathVariable("relation") String relation, @PathVariable("itemid") Integer itemid, @PathVariable("userid") Integer userid) throws Exception{
+		Optional<Item> item = itemRepo.findById(itemid);
+		Optional<User> user1 = userRepo.findById(userid);
+		GregorianCalendar dateDue = new GregorianCalendar();
+		Date dateToday = new Date(dateDue.getTimeInMillis());
+		dateDue.add(Calendar.MONTH, 1);
+		int count = 0;
+		
+		if (user1.get().getItems().size() >= 10) {
+			throw new Exception("User Has Too Many Items Rented");
+		}
+		for (UserItem u : user1.get().getItems()) {
+			if (u.getTimestamp() != null) {
+				if (u.getTimestamp().toInstant().isAfter(dateDue.toInstant())) {
+					count++;
+				}
+			}
+		}
+		if (count >= 3) {
+			throw new Exception("User Has Over 3 Items Overdue");
+		}
+		if (item.isPresent() && user1.isPresent()) {
+			UserItem ui = item.get().addUser(user1.get(), Ownership.valueOf(relation), dateToday);
+			uiRepo.save(ui);
+			itemRepo.save(item.get());
+			userRepo.save(user1.get());
+			return new ResponseEntity<Item>(item.get(), HttpStatus.CREATED);
+		}
+		else {
+			throw new Exception("Item or User Doesnt Exist");
+		}
+	}
+	
+	@GetMapping("/user/{userid}/item/delete/{itemid}")
+	public ResponseEntity<Item> removeItemFromUser(@PathVariable("itemid") Integer itemid, @PathVariable("userid") Integer userid) throws Exception{
+		Optional<Item> item = itemRepo.findById(itemid);
+		Optional<User> user1 = userRepo.findById(userid);
+
+		if (item.isPresent() && user1.isPresent()) {
+			UserItem ui = user1.get().getItems().stream().filter(u -> u.getItem().equals(item.get())).findFirst().orElse(null);
+			if (ui != null) {
+				uiRepo.delete(ui);
+				user1.get().getItems().remove(ui);
+				ui.setItem(null);
+				ui.setUser(null);
+				item.get().setStock(item.get().getStock() + 1);
+				itemRepo.save(item.get());
+				userRepo.save(user1.get());
+				return new ResponseEntity<Item>(item.get(), HttpStatus.OK);
+			}
+			else {
+				throw new Exception("User Doesnt Own Item");
+			}
+		}
+		else {
+			throw new Exception("User or Item Doesnt Exist");
+		}
+	}
+		
 	
 	@PutMapping("/user/update/{id}")
 	public ResponseEntity<User> updateUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
-		User user1 = userRepo.findById(id).get();
-		if (user1 != null) {
-			user1.setUsername(user.getUsername());
-			user1.setPassword(user.getPassword());
-			user1.setEmail(user.getEmail());
-			return new ResponseEntity<User>(userRepo.save(user1), HttpStatus.OK);
+		Optional<User> user1 = userRepo.findById(id);
+		if (user1.isPresent()) {
+			user1.get().setUsername(user.getUsername());
+			user1.get().setPassword(user.getPassword());
+			user1.get().setEmail(user.getEmail());
+			return new ResponseEntity<User>(userRepo.save(user1.get()), HttpStatus.OK);
 		}
 		else {
 			throw new Exception("User Doesnt Exist");
