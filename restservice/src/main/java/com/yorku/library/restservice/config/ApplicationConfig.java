@@ -1,5 +1,6 @@
 package com.yorku.library.restservice.config;
 
+import com.yorku.library.restservice.models.User;
 import com.yorku.library.restservice.repositories.UserRepo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 @Configuration
 public class ApplicationConfig {
     private final UserRepo repo;
@@ -23,9 +26,23 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-            return username -> repo.findByEmail(username)
+        return username -> {
+            // Log the username received as a parameter
+            System.out.println("Received username: " + username);
+
+            Optional<User> userOptional = repo.findByEmail(username);
+
+            // Log the result of the repository method call
+            if (userOptional.isPresent()) {
+                System.out.println("User found: " + userOptional.get().getUsername());
+            } else {
+                System.out.println("User not found for username: " + username);
+            }
+
+            return userOptional
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        }
+        };
+    }
 
 
     @Bean
