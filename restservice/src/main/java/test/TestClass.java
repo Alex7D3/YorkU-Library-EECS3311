@@ -47,12 +47,18 @@ public class TestClass {
 		assertEquals(user1.getEmail(), "email1");
 		assertEquals(user1.getPassword(), "pw1");
 		assertEquals(user1.getUsername(), "user2");
-		
+	}
+	
+	@Test
+	public void staffTest() {
 		Staff staff0 =  new Staff();
 		assertNull(staff0.getUsername());
 		Staff staff1 = new Staff("staff1", "staff1pw", "staff1email");
 		assertEquals(staff1.getRole(), Role.NON_FACULTY_STAFF);
-		
+	}
+	
+	@Test
+	public void studentTest() {
 		Student student0 =  new Student();
 		assertNull(student0.getUsername());
 		Student student1 = new Student("student1", "student1pw", "student1email", "123456");
@@ -60,7 +66,10 @@ public class TestClass {
 		student1.setStudentNum("654321");
 		assertEquals(student1.getStudentNum(), "654321");
 		assertEquals(student1.getRole(), Role.STUDENTS);
-		
+	}
+	
+	@Test
+	public void facultyTest() {
 		Faculty faculty0 =  new Faculty();
 		assertNull(faculty0.getUsername());
 		Faculty faculty1 = new Faculty("faculty1", "faculty1pw", "faculty1email", "789101");
@@ -68,7 +77,10 @@ public class TestClass {
 		faculty1.setStaffNum("101987");
 		assertEquals(faculty1.getStaffNum(), "101987");
 		assertEquals(faculty1.getRole(), Role.FACULTY);
-		
+	}
+	
+	@Test
+	public void visitorTest() {
 		Visitor visitor0 =  new Visitor();
 		assertNull(visitor0.getUsername());
 		Visitor visitor1 = new Visitor("staff1", "staff1pw", "staff1email");
@@ -95,29 +107,40 @@ public class TestClass {
 		assertEquals(item1.getLocation(), "loc0");
 		assertEquals(item1.getTitle(), "name0");
 		assertTrue(item1.getStock() == 19);
-		
+	}
+	
+	@Test
+	public void bookTest() {
 		Book book0 = new Book();
 		assertNull(book0.getTitle());
 		Book book1 = new Book("book1", "bdesc", "bloc", "1234", null);
 		assertEquals(book1.getIsbn(), "1234");
 		book0.setIsbn("5678");
 		assertEquals(book0.getIsbn(), "5678");
-		
+	}
+	
+	@Test
+	public void nlTest() {
 		NewsLetter nl0 = new NewsLetter();
 		assertNull(nl0.getTitle());
 		NewsLetter nl1 = new NewsLetter("letter1", "ndesc", "nloc", null, "nyt");
 		assertEquals(nl1.getSource(), "nyt");
 		nl0.setSource("Tstar");
 		assertEquals(nl0.getSource(), "Tstar");
-		
+	}
+	
+	@Test
+	public void siTest() {
 		SpecialItem si0 = new SpecialItem();
 		assertNull(si0.getTitle());
 		SpecialItem si1 = new SpecialItem("sitem1", "sdesc", "sloc", null, "disk");
 		assertEquals(si1.getMediaType(), "disk");
 		si0.setMediaType("audio");
 		assertEquals(si0.getMediaType(), "audio");
+	}
 
-		
+	@Test
+	public void tbTest() {
 		TextBook tb0 = new TextBook();
 		assertNull(tb0.getTitle());
 		TextBook tb1 = new TextBook("tb1", "tdesc", "tloc", null, null);
@@ -192,7 +215,6 @@ public class TestClass {
 		try {
 			item.addUser(user, Ownership.PURCHASED, date);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assertTrue(user.getItems().size() == 1);

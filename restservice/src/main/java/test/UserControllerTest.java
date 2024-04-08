@@ -1,10 +1,8 @@
 package test;
 
 import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 import java.util.Optional;
 
@@ -16,35 +14,35 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.yorku.library.restservice.controllers.ItemController;
-import com.yorku.library.restservice.models.Item;
-import com.yorku.library.restservice.repositories.ItemRepo;
+import com.yorku.library.restservice.controllers.UserController;
+import com.yorku.library.restservice.models.Role;
+import com.yorku.library.restservice.models.User;
+import com.yorku.library.restservice.repositories.UserRepo;
 
-@SpringBootTest(classes = ItemController.class)
+@SpringBootTest(classes = UserController.class)
 @ComponentScan("com.example")
 @AutoConfigureMockMvc
 @EnableWebMvc
-class ItemControllerTest {
-	
+public class UserControllerTest {
+
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private ItemRepo itemRepo;
+	private UserRepo userRepo;
 	
     @InjectMocks
-    private ItemController itemCont;
+    private UserController userCont;
     
     @BeforeEach
     public void setUp() {
-    	Item item = new Item("test", "testdesc", "library", null);
-    	item.setId(189);
-    	when(itemRepo.findById(189))
-            .thenReturn(Optional.of(item));
+    	User user = new User("name", "pw", "email", Role.STUDENTS);
+    	user.setId(189);
+    	when(userRepo.findById(189))
+            .thenReturn(Optional.of(user));
 	}
 	
 	@Test
@@ -52,7 +50,7 @@ class ItemControllerTest {
 	}
 	  
 	@Test
-	void testGetItemById() throws Exception {
+	void testGetUserById() throws Exception {
 	    mockMvc.perform(get("http://localhost:8080/item/{id}", 189))
 	            .andExpect(status().isOk());
 	    }
