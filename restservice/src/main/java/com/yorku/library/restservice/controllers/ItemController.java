@@ -47,19 +47,7 @@ public class ItemController {
 	public ResponseEntity<List<Item>> getAllItems() {
 		return new ResponseEntity<List<Item>>(itemRepo.findAll(), HttpStatus.OK);
 	}
-	
-	@PutMapping("/items/update/{id}")
-	public ResponseEntity<Item> updateItem(@PathVariable("id") Integer id, @RequestBody Item item) throws Exception {
-		Item item1 = itemRepo.findById(id).get();
-		if (item1 != null) {
-			item1.setTitle(item.getTitle());
-			item1.setDescription(item.getDescription());
-			item1.setLocation(item.getLocation());
-			return new ResponseEntity<Item>(itemRepo.save(item1), HttpStatus.OK);
-		}
-		else {
-			throw new Exception("Item Doesnt Exist");
-		}
-	}
-	
+
+
+
 }
