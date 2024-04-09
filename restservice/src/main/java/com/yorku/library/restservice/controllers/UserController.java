@@ -50,7 +50,7 @@ public class UserController {
 	
 	@GetMapping("/user/login/{email}/{pw}")
 	public ResponseEntity<User> userLogin(@PathVariable("email") String email, @PathVariable("pw") String pw) throws Exception{
-		User user = userRepo.findByEmail(email).get(0);
+		User user = userRepo.findByEmail(email);
 		if (user.getPassword().equals(pw)) {
 			return new ResponseEntity<User>(user, HttpStatus.OK);
 		}
@@ -250,21 +250,6 @@ public class UserController {
 		}
 		else {
 			throw new Exception("User or Item Doesnt Exist");
-		}
-	}
-		
-	
-	@PutMapping("/user/update/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
-		Optional<User> user1 = userRepo.findById(id);
-		if (user1.isPresent()) {
-			user1.get().setUsername(user.getUsername());
-			user1.get().setPassword(user.getPassword());
-			user1.get().setEmail(user.getEmail());
-			return new ResponseEntity<User>(userRepo.save(user1.get()), HttpStatus.OK);
-		}
-		else {
-			throw new Exception("User Doesnt Exist");
 		}
 	}
 }
