@@ -11,13 +11,19 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
-import com.yorku.library.app.auth.UserAuth;
-import java.io.IOException;	
+//import com.yorku.library.app.auth.UserAuth;
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class RequestServiceImpl implements RequestService {
-	private HttpClient client;
-	private String host = "https://localhost:8080/";	//change in production
-	
+	private static HttpClient client;
+	private String host = "http://localhost:8080/";	//change in production
+
+	public RequestServiceImpl(HttpClient client) {
+		this.client = client;
+	}
+
 	private URI createURI(String host, String path) {
 		try {
 			return new URI(host + path);
@@ -27,80 +33,72 @@ public class RequestServiceImpl implements RequestService {
 		return null;
 	}
 	
-	private HttpResponse<String> sendRequest(HttpRequest request, HttpResponse.BodyHandler<String> handler) {
+	private CompletableFuture<String> sendRequest(HttpRequest request, HttpResponse.BodyHandler<String> handler) {
 		int count = 0;
 		int maxTries = 3;
-		HttpResponse<String> response = null;
+		CompletableFuture<HttpResponse<String>> response = null;
 		for(;;) {
 			try {
-				response = client.send(request, handler);
-				return response;
-			} catch(InterruptedException e) {
-				if(++count > maxTries) {
+				response = client.sendAsync(request, handler);
+				return response.thenApply(HttpResponse::body);
+			} catch(Exception e) {
+				if (++count > maxTries) {
 					e.printStackTrace();
 					break;
 				}
-				continue;
-			} catch(Exception e) {
-				System.out.println(response.statusCode());
 			}
 		}
 		return null;
 	}
 	
 
-	public String getRequest(String path) {
+	public CompletableFuture<String> getRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.GET()
 				.build();
-		HttpResponse<String> response = sendRequest(request, null);
-		return response.body();
+		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
+
 	}
 	
-	public String postRequest(String path) {
+	public CompletableFuture<String> postRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.POST(BodyPublishers.noBody())
 				.build();
-		HttpResponse<String> response = sendRequest(request, null);
-		return response.body();
+		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
 	}
 	
-	public String postRequest(String body, String path) {
+	public CompletableFuture<String> postRequest(String body, String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.POST(BodyPublishers.ofString(body))
 				.build();
-		HttpResponse<String> response = sendRequest(request, null);
-		return response.body();
+		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
 	}
 	
-	public String putRequest(String path) {
+	public CompletableFuture<String> putRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.PUT(BodyPublishers.noBody())
 				.build();
-		HttpResponse<String> response = sendRequest(request, null);
-		return response.body();
+		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
 	}
 	
-	public String putRequest(String body, String path) {
+	public CompletableFuture<String> putRequest(String body, String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.POST(BodyPublishers.ofString(body))
 				.build();
-		HttpResponse<String> response = sendRequest(request, null);
-		return response.body();
+		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
 	}
 	
-	public String deleteRequest(String path) {
+	public CompletableFuture<String> deleteRequest(String path) {
 		HttpRequest request = HttpRequest
 				.newBuilder(createURI(host, path))
 				.DELETE()
 				.build();
-		HttpResponse<String> response = sendRequest(request, null);
-		return response.body();
+		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
 	}
 
 }

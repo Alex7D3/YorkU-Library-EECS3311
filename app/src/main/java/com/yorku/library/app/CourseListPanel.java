@@ -20,7 +20,6 @@ import javax.swing.SwingConstants;
 
 public class CourseListPanel extends JPanel{
 
-	private JFrame frame;
 	private DefaultListModel<ListItems> courseModel;
 
 	public CourseListPanel() {

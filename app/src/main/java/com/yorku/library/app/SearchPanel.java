@@ -9,12 +9,17 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+//import com.yorku.library.app.services.gui.workers.SearchPanelWorker;
+import com.yorku.library.app.services.requests.RequestService;
+
 public class SearchPanel extends JPanel {
 
 	private JTextField txtSearchForBooks;
 	private DefaultListModel<ListItems> SearchModel;
-	private JComboBox comboBox;
+	private JComboBox<String[]> comboBox;
 	String [] itemCategories = {"All Items", "Textbooks", "Books", "Special Items", "News Letter"};
+	
+
 	/**
 	 * Launch the application.
 	 */
@@ -22,7 +27,7 @@ public class SearchPanel extends JPanel {
 		
         setLayout(null);
                 
-        
+
         // Load the original image icon
         ImageIcon originalIcon = new ImageIcon(SearchPanel.class.getResource("/images/61088.png"));
         ImageIcon bookIcon = new ImageIcon(SearchPanel.class.getResource("/images/bookplaceholder.png"));
@@ -154,7 +159,13 @@ public class SearchPanel extends JPanel {
         add(spSearchResult);
 	}
 
+	public JTextField getTextField() {
+		return txtSearchForBooks;
+	}
 	
+	public JComboBox<String[]> getComboBox() {
+		return comboBox;
+	}
 	//Scale icon
 	public static ImageIcon scaleImageIcon(ImageIcon originalIcon, int width, int height) {
         Image image = originalIcon.getImage();

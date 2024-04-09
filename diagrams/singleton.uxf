@@ -1,0 +1,13 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>410</x><y>220</y><w>210</w><h>190</h></coordinates><panel_attributes>UserAuth
+--
+-id: Integer
+-username: String
+-email: String
+-password: String
+-access: String
+_-instance: UserAuth_
+--
+-UserAuth()
+_+getInstance(): UserAuth_
+--
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>

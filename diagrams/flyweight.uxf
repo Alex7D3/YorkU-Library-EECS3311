@@ -1,0 +1,24 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>290</x><y>140</y><w>230</w><h>190</h></coordinates><panel_attributes>SearchPanel
+--
+-baseItemFrames: JFrame[]
+-realFrames: ItemFrame[]
+--
++addFrame(frame: ItemFrame): void
++renderFrame(frame: ItemFrame): void
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>560</x><y>140</y><w>220</w><h>190</h></coordinates><panel_attributes>JFrame
+--
+-selections: JComboBox
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>290</x><y>400</y><w>210</w><h>190</h></coordinates><panel_attributes>AppFrame
+--
+-search: SearchPanel
+--
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>570</x><y>400</y><w>210</w><h>190</h></coordinates><panel_attributes>ItemFrame
+--
+-img: ImageIcon
+-text: String
+--
++setVisible(visible: boolean): void
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>230</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>320</y><w>80</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;60;80</additional_attributes></element><element><id>Relation</id><coordinates><x>660</x><y>320</y><w>30</w><h>100</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>390</x><y>320</y><w>30</w><h>100</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element></diagram>

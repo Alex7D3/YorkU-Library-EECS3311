@@ -1,0 +1,29 @@
+<diagram program="umletino" version="15.1"><zoom_level>6</zoom_level><element><id>UMLClass</id><coordinates><x>450</x><y>204</y><w>168</w><h>120</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+/RequestService/
+--
+
+--
++getRequest(String path): String
++postRequest(String path): String
++postRequest(String body, String path): String
++putRequest(String path): String
++putRequest(String body, String path): String
++deleteRequest(String path): String
+--
+Responsibilities
+-- Resp1
+*-- Resp2*</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>384</x><y>366</y><w>126</w><h>114</h></coordinates><panel_attributes>RequestServiceProxy
+--
+-cache: HashMap&lt;String, String&gt;
+-realService: RequestServiceImpl
+--
+
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>564</x><y>366</y><w>318</w><h>114</h></coordinates><panel_attributes>RequestServiceImpl
+--
+-host: String
+-httpClient: HttpClient
+--
+-createURI(host: String, path: String): URI
+-sendRequest(request: HttpRequest, handler: BodyHandler&lt;String&gt;): HttpResponse&lt;String&gt;
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>558</x><y>318</y><w>78</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;110;80</additional_attributes></element><element><id>Relation</id><coordinates><x>438</x><y>318</y><w>90</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>130;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>414</y><w>72</w><h>18</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;100;10</additional_attributes></element></diagram>

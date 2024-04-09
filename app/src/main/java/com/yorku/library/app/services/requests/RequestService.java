@@ -1,14 +1,15 @@
 package com.yorku.library.app.services.requests;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-import com.yorku.library.app.auth.UserAuth;
+//import com.yorku.library.app.auth.UserAuth;
 
 public interface RequestService {
-	String getRequest(String path);
-	String postRequest(String path);
-	String postRequest(String body, String path);
-	String putRequest(String path);
-	String putRequest(String body, String path);
-	String deleteRequest(String path);
+	CompletableFuture<String> getRequest(String path);
+	CompletableFuture<String> postRequest(String path);
+	CompletableFuture<String> postRequest(String body, String path);
+	CompletableFuture<String> putRequest(String path);
+	CompletableFuture<String> putRequest(String body, String path);
+	CompletableFuture<String> deleteRequest(String path);
 }

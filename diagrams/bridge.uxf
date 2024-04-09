@@ -1,0 +1,17 @@
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><element><id>UMLClass</id><coordinates><x>408</x><y>248</y><w>232</w><h>152</h></coordinates><panel_attributes>ItemBridge
+--
+_+TABLE: Integer = 0_
+_+LIST: Integer = 1_
+--
++makeList(items: List&lt;ItemComponent&gt;): JList
++maleTable(items: List&lt;ItemComponent&gt;)): JTable
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>440</x><y>64</y><w>168</w><h>152</h></coordinates><panel_attributes>JScrollPane
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>520</x><y>208</y><w>24</w><h>56</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;50</additional_attributes></element><element><id>UMLClass</id><coordinates><x>544</x><y>480</y><w>168</w><h>152</h></coordinates><panel_attributes>JTable
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>320</x><y>480</y><w>168</w><h>152</h></coordinates><panel_attributes>JList
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>392</y><w>64</w><h>104</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;110;60;10</additional_attributes></element><element><id>Relation</id><coordinates><x>584</x><y>392</y><w>56</w><h>104</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>50;110;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>688</x><y>248</y><w>168</w><h>152</h></coordinates><panel_attributes>ItemComponent
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>632</x><y>312</y><w>72</w><h>24</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>70;10;10;10</additional_attributes></element></diagram>

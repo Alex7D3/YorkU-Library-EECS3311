@@ -1,5 +1,7 @@
 package com.yorku.library.app.services.gui.items;
 
-public abstract class ItemComponent {
+import java.awt.Component;
+
+public abstract class ItemComponent extends Component {
 	
 }

@@ -6,18 +6,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
-import com.yorku.library.app.auth.UserAuth;
+//import com.yorku.library.app.auth.UserAuth;
+import com.yorku.library.app.services.requests.RequestServiceProxy;
 
 public class App {
-	private static UserAuth auth;
+	//private UserAuth auth;
+	private static RequestServiceProxy reqService;
 	private static AppFrame app;
-	private static HomePanel home;
-	private static SearchPanel search;
-	private static CartPanel cart;
+
 	private static LoginPanel login;
 	private static RegisterPanel register;
 	private static LoginRegisterFrame loginRegister;
 	private static CourseListPanel course;
+
 
 	
 	public static void main(String[] args) {
@@ -28,11 +29,9 @@ public class App {
 	}
 	
 	private static void initApp() {
-		home = new HomePanel();
-		search = new SearchPanel();
-		cart = new CartPanel();
+
 		course = new CourseListPanel();
-		app = new AppFrame(home, search, cart, course);
+		app = new AppFrame(reqService);
 		app.setVisible(true);
 	}
 	
