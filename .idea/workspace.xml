@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="4e2489f6-ca15-432d-a038-adf17461c237" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
@@ -38,6 +39,13 @@
       <change beforePath="$PROJECT_DIR$/restservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/restservice/src/main/java/test/ItemControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/src/main/java/test/ItemControllerTest.java" afterDir="false" />
+=======
+    <list default="true" id="41e864f4-1083-48b4-8bb3-f7ae893d54c8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/restservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restservice/src/main/java/test/ItemControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/src/main/java/test/ItemControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restservice/src/main/java/test/TestClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/src/main/java/test/TestClass.java" afterDir="false" />
+>>>>>>> e2138ae7819d2bdbfdfb7c281d195141b2b90955
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +62,35 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="bug-fix" />
+                    <option name="lastUsedInstant" value="1712605730" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="security" />
+                    <option name="lastUsedInstant" value="1712605729" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+>>>>>>> e2138ae7819d2bdbfdfb7c281d195141b2b90955
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -65,9 +102,15 @@
     </option>
   </component>
   <component name="ProjectColorInfo">{
+<<<<<<< HEAD
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2eQwx8Pi2ruf9YF6g3gxEgMYsZ9" />
+=======
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2ecCYh7qjoIWPiqT6DSuC2BaamB" />
+>>>>>>> e2138ae7819d2bdbfdfb7c281d195141b2b90955
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -77,6 +120,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+<<<<<<< HEAD
     "Application.App.executor": "Run",
     "Attach to process.pid 15256.executor": "ProcessAttachDebug",
     "JUnit.ItemControllerTest.contextLoads.executor": "Run",
@@ -147,11 +191,41 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.yorku.library.app" />
       <option name="MAIN_CLASS_NAME" value="com.yorku.library.app.RequestServiceProxyTest" />
+=======
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.DatabaseTester.executor": "Run",
+    "JUnit.ItemControllerTest.executor": "Run",
+    "JUnit.TestClass.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "bug-fix",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.yorku.library.restservice.config" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ItemControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="restservice" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="test" />
+      <option name="MAIN_CLASS_NAME" value="test.ItemControllerTest" />
+>>>>>>> e2138ae7819d2bdbfdfb7c281d195141b2b90955
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+<<<<<<< HEAD
     <configuration name="RequestServiceProxyTest.testConcurrentRequests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="app" />
       <extension name="coverage">
@@ -180,10 +254,15 @@
       <option name="MAIN_CLASS_NAME" value="com.yorku.library.app.RequestServiceProxyTest" />
       <option name="METHOD_NAME" value="testDeleteRequest" />
       <option name="TEST_OBJECT" value="method" />
+=======
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="YorkU-Library-EECS3311" />
+>>>>>>> e2138ae7819d2bdbfdfb7c281d195141b2b90955
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+<<<<<<< HEAD
     <configuration name="UserAuthTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="app" />
       <extension name="coverage">
@@ -202,12 +281,18 @@
     <configuration name="DatabaseTester" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="restservice" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.yorku.library.restservice.DatabaseTester" />
+=======
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="YorkU-Library-EECS3311" />
+      <option name="filePath" />
+>>>>>>> e2138ae7819d2bdbfdfb7c281d195141b2b90955
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="JUnit.RequestServiceImplTest" />
         <item itemvalue="JUnit.RequestServiceProxyTest" />
         <item itemvalue="JUnit.RequestServiceProxyTest.testConcurrentRequests" />
@@ -253,5 +338,33 @@
         </entry>
       </map>
     </option>
+=======
+        <item itemvalue="JUnit.ItemControllerTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="41e864f4-1083-48b4-8bb3-f7ae893d54c8" name="Changes" comment="" />
+      <created>1712194528941</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712194528941</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="org.springframework.security.core.userdetails.UsernameNotFoundException" package="org.springframework.security.core.userdetails">
+            <option name="NOTIFY_UNCAUGHT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+>>>>>>> e2138ae7819d2bdbfdfb7c281d195141b2b90955
   </component>
 </project>

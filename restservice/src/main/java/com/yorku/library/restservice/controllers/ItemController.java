@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping("item")
 public class ItemController {
 	
 	@Autowired
@@ -30,22 +28,22 @@ public class ItemController {
 		return "Home Page";
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/item/{id}")
 	public ResponseEntity<Item> getItemById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<Item>(itemRepo.findById(id).get(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/search/{title}")
+	@GetMapping("/item/search/{title}")
 	public ResponseEntity<List<Item>> getItemsByTitle(@PathVariable("title") String title) {
 		return new ResponseEntity<List<Item>>(itemRepo.findByTitleContaining(title), HttpStatus.OK);
 	}
 	
-	@GetMapping("/search/by/{type}")
+	@GetMapping("/item/search/by/{type}")
 	public ResponseEntity<List<Item>> getItemsByType(@PathVariable("type") String type) {
 		return new ResponseEntity<List<Item>>(itemRepo.findByItemType(type), HttpStatus.OK);
 	}
 	
-	@GetMapping("/all")
+	@GetMapping("/item/all")
 	public ResponseEntity<List<Item>> getAllItems() {
 		return new ResponseEntity<List<Item>>(itemRepo.findAll(), HttpStatus.OK);
 	}
@@ -64,4 +62,7 @@ public class ItemController {
 		}
 	}
 	
+
+
+
 }
