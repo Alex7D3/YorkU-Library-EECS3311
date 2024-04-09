@@ -1,0 +1,1752 @@
+Index: app/src/main/java/com/yorku/library/app/services/requests/RequestService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.requests;\r\n\r\nimport java.util.List;\r\n\r\nimport com.yorku.library.app.auth.UserAuth;\r\n\r\npublic interface RequestService {\r\n\tString getRequest(String path);\r\n\tString postRequest(String path);\r\n\tString postRequest(String body, String path);\r\n\tString putRequest(String path);\r\n\tString putRequest(String body, String path);\r\n\tString deleteRequest(String path);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/requests/RequestService.java b/app/src/main/java/com/yorku/library/app/services/requests/RequestService.java
+--- a/app/src/main/java/com/yorku/library/app/services/requests/RequestService.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/requests/RequestService.java	(date 1712457074497)
+@@ -1,14 +1,15 @@
+ package com.yorku.library.app.services.requests;
+ 
+ import java.util.List;
++import java.util.concurrent.CompletableFuture;
+ 
+-import com.yorku.library.app.auth.UserAuth;
++//import com.yorku.library.app.auth.UserAuth;
+ 
+ public interface RequestService {
+-	String getRequest(String path);
+-	String postRequest(String path);
+-	String postRequest(String body, String path);
+-	String putRequest(String path);
+-	String putRequest(String body, String path);
+-	String deleteRequest(String path);
++	CompletableFuture<String> getRequest(String path);
++	CompletableFuture<String> postRequest(String path);
++	CompletableFuture<String> postRequest(String body, String path);
++	CompletableFuture<String> putRequest(String path);
++	CompletableFuture<String> putRequest(String body, String path);
++	CompletableFuture<String> deleteRequest(String path);
+ }
+Index: app/src/main/java/com/yorku/library/app/services/requests/RequestServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.requests;\r\nimport java.net.http.HttpClient;\r\n\r\nimport java.net.HttpCookie;\r\nimport java.net.MalformedURLException;\r\nimport java.net.http.HttpResponse;\r\nimport java.net.http.HttpRequest;\r\nimport java.net.http.HttpRequest.BodyPublishers;\r\nimport java.net.URI;\r\nimport java.net.URISyntaxException;\r\nimport java.net.URL;\r\nimport java.util.List;\r\n\r\nimport com.yorku.library.app.auth.UserAuth;\r\nimport java.io.IOException;\t\r\n\r\npublic class RequestServiceImpl implements RequestService {\r\n\tprivate HttpClient client;\r\n\tprivate String host = \"https://localhost:8080/\";\t//change in production\r\n\t\r\n\tprivate URI createURI(String host, String path) {\r\n\t\ttry {\r\n\t\t\treturn new URI(host + path);\r\n\t\t} catch(URISyntaxException e) {\r\n\t\t\te.printStackTrace();\r\n\t\t}\r\n\t\treturn null;\r\n\t}\r\n\t\r\n\tprivate HttpResponse<String> sendRequest(HttpRequest request, HttpResponse.BodyHandler<String> handler) {\r\n\t\tint count = 0;\r\n\t\tint maxTries = 3;\r\n\t\tHttpResponse<String> response = null;\r\n\t\tfor(;;) {\r\n\t\t\ttry {\r\n\t\t\t\tresponse = client.send(request, handler);\r\n\t\t\t\treturn response;\r\n\t\t\t} catch(InterruptedException e) {\r\n\t\t\t\tif(++count > maxTries) {\r\n\t\t\t\t\te.printStackTrace();\r\n\t\t\t\t\tbreak;\r\n\t\t\t\t}\r\n\t\t\t\tcontinue;\r\n\t\t\t} catch(Exception e) {\r\n\t\t\t\tSystem.out.println(response.statusCode());\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn null;\r\n\t}\r\n\t\r\n\r\n\tpublic String getRequest(String path) {\r\n\t\tHttpRequest request = HttpRequest\r\n\t\t\t\t.newBuilder(createURI(host, path))\r\n\t\t\t\t.GET()\r\n\t\t\t\t.build();\r\n\t\tHttpResponse<String> response = sendRequest(request, null);\r\n\t\treturn response.body();\r\n\t}\r\n\t\r\n\tpublic String postRequest(String path) {\r\n\t\tHttpRequest request = HttpRequest\r\n\t\t\t\t.newBuilder(createURI(host, path))\r\n\t\t\t\t.POST(BodyPublishers.noBody())\r\n\t\t\t\t.build();\r\n\t\tHttpResponse<String> response = sendRequest(request, null);\r\n\t\treturn response.body();\r\n\t}\r\n\t\r\n\tpublic String postRequest(String body, String path) {\r\n\t\tHttpRequest request = HttpRequest\r\n\t\t\t\t.newBuilder(createURI(host, path))\r\n\t\t\t\t.POST(BodyPublishers.ofString(body))\r\n\t\t\t\t.build();\r\n\t\tHttpResponse<String> response = sendRequest(request, null);\r\n\t\treturn response.body();\r\n\t}\r\n\t\r\n\tpublic String putRequest(String path) {\r\n\t\tHttpRequest request = HttpRequest\r\n\t\t\t\t.newBuilder(createURI(host, path))\r\n\t\t\t\t.PUT(BodyPublishers.noBody())\r\n\t\t\t\t.build();\r\n\t\tHttpResponse<String> response = sendRequest(request, null);\r\n\t\treturn response.body();\r\n\t}\r\n\t\r\n\tpublic String putRequest(String body, String path) {\r\n\t\tHttpRequest request = HttpRequest\r\n\t\t\t\t.newBuilder(createURI(host, path))\r\n\t\t\t\t.POST(BodyPublishers.ofString(body))\r\n\t\t\t\t.build();\r\n\t\tHttpResponse<String> response = sendRequest(request, null);\r\n\t\treturn response.body();\r\n\t}\r\n\t\r\n\tpublic String deleteRequest(String path) {\r\n\t\tHttpRequest request = HttpRequest\r\n\t\t\t\t.newBuilder(createURI(host, path))\r\n\t\t\t\t.DELETE()\r\n\t\t\t\t.build();\r\n\t\tHttpResponse<String> response = sendRequest(request, null);\r\n\t\treturn response.body();\r\n\t}\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceImpl.java b/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceImpl.java
+--- a/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceImpl.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceImpl.java	(date 1712457074516)
+@@ -11,13 +11,19 @@
+ import java.net.URL;
+ import java.util.List;
+ 
+-import com.yorku.library.app.auth.UserAuth;
+-import java.io.IOException;	
++//import com.yorku.library.app.auth.UserAuth;
++import java.io.IOException;
++import java.util.concurrent.CompletableFuture;
++import java.util.concurrent.CompletionException;
+ 
+ public class RequestServiceImpl implements RequestService {
+-	private HttpClient client;
+-	private String host = "https://localhost:8080/";	//change in production
+-	
++	private static HttpClient client;
++	private String host = "http://localhost:8080/";	//change in production
++
++	public RequestServiceImpl(HttpClient client) {
++		this.client = client;
++	}
++
+ 	private URI createURI(String host, String path) {
+ 		try {
+ 			return new URI(host + path);
+@@ -27,80 +33,72 @@
+ 		return null;
+ 	}
+ 	
+-	private HttpResponse<String> sendRequest(HttpRequest request, HttpResponse.BodyHandler<String> handler) {
++	private CompletableFuture<String> sendRequest(HttpRequest request, HttpResponse.BodyHandler<String> handler) {
+ 		int count = 0;
+ 		int maxTries = 3;
+-		HttpResponse<String> response = null;
++		CompletableFuture<HttpResponse<String>> response = null;
+ 		for(;;) {
+ 			try {
+-				response = client.send(request, handler);
+-				return response;
+-			} catch(InterruptedException e) {
+-				if(++count > maxTries) {
++				response = client.sendAsync(request, handler);
++				return response.thenApply(HttpResponse::body);
++			} catch(Exception e) {
++				if (++count > maxTries) {
+ 					e.printStackTrace();
+ 					break;
+ 				}
+-				continue;
+-			} catch(Exception e) {
+-				System.out.println(response.statusCode());
+ 			}
+ 		}
+ 		return null;
+ 	}
+ 	
+ 
+-	public String getRequest(String path) {
++	public CompletableFuture<String> getRequest(String path) {
+ 		HttpRequest request = HttpRequest
+ 				.newBuilder(createURI(host, path))
+ 				.GET()
+ 				.build();
+-		HttpResponse<String> response = sendRequest(request, null);
+-		return response.body();
++		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
++
+ 	}
+ 	
+-	public String postRequest(String path) {
++	public CompletableFuture<String> postRequest(String path) {
+ 		HttpRequest request = HttpRequest
+ 				.newBuilder(createURI(host, path))
+ 				.POST(BodyPublishers.noBody())
+ 				.build();
+-		HttpResponse<String> response = sendRequest(request, null);
+-		return response.body();
++		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
+ 	}
+ 	
+-	public String postRequest(String body, String path) {
++	public CompletableFuture<String> postRequest(String body, String path) {
+ 		HttpRequest request = HttpRequest
+ 				.newBuilder(createURI(host, path))
+ 				.POST(BodyPublishers.ofString(body))
+ 				.build();
+-		HttpResponse<String> response = sendRequest(request, null);
+-		return response.body();
++		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
+ 	}
+ 	
+-	public String putRequest(String path) {
++	public CompletableFuture<String> putRequest(String path) {
+ 		HttpRequest request = HttpRequest
+ 				.newBuilder(createURI(host, path))
+ 				.PUT(BodyPublishers.noBody())
+ 				.build();
+-		HttpResponse<String> response = sendRequest(request, null);
+-		return response.body();
++		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
+ 	}
+ 	
+-	public String putRequest(String body, String path) {
++	public CompletableFuture<String> putRequest(String body, String path) {
+ 		HttpRequest request = HttpRequest
+ 				.newBuilder(createURI(host, path))
+ 				.POST(BodyPublishers.ofString(body))
+ 				.build();
+-		HttpResponse<String> response = sendRequest(request, null);
+-		return response.body();
++		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
+ 	}
+ 	
+-	public String deleteRequest(String path) {
++	public CompletableFuture<String> deleteRequest(String path) {
+ 		HttpRequest request = HttpRequest
+ 				.newBuilder(createURI(host, path))
+ 				.DELETE()
+ 				.build();
+-		HttpResponse<String> response = sendRequest(request, null);
+-		return response.body();
++		return sendRequest(request, HttpResponse.BodyHandlers.ofString());
+ 	}
+ 
+ }
+Index: app/src/main/java/com/yorku/library/app/services/requests/RequestServiceProxy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.requests;\r\n\r\nimport java.util.concurrent.ConcurrentHashMap;\r\nimport java.util.concurrent.ConcurrentMap;\r\n\r\npublic class RequestServiceProxy implements RequestService {\r\n\tprivate RequestService realService;\r\n\tprivate ConcurrentMap<String, String> cache;\r\n\t\r\n\tpublic RequestServiceProxy(RequestService realService) {\r\n\t\tthis.realService = realService;\r\n\t\tthis.cache = new ConcurrentHashMap<>();\r\n\t}\r\n\r\n\r\n\t@Override\r\n\tpublic String getRequest(String path) {\r\n\t\tif(cache.containsKey(path))\r\n\t\t\treturn cache.get(path);\r\n\t\treturn realService.getRequest(path);\r\n\t}\r\n\t\r\n\t@Override\r\n\tpublic String postRequest(String path) {\r\n\t\treturn realService.postRequest(path);\r\n\t}\r\n\r\n\t@Override\r\n\tpublic String postRequest(String body, String path) {\r\n\t\treturn realService.postRequest(body, path);\r\n\t}\r\n\r\n\t@Override\r\n\tpublic String putRequest(String path) {\r\n\t\treturn realService.putRequest(path);\r\n\t}\r\n\r\n\t@Override\r\n\tpublic String putRequest(String body, String path) {\r\n\t\treturn realService.putRequest(body, path);\r\n\t}\r\n\r\n\t@Override\r\n\tpublic String deleteRequest(String path) {\r\n\t\treturn realService.putRequest(path);\r\n\t}}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceProxy.java b/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceProxy.java
+--- a/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceProxy.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceProxy.java	(date 1712556263010)
+@@ -1,46 +1,81 @@
+ package com.yorku.library.app.services.requests;
+ 
++import java.util.Date;
+ import java.util.concurrent.ConcurrentHashMap;
+ import java.util.concurrent.ConcurrentMap;
+-
++import java.time.Duration;
++import java.util.concurrent.CompletableFuture;
++import java.util.concurrent.ScheduledExecutorService;
++import java.util.concurrent.TimeUnit;
+ public class RequestServiceProxy implements RequestService {
+ 	private RequestService realService;
+-	private ConcurrentMap<String, String> cache;
+-	
+-	public RequestServiceProxy(RequestService realService) {
++	private ConcurrentMap<String, CacheEntry> cache;
++	private ScheduledExecutorService scheduler;
++	private static final Duration expiryTime = Duration.ofMinutes(1);
++	private void cleanupExpiredEntries() {
++		System.out.println("cache clear: " + new Date().getTime());
++		long currentTimeMillis = System.currentTimeMillis();
++		cache.entrySet().removeIf(entry -> entry.getValue().isExpired(currentTimeMillis));
++	}
++	public RequestServiceProxy(RequestService realService, ScheduledExecutorService scheduler) {
+ 		this.realService = realService;
+ 		this.cache = new ConcurrentHashMap<>();
+-	}
++		this.scheduler = scheduler;
+ 
++		scheduler.scheduleAtFixedRate(this::cleanupExpiredEntries, 1, 1, TimeUnit.MINUTES);
++	}
+ 
+ 	@Override
+-	public String getRequest(String path) {
++	public CompletableFuture<String> getRequest(String path) {
+ 		if(cache.containsKey(path))
+-			return cache.get(path);
+-		return realService.getRequest(path);
++			return CompletableFuture.supplyAsync(cache.get(path)::getResponse);
++        return realService.getRequest(path)
++				.thenApply(responseStr -> {
++					cache.put(path, new CacheEntry(responseStr, expiryTime));
++					return responseStr;
++				});
+ 	}
+-	
++
+ 	@Override
+-	public String postRequest(String path) {
++	public CompletableFuture<String> postRequest(String path) {
+ 		return realService.postRequest(path);
+ 	}
+ 
+ 	@Override
+-	public String postRequest(String body, String path) {
++	public CompletableFuture<String> postRequest(String body, String path) {
+ 		return realService.postRequest(body, path);
+ 	}
+ 
+ 	@Override
+-	public String putRequest(String path) {
++	public CompletableFuture<String> putRequest(String path) {
+ 		return realService.putRequest(path);
+ 	}
+ 
+ 	@Override
+-	public String putRequest(String body, String path) {
++	public CompletableFuture<String> putRequest(String body, String path) {
+ 		return realService.putRequest(body, path);
+ 	}
+ 
+ 	@Override
+-	public String deleteRequest(String path) {
+-		return realService.putRequest(path);
+-	}}
++	public CompletableFuture<String> deleteRequest(String path) {
++		return realService.deleteRequest(path);
++	}
++}
++
++class CacheEntry {
++	private final String response;
++	private final long expiryTimeMillis;
++
++	public CacheEntry(String response, Duration cacheDuration) {
++		this.response = response;
++		this.expiryTimeMillis = System.currentTimeMillis() + cacheDuration.toMillis();
++	}
++
++	public String getResponse() {
++		return response;
++	}
++
++	public boolean isExpired(long currentTimeMillis) {
++		return currentTimeMillis >= expiryTimeMillis;
++	}
++}
+Index: app/src/main/java/com/yorku/library/app/services/gui/utils/ItemCellRenderer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.utils;\r\n\r\nimport javax.swing.JLabel;\r\nimport javax.swing.JList;\r\nimport javax.swing.ListCellRenderer;\r\n\r\nimport com.yorku.library.app.services.gui.items.ItemComponent;\r\n\r\nclass StoreItemCellRenderer extends JLabel implements ListCellRenderer<ItemComponent> {\r\n    public StoreItemCellRenderer() {\r\n        setOpaque(true);\r\n    }\r\n\r\n    @Override\r\n    public Component getListCellRendererComponent(JList<? extends ItemComponent> list, ItemComponent value, int index, boolean isSelected, boolean cellHasFocus) {\r\n        setText(value.getName() + \" - $\" + value.getPrice());\r\n        setIcon(value.getImage());\r\n\r\n        if (isSelected) {\r\n            setBackground(list.getSelectionBackground());\r\n            setForeground(list.getSelectionForeground());\r\n        } else {\r\n            setBackground(list.getBackground());\r\n            setForeground(list.getForeground());\r\n        }\r\n\r\n        return this;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/utils/ItemCellRenderer.java b/app/src/main/java/com/yorku/library/app/services/gui/utils/ItemCellRenderer.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/utils/ItemCellRenderer.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/utils/ItemCellRenderer.java	(date 1712451626753)
+@@ -1,29 +1,31 @@
+-package com.yorku.library.app.services.gui.utils;
+-
+-import javax.swing.JLabel;
+-import javax.swing.JList;
+-import javax.swing.ListCellRenderer;
+-
+-import com.yorku.library.app.services.gui.items.ItemComponent;
+-
+-class StoreItemCellRenderer extends JLabel implements ListCellRenderer<ItemComponent> {
+-    public StoreItemCellRenderer() {
+-        setOpaque(true);
+-    }
+-
+-    @Override
+-    public Component getListCellRendererComponent(JList<? extends ItemComponent> list, ItemComponent value, int index, boolean isSelected, boolean cellHasFocus) {
+-        setText(value.getName() + " - $" + value.getPrice());
+-        setIcon(value.getImage());
+-
+-        if (isSelected) {
+-            setBackground(list.getSelectionBackground());
+-            setForeground(list.getSelectionForeground());
+-        } else {
+-            setBackground(list.getBackground());
+-            setForeground(list.getForeground());
+-        }
+-
+-        return this;
+-    }
+-}
+\ No newline at end of file
++//package com.yorku.library.app.services.gui.utils;
++//
++//import javax.swing.JLabel;
++//import javax.swing.JList;
++//import javax.swing.ListCellRenderer;
++//
++//import com.yorku.library.app.services.gui.items.ItemComponent;
++//
++//import java.awt.*;
++//
++//class StoreItemCellRenderer extends JLabel implements ListCellRenderer<ItemComponent> {
++//    public StoreItemCellRenderer() {
++//        setOpaque(true);
++//    }
++//
++//    @Override
++//    public Component getListCellRendererComponent(JList<? extends ItemComponent> list, ItemComponent value, int index, boolean isSelected, boolean cellHasFocus) {
++//        setText(value.getName() + " - $" + value.getPrice());
++//        setIcon(value.getImage());
++//
++//        if (isSelected) {
++//            setBackground(list.getSelectionBackground());
++//            setForeground(list.getSelectionForeground());
++//        } else {
++//            setBackground(list.getBackground());
++//            setForeground(list.getForeground());
++//        }
++//
++//        return this;
++//    }
++//}
+\ No newline at end of file
+Index: app/src/main/java/com/yorku/library/app/CourseListPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app;\r\n\r\nimport java.awt.Color;\r\nimport java.awt.EventQueue;\r\nimport java.awt.Font;\r\nimport java.awt.Image;\r\n\r\nimport javax.swing.DefaultListModel;\r\nimport javax.swing.ImageIcon;\r\nimport javax.swing.JButton;\r\nimport javax.swing.JComboBox;\r\nimport javax.swing.JFrame;\r\nimport javax.swing.JLabel;\r\nimport javax.swing.JList;\r\nimport javax.swing.JPanel;\r\nimport javax.swing.JScrollPane;\r\nimport javax.swing.JTextField;\r\nimport javax.swing.ListSelectionModel;\r\nimport javax.swing.SwingConstants;\r\n\r\npublic class CourseListPanel extends JPanel{\r\n\r\n\tprivate JFrame frame;\r\n\tprivate DefaultListModel<ListItems> courseModel;\r\n\r\n\tpublic CourseListPanel() {\r\n\t\tsetLayout(null);\r\n\t\t\r\n\r\n        ImageIcon originalIcon = new ImageIcon(CourseListPanel.class.getResource(\"/images/61088.png\"));\r\n        ImageIcon bookIcon = new ImageIcon(CourseListPanel.class.getResource(\"/images/bookplaceholder.png\"));\r\n        ImageIcon yorkIcon = new ImageIcon(CourseListPanel.class.getResource(\"/images/yorku.png\"));\r\n\r\n        \r\n        // Resize the image\r\n        Image image = originalIcon.getImage(); \r\n        Image image2 = bookIcon.getImage();\r\n        Image york = yorkIcon.getImage();\r\n\r\n        Image newimg = image.getScaledInstance(20, 20,  Image.SCALE_SMOOTH); \r\n        Image newbook = image.getScaledInstance(60, 60, Image.SCALE_SMOOTH);\r\n        Image yorkNew = york.getScaledInstance(80, 80, Image.SCALE_SMOOTH);\r\n\r\n        ImageIcon resizedIcon = new ImageIcon(newimg); \r\n        ImageIcon resizedBook = new ImageIcon(newbook);\r\n        ImageIcon resizedYork = new ImageIcon(yorkNew);\r\n        \r\n     \r\n        \r\n        JLabel lblBackground = new JLabel(\"New label\");\r\n\t\tlblBackground.setBounds(6, 0, 888, 154);\r\n\t\t\r\n\t\tJLabel bookPlaceholder1_1 = new JLabel(\"\");\r\n\t\tbookPlaceholder1_1.setBounds(627, 179, 72, 116);\r\n\t\tadd(bookPlaceholder1_1);\r\n\t\t\r\n\t\tJLabel YorkU = new JLabel(\"\");\r\n\t\tYorkU.setIcon(resizedYork);\r\n\t\tYorkU.setBounds(27, 16, 80, 80);\r\n\t\tadd(YorkU);\r\n\t\t\r\n\t\tJLabel lblYorkUniversityLibrary = new JLabel(\"York University Library\");\r\n\t\tlblYorkUniversityLibrary.setBounds(119, 23, 165, 48);\r\n\t\tadd(lblYorkUniversityLibrary);\r\n        \r\n\t\tJPanel redpanel = new JPanel();\r\n\t\tredpanel.setBackground(new Color(241, 71, 83));\r\n\t\tredpanel.setBounds(6, -8, 888, 132);\r\n\t\tadd(redpanel);\r\n\t\t\r\n\t\tJPanel panel = new JPanel();\r\n\t\tpanel.setBackground(new Color(168, 49, 59));\r\n\t\tpanel.setBounds(6, 124, 888, 35);\r\n\t\tadd(panel);\r\n\t\t\r\n\t\tJLabel lblcourses = new JLabel(\"Your Courses\");\r\n\t\tlblcourses.setFont(new Font(\"Lucida Grande\", Font.BOLD, 18));\r\n\t\tlblcourses.setBounds(27, 179, 124, 16);\r\n\t\tadd(lblcourses);\r\n\t\t\r\n\t\tcourseModel = new DefaultListModel<>();\r\n\t    JList<ListItems> courseList = new JList<>(courseModel);\r\n\t    courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);\r\n\t    courseList.setLayoutOrientation(JList.VERTICAL_WRAP);\r\n        courseList.setFixedCellHeight(100); \r\n        courseList.setFixedCellWidth(830); \r\n\t\t\r\n        ItemPainter painter = new ItemPainter();\r\n        courseList.setCellRenderer(painter);\r\n        \r\n        //samples\r\n        courseModel.addElement(new ListItems(\"EECS2021\", new ImageIcon(HomePanel.class.getResource(\"/images/NoLongerHuman.jpeg\"))));  \r\n        courseModel.addElement(new ListItems(\"EECS2031\", new ImageIcon(HomePanel.class.getResource(\"/images/NoLongerHuman.jpeg\"))));\r\n        \r\n\t\tJScrollPane scrollPane = new JScrollPane(courseList);\r\n\t\tscrollPane.setBounds(27, 218, 846, 428);\r\n\t\tadd(scrollPane);\r\n\t}\r\n\r\n\t\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/CourseListPanel.java b/app/src/main/java/com/yorku/library/app/CourseListPanel.java
+--- a/app/src/main/java/com/yorku/library/app/CourseListPanel.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/CourseListPanel.java	(date 1712366351725)
+@@ -20,7 +20,6 @@
+ 
+ public class CourseListPanel extends JPanel{
+ 
+-	private JFrame frame;
+ 	private DefaultListModel<ListItems> courseModel;
+ 
+ 	public CourseListPanel() {
+Index: app/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n  <modelVersion>4.0.0</modelVersion>\r\n  <parent>\r\n    <groupId>com.yorku</groupId>\r\n    <artifactId>library</artifactId>\r\n    <version>0.0.1-SNAPSHOT</version>\r\n  </parent>\r\n  <groupId>com.yorku.library</groupId>\r\n  <artifactId>app</artifactId>\r\n  <properties>\r\n\t\t<java.version>17</java.version>\r\n\t</properties>\r\n\t<build>\r\n</build>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/pom.xml b/app/pom.xml
+--- a/app/pom.xml	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/pom.xml	(date 1712450556339)
+@@ -10,6 +10,42 @@
+   <properties>
+ 		<java.version>17</java.version>
+ 	</properties>
+-	<build>
+-</build>
++    <dependencies>
++        <dependency>
++            <groupId>org.mockito</groupId>
++            <artifactId>mockito-core</artifactId>
++            <version>5.7.0</version>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.testng</groupId>
++            <artifactId>testng</artifactId>
++            <version>RELEASE</version>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.junit.jupiter</groupId>
++            <artifactId>junit-jupiter-api</artifactId>
++            <version>5.10.2</version>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>junit</groupId>
++            <artifactId>junit</artifactId>
++            <version>4.13.1</version>
++            <scope>test</scope>
++        </dependency>
++    </dependencies>
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-compiler-plugin</artifactId>
++                <configuration>
++                    <source>11</source>
++                    <target>11</target>
++                </configuration>
++            </plugin>
++        </plugins>
++    </build>
+ </project>
+\ No newline at end of file
+Index: app/src/main/java/com/yorku/library/app/AppFrame.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app;\r\nimport java.awt.CardLayout;\r\nimport java.awt.Container;\r\nimport javax.swing.JFrame;\r\nimport javax.swing.JMenu;\r\nimport javax.swing.JMenuBar;\r\nimport javax.swing.JMenuItem;\r\nimport javax.swing.JPanel;\r\n\r\nimport com.yorku.library.app.services.requests.RequestServiceProxy;\r\npublic class AppFrame extends JFrame {\r\n\tprivate final int FRAME_HEIGHT = 700;\r\n\tprivate final int FRAME_WIDTH = 900;\r\n\tpublic static final String HOME_PANEL = \"Home\";\r\n\tpublic static final String SEARCH_PANEL = \"Search\";\r\n\tpublic static final String CART_PANEL = \"Cart\";\r\n\tpublic static final String COURSE_PANEL = \"Course\";\r\n\tprivate JPanel contentPanel;\r\n\tprivate HomePanel homePanel;\r\n\tprivate SearchPanel searchPanel;\r\n\tprivate CartPanel cartPanel;\r\n\tprivate CourseListPanel coursePanel;\r\n\tprivate JMenuBar navMenu;\r\n\tprivate RequestServiceProxy reqService;\r\n\r\n\tpublic AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel) {\r\n\t\t\r\n\t}\r\n\r\n\r\n\tpublic AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel, CourseListPanel coursePanel) {\r\n\t\tthis.homePanel = homePanel;\r\n\t\tthis.cartPanel = cartPanel;\r\n\t\tthis.cartPanel = cartPanel;\r\n\t\tthis.coursePanel = coursePanel;\r\n\r\n\t\tcontentPanel = new JPanel(new CardLayout());\r\n\t\tcontentPanel.add(homePanel, HOME_PANEL);\r\n\t\tcontentPanel.add(searchPanel, SEARCH_PANEL);\r\n\t\tcontentPanel.add(cartPanel, CART_PANEL);\r\n\t\tcontentPanel.add(coursePanel, COURSE_PANEL);\r\n\r\n\t\tnavMenu = new JMenuBar();\r\n\t\tJMenu menu = new JMenu(\"Navigate\");\r\n\t\tJMenuItem homeOption = new JMenuItem(HOME_PANEL);\r\n\t\tJMenuItem searchOption = new JMenuItem(SEARCH_PANEL);\r\n\t\tJMenuItem cartOption = new JMenuItem(CART_PANEL);\r\n\t\tJMenuItem courseOption = new JMenuItem(COURSE_PANEL);\r\n\t\thomeOption.addActionListener(e -> changePanel(HOME_PANEL));\r\n\t\tsearchOption.addActionListener(e -> changePanel(SEARCH_PANEL));\r\n\t\tcartOption.addActionListener(e -> changePanel(CART_PANEL));\r\n\t\tcourseOption.addActionListener(e -> changePanel(COURSE_PANEL));\r\n\t\tmenu.add(homeOption);\r\n\t\tmenu.add(searchOption);\r\n\t\tmenu.add(cartOption);\r\n\t\tmenu.add(courseOption);\r\n\t\tnavMenu.add(menu);\r\n\r\n\t\tsetSize(FRAME_WIDTH, FRAME_HEIGHT);\r\n\t\tsetResizable(false);\r\n\t\tsetDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n\t\tsetTitle(\"YorkU Library\");\r\n\t\tsetJMenuBar(navMenu);\r\n\t\tadd(contentPanel);\r\n\t}\r\n\t\r\n\tprivate void changePanel(String panelName) {\r\n\t\t((CardLayout) contentPanel.getLayout()).show(contentPanel, panelName);\r\n\t\tswitch(panelName) {\r\n\t\t\tcase HOME_PANEL:\r\n\r\n\t\t\t\t// home panel functions here, make requests and update the home panel\r\n\t\t\t\treqService.getRequest(\"/user/id/items\");\r\n\t\t\t\treqService.getRequest(\"/user/id/overdueitems\");\r\n\t\t\t\treqService.getRequest(\"/user/id/courses\");\r\n\t\t\t\treqService.postRequest(\"/user/id/addcourse/code\");\r\n\t\t\t\treqService.postRequest(\"/user/userid/request/itemid/priority\");\r\n\t\t\t\treqService.postRequest(\"/user/item/add/relation/id\");\r\n\t\t\t\treqService.postRequest(\"/user/id/notifs\");\r\n\t\t\t\treqService.deleteRequest(\"/user/id/dropcourse/code\");\r\n\t\t\t\treqService.deleteRequest(\"/user/userid/item/delete/itemid\");\r\n\t\t\t\t//needs put request for update functions (but ion even think we needa use them up to you alex my king)\r\n\r\n\t\t\t\t\r\n\t\t\t\tbreak;\r\n\t\t\tcase SEARCH_PANEL:\r\n\t\t\t\treqService.getRequest(\"/item/search/title\");\r\n\t\t\t\treqService.getRequest(\"/item/search/by/type\");\r\n\t\t\t\treqService.getRequest(\"/item/all\");\r\n\t\t\t\t//put request\r\n\t\t\t\t\r\n\t\t\t\tbreak;\r\n\t\t\tcase CART_PANEL:\r\n\t\t\t\treqService.getRequest(\"/item/id\");\r\n\t\t\t\tbreak;\r\n\t\t}\r\n\t}\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/AppFrame.java b/app/src/main/java/com/yorku/library/app/AppFrame.java
+--- a/app/src/main/java/com/yorku/library/app/AppFrame.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/AppFrame.java	(date 1712428330626)
+@@ -6,7 +6,9 @@
+ import javax.swing.JMenuBar;
+ import javax.swing.JMenuItem;
+ import javax.swing.JPanel;
++import javax.swing.SwingWorker;
+ 
++import com.yorku.library.app.services.requests.RequestService;
+ import com.yorku.library.app.services.requests.RequestServiceProxy;
+ public class AppFrame extends JFrame {
+ 	private final int FRAME_HEIGHT = 700;
+@@ -21,18 +23,18 @@
+ 	private CartPanel cartPanel;
+ 	private CourseListPanel coursePanel;
+ 	private JMenuBar navMenu;
+-	private RequestServiceProxy reqService;
++	private RequestService reqService;
+ 
+ 	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel) {
+ 		
+ 	}
+ 
+-
+-	public AppFrame(HomePanel homePanel, SearchPanel searchPanel, CartPanel cartPanel, CourseListPanel coursePanel) {
+-		this.homePanel = homePanel;
+-		this.cartPanel = cartPanel;
+-		this.cartPanel = cartPanel;
+-		this.coursePanel = coursePanel;
++	public AppFrame(RequestService reqService) {
++		this.reqService = reqService;
++		this.homePanel = new HomePanel();
++		this.searchPanel = new SearchPanel();
++		this.cartPanel = new CartPanel();
++		this.coursePanel = new CourseListPanel();
+ 
+ 		contentPanel = new JPanel(new CardLayout());
+ 		contentPanel.add(homePanel, HOME_PANEL);
+@@ -41,6 +43,18 @@
+ 		contentPanel.add(coursePanel, COURSE_PANEL);
+ 
+ 		navMenu = new JMenuBar();
++		JMenu menu = getjMenu();
++		navMenu.add(menu);
++
++		setSize(FRAME_WIDTH, FRAME_HEIGHT);
++		setResizable(false);
++		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
++		setTitle("YorkU Library");
++		setJMenuBar(navMenu);
++		add(contentPanel);
++	}
++
++	private JMenu getjMenu() {
+ 		JMenu menu = new JMenu("Navigate");
+ 		JMenuItem homeOption = new JMenuItem(HOME_PANEL);
+ 		JMenuItem searchOption = new JMenuItem(SEARCH_PANEL);
+@@ -54,46 +68,50 @@
+ 		menu.add(searchOption);
+ 		menu.add(cartOption);
+ 		menu.add(courseOption);
+-		navMenu.add(menu);
+-
+-		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+-		setResizable(false);
+-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+-		setTitle("YorkU Library");
+-		setJMenuBar(navMenu);
+-		add(contentPanel);
++		return menu;
+ 	}
+-	
++
+ 	private void changePanel(String panelName) {
+ 		((CardLayout) contentPanel.getLayout()).show(contentPanel, panelName);
+-		switch(panelName) {
+-			case HOME_PANEL:
+-
+-				// home panel functions here, make requests and update the home panel
+-				reqService.getRequest("/user/id/items");
+-				reqService.getRequest("/user/id/overdueitems");
+-				reqService.getRequest("/user/id/courses");
+-				reqService.postRequest("/user/id/addcourse/code");
+-				reqService.postRequest("/user/userid/request/itemid/priority");
+-				reqService.postRequest("/user/item/add/relation/id");
+-				reqService.postRequest("/user/id/notifs");
+-				reqService.deleteRequest("/user/id/dropcourse/code");
+-				reqService.deleteRequest("/user/userid/item/delete/itemid");
+-				//needs put request for update functions (but ion even think we needa use them up to you alex my king)
+-
+-				
+-				break;
+-			case SEARCH_PANEL:
+-				reqService.getRequest("/item/search/title");
+-				reqService.getRequest("/item/search/by/type");
+-				reqService.getRequest("/item/all");
+-				//put request
+-				
+-				break;
+-			case CART_PANEL:
+-				reqService.getRequest("/item/id");
+-				break;
+-		}
++//		switch(panelName) {
++//			case HOME_PANEL:
++//
++//				reqService.getRequest("/user/id/items");
++//				reqService.getRequest("/user/id/overdueitems");
++//				reqService.getRequest("/user/id/courses");
++//				reqService.postRequest("/user/id/addcourse/code");
++//				reqService.postRequest("/user/userid/request/itemid/priority");
++//				reqService.postRequest("/user/item/add/relation/id");
++//				reqService.postRequest("/user/id/notifs");
++//				reqService.deleteRequest("/user/id/dropcourse/code");
++//				reqService.deleteRequest("/user/userid/item/delete/itemid");
++//
++//				break;
++//			case SEARCH_PANEL:
++//				SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
++//					@Override
++//                    protected Void doInBackground() throws Exception {
++//                        searchPanel
++//                        return null;
++//                    }
++//
++//                    @Override
++//                    protected void process(List<List<Item>> chunks) {
++//                        // Update search panel's JTable with fetched items
++//                        List<Item> itemList = chunks.get(chunks.size() - 1);
++//                        searchPanel.updateTable(itemList);
++//                    }
++//				};
++//				reqService.getRequest("/item/search/title");
++//				reqService.getRequest("/item/search/by/type");
++//				reqService.getRequest("/item/all");
++//
++//				worker.execute();
++//				break;
++//			case CART_PANEL:
++//				reqService.getRequest("/item/id");
++//				break;
++//		}
+ 	}
+ }
+ 
+Index: app/src/main/java/com/yorku/library/app/SearchPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app;\r\n\r\nimport java.awt.*;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.awt.event.MouseAdapter;\r\nimport java.awt.event.MouseEvent;\r\n\r\nimport javax.swing.*;\r\nimport javax.swing.border.Border;\r\n\r\npublic class SearchPanel extends JPanel {\r\n\r\n\tprivate JTextField txtSearchForBooks;\r\n\tprivate DefaultListModel<ListItems> SearchModel;\r\n\tprivate JComboBox comboBox;\r\n\tString [] itemCategories = {\"All Items\", \"Textbooks\", \"Books\", \"Special Items\", \"News Letter\"};\r\n\t/**\r\n\t * Launch the application.\r\n\t */\r\n\tpublic SearchPanel() {\r\n\t\t\r\n        setLayout(null);\r\n                \r\n        \r\n        // Load the original image icon\r\n        ImageIcon originalIcon = new ImageIcon(SearchPanel.class.getResource(\"/images/61088.png\"));\r\n        ImageIcon bookIcon = new ImageIcon(SearchPanel.class.getResource(\"/images/bookplaceholder.png\"));\r\n        ImageIcon yorkIcon = new ImageIcon(SearchPanel.class.getResource(\"/images/yorku.png\"));\r\n\r\n        \r\n        // Resize the image\r\n        Image image = originalIcon.getImage(); \r\n        Image image2 = bookIcon.getImage();\r\n        Image york = yorkIcon.getImage();\r\n\r\n        Image newimg = image.getScaledInstance(20, 20,  Image.SCALE_SMOOTH); \r\n        Image newbook = image.getScaledInstance(60, 60, Image.SCALE_SMOOTH);\r\n        Image yorkNew = york.getScaledInstance(80, 80, Image.SCALE_SMOOTH);\r\n\r\n        ImageIcon resizedIcon = new ImageIcon(newimg); \r\n        ImageIcon resizedBook = new ImageIcon(newbook);\r\n        ImageIcon resizedYork = new ImageIcon(yorkNew);\r\n\r\n        \r\n        JLabel lblSearchImg = new JLabel(\"\");\r\n        lblSearchImg.setHorizontalAlignment(SwingConstants.CENTER);\r\n        lblSearchImg.setIcon(resizedIcon);\r\n        lblSearchImg.setBounds(166, 96, 20, 20); \r\n        add(lblSearchImg);\r\n        \r\n        txtSearchForBooks = new JTextField();\r\n        txtSearchForBooks.setText(\"Search for books, textbooks, DVDs...\");\r\n        txtSearchForBooks.setBounds(198, 96, 378, 26);\r\n        add(txtSearchForBooks);\r\n        txtSearchForBooks.setColumns(10);\r\n        \r\n        JLabel lblBackground = new JLabel(\"New label\");\r\n\t\tlblBackground.setBounds(6, 0, 888, 154);\r\n\t\t\r\n\t\tJLabel bookPlaceholder1_1 = new JLabel(\"\");\r\n\t\tbookPlaceholder1_1.setBounds(627, 179, 72, 116);\r\n\t\tadd(bookPlaceholder1_1);\r\n\t\t\r\n\t\tJLabel YorkU = new JLabel(\"\");\r\n\t\tYorkU.setIcon(resizedYork);\r\n\t\tYorkU.setBounds(27, 16, 80, 80);\r\n\t\tadd(YorkU);\r\n\t\t\r\n\t\tJLabel lblYorkUniversityLibrary = new JLabel(\"York University Library\");\r\n\t\tlblYorkUniversityLibrary.setBounds(119, 23, 165, 48);\r\n\t\tadd(lblYorkUniversityLibrary);\r\n        \r\n\t\tJPanel redpanel = new JPanel();\r\n\t\tredpanel.setBackground(new Color(241, 71, 83));\r\n\t\tredpanel.setBounds(6, -8, 888, 132);\r\n\t\tadd(redpanel);\r\n\t\tredpanel.setLayout(null);\r\n\t\t\r\n\t\t// drop down menu\r\n\t\tcomboBox = new JComboBox(itemCategories);\r\n\t\tcomboBox.setBounds(574, 105, 139, 27);\r\n\t\tredpanel.add(comboBox);\r\n\t\t\r\n\t\tJButton searchButton = new JButton(\"Search\");\r\n\t\tsearchButton.setBounds(705, 103, 117, 29);\r\n\t\tredpanel.add(searchButton);\r\n\t\tsearchButton.setVerticalAlignment(SwingConstants.BOTTOM);\r\n\t\t\r\n\t\tsearchButton.setFont(new Font(\"Apple Braille\", Font.PLAIN, 13));\r\n\t\tsearchButton.setBackground(new Color(50, 205, 50));\r\n\t\t\r\n\t\t\r\n\t\t\r\n\t\t//search function\r\n\t\tsearchButton.addActionListener(new ActionListener() {\r\n\t\t\tpublic void actionPerformed(ActionEvent e) {\r\n\t\t\t}\r\n\t\t});\r\n\t\t\r\n\t\tJPanel panel = new JPanel();\r\n\t\tpanel.setBackground(new Color(168, 49, 59));\r\n\t\tpanel.setBounds(6, 124, 888, 35);\r\n\t\tadd(panel);\r\n\t\t\r\n\t\tJPanel panelSearch = new JPanel();\r\n\t\tpanelSearch.setBounds(2, 2, 853, 611);\r\n\t\tadd(panelSearch);\r\n\t\t// change # of column to display\r\n\t\tpanelSearch.setLayout(new GridLayout(0,2, 50, 50));\r\n\t\t\r\n\t\tJLabel lblSearchResult = new JLabel(\"Search Result\");\r\n\t\tlblSearchResult.setFont(new Font(\"Lucida Grande\", Font.BOLD, 18));\r\n\t\tlblSearchResult.setBounds(19, 174, 245, 35);\r\n\t\tadd(lblSearchResult);\r\n\t\t\r\n\t\t\r\n\t\t// Add jlabels(images) to the gridlayout\r\n\t\tfor(int i = 0; i < 3; i++) {\r\n\t\t\t\r\n\t\t\t//example\r\n\t\t\tImageIcon scaledIcon = scaleImageIcon(new ImageIcon(SearchPanel.class.getResource(\"/images/NoLongerHuman.jpeg\")), 150, 150);\r\n\t\t\tJLabel label = new JLabel(\"NO LONGER HUMAN - Osamu Dazai\", scaledIcon, JLabel.CENTER);\r\n\t\t\t\r\n\t\t\t// The name of the book\r\n\t\t\tlabel.setFont(new Font(\"Lucida Grande\", Font.BOLD, 18));\r\n\t\t\tlabel.setIcon(scaledIcon);\r\n\t\t\tlabel.setVerticalTextPosition(JLabel.TOP);\r\n\t\t\tlabel.setHorizontalTextPosition(JLabel.CENTER);\r\n\r\n\t\t\tlabel.setHorizontalAlignment(JLabel.CENTER);\r\n\t\t    label.setVerticalAlignment(JLabel.CENTER);\r\n\r\n\t\t \r\n\t\t    // Add a hover effect\r\n            label.addMouseListener(new MouseAdapter() {\r\n                @Override\r\n                public void mouseEntered(MouseEvent e) {\r\n                    label.setBorder(BorderFactory.createLineBorder(Color.BLUE)); \r\n                }\r\n\r\n                @Override\r\n                public void mouseExited(MouseEvent e) {\r\n                    label.setBorder(null); \r\n                }\r\n            });\r\n\t\t\tpanelSearch.add(label);\r\n\t\t}\r\n\t\t\r\n\t\t//scroll bar\r\n\t\tJScrollPane spSearchResult = new JScrollPane(panelSearch);\r\n        spSearchResult.setBounds(10, 214, 876, 335);\r\n        spSearchResult.setViewportBorder(null);\r\n        add(spSearchResult);\r\n\t}\r\n\r\n\t\r\n\t//Scale icon\r\n\tpublic static ImageIcon scaleImageIcon(ImageIcon originalIcon, int width, int height) {\r\n        Image image = originalIcon.getImage();\r\n        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);\r\n        return new ImageIcon(scaledImage);\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/SearchPanel.java b/app/src/main/java/com/yorku/library/app/SearchPanel.java
+--- a/app/src/main/java/com/yorku/library/app/SearchPanel.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/SearchPanel.java	(date 1712366351707)
+@@ -9,12 +9,17 @@
+ import javax.swing.*;
+ import javax.swing.border.Border;
+ 
++import com.yorku.library.app.services.gui.workers.SearchPanelWorker;
++import com.yorku.library.app.services.requests.RequestService;
++
+ public class SearchPanel extends JPanel {
+ 
+ 	private JTextField txtSearchForBooks;
+ 	private DefaultListModel<ListItems> SearchModel;
+-	private JComboBox comboBox;
++	private JComboBox<String[]> comboBox;
+ 	String [] itemCategories = {"All Items", "Textbooks", "Books", "Special Items", "News Letter"};
++	
++
+ 	/**
+ 	 * Launch the application.
+ 	 */
+@@ -22,7 +27,7 @@
+ 		
+         setLayout(null);
+                 
+-        
++
+         // Load the original image icon
+         ImageIcon originalIcon = new ImageIcon(SearchPanel.class.getResource("/images/61088.png"));
+         ImageIcon bookIcon = new ImageIcon(SearchPanel.class.getResource("/images/bookplaceholder.png"));
+@@ -154,7 +159,13 @@
+         add(spSearchResult);
+ 	}
+ 
++	public JTextField getTextField() {
++		return txtSearchForBooks;
++	}
+ 	
++	public JComboBox<String[]> getComboBox() {
++		return comboBox;
++	}
+ 	//Scale icon
+ 	public static ImageIcon scaleImageIcon(ImageIcon originalIcon, int width, int height) {
+         Image image = originalIcon.getImage();
+Index: app/src/test/java/com/yorku/library/app/RequestServiceProxyTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/test/java/com/yorku/library/app/RequestServiceProxyTest.java b/app/src/test/java/com/yorku/library/app/RequestServiceProxyTest.java
+new file mode 100644
+--- /dev/null	(date 1712599983507)
++++ b/app/src/test/java/com/yorku/library/app/RequestServiceProxyTest.java	(date 1712599983507)
+@@ -0,0 +1,166 @@
++package com.yorku.library.app;
++import static org.junit.Assert.*;
++import static org.mockito.Mockito.*;
++
++import java.util.concurrent.CompletableFuture;
++import java.util.concurrent.ScheduledExecutorService;
++import java.util.concurrent.TimeUnit;
++
++import com.yorku.library.app.services.requests.RequestService;
++import com.yorku.library.app.services.requests.RequestServiceProxy;
++import org.junit.Before;
++import org.junit.Test;
++
++public class RequestServiceProxyTest {
++
++    private RequestService realService;
++    private RequestServiceProxy requestServiceProxy;
++    private ScheduledExecutorService scheduler;
++    @Before
++    public void setUp() {
++        realService = mock(RequestService.class);
++        scheduler = spy(ScheduledExecutorService.class);
++        requestServiceProxy = new RequestServiceProxy(realService, scheduler);
++    }
++
++    @Test
++    public void testGetRequestFromCache() throws Exception {
++        String path = "/api/get";
++        String expectedResponse = "Generic GET response.";
++
++        when(realService.getRequest(path))
++                .thenReturn(CompletableFuture.supplyAsync(() -> "Generic GET response."));
++
++        requestServiceProxy.getRequest(path).join();
++
++        when(realService.getRequest(path))
++                .thenThrow(new AssertionError("Real service should not be called"));
++
++        CompletableFuture<String> responseFuture = requestServiceProxy.getRequest(path);
++        String result = responseFuture.get();
++
++        assertEquals(expectedResponse, result);
++
++        verify(realService, times(1)).getRequest(path);
++    }
++
++    @Test
++    public void testGetRequestNotInCache() throws Exception {
++        String path = "/api/get";
++        String expectedResponse = "Response from real service";
++
++        when(realService.getRequest(path)).thenReturn(CompletableFuture.completedFuture(expectedResponse));
++
++        CompletableFuture<String> responseFuture = requestServiceProxy.getRequest(path);
++        String result = responseFuture.get();
++
++        assertEquals(expectedResponse, result);
++
++        verify(realService, times(1)).getRequest(path);
++    }
++
++    @Test
++    public void testCacheExpiry() throws Exception {
++        String path = "/api/get";
++        String expectedResponse = "Generic GET response.";
++
++        when(realService.getRequest(path)).thenReturn(CompletableFuture.completedFuture(expectedResponse));
++        when(scheduler.scheduleAtFixedRate(any(Runnable.class), anyLong(), anyLong(), any(TimeUnit.class)))
++                .thenAnswer(invocation -> {
++                    Runnable task = invocation.getArgument(0);
++
++                        task.run();
++                    return null;
++                });
++        requestServiceProxy = new RequestServiceProxy(realService, scheduler);
++
++        requestServiceProxy.getRequest(path).join();
++        Thread.sleep(10);
++        CompletableFuture<String> responseFuture = requestServiceProxy.getRequest(path);
++        String result = responseFuture.get();
++
++        verify(realService, times(2)).getRequest(path);
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testCacheCleanupTaskRepeatedlyExecutes() throws InterruptedException {
++        verify(scheduler, atLeastOnce()).scheduleAtFixedRate(any(Runnable.class), eq(1L), eq(1L), eq(TimeUnit.MINUTES));
++    }
++
++    @Test
++    public void testPostRequest() throws Exception {
++        String path = "/api/post";
++        String expectedResponse = "Generic POST response.";
++
++        when(realService.postRequest(path)).thenReturn(CompletableFuture.completedFuture(expectedResponse));
++
++        CompletableFuture<String> responseFuture = requestServiceProxy.postRequest(path);
++        String result = responseFuture.get();
++
++        assertEquals(expectedResponse, result);
++
++        verify(realService, times(1)).postRequest(path);
++    }
++
++    @Test
++    public void testPutRequest() throws Exception {
++        String path = "/api/get";
++        String expectedResponse = "Generic GET response.";
++
++        when(realService.putRequest(path)).thenReturn(CompletableFuture.completedFuture(expectedResponse));
++
++        CompletableFuture<String> responseFuture = requestServiceProxy.putRequest(path);
++        String result = responseFuture.get();
++
++        assertEquals(expectedResponse, result);
++
++        verify(realService, times(1)).putRequest(path);
++    }
++
++    @Test
++    public void testPostRequestWithBody() throws Exception {
++        String path = "/api/post";
++        String requestBody = "Request body for POST";
++        String expectedResponse = "Response for POST";
++
++        when(realService.postRequest(requestBody, path)).thenReturn(CompletableFuture.completedFuture(expectedResponse));
++
++        CompletableFuture<String> responseFuture = requestServiceProxy.postRequest(requestBody, path);
++        String result = responseFuture.get();
++
++        assertEquals(expectedResponse, result);
++        verify(realService, times(1)).postRequest(requestBody, path);
++    }
++
++    @Test
++    public void testPutRequestWithBody() throws Exception {
++        String path = "/api/put";
++        String requestBody = "Request body for PUT";
++        String expectedResponse = "Response for PUT";
++
++        when(realService.putRequest(requestBody, path)).thenReturn(CompletableFuture.completedFuture(expectedResponse));
++
++        CompletableFuture<String> responseFuture = requestServiceProxy.putRequest(requestBody, path);
++        String result = responseFuture.get();
++
++        assertEquals(expectedResponse, result);
++        verify(realService, times(1)).putRequest(requestBody, path);
++    }
++
++    @Test
++    public void testDeleteRequest() throws Exception {
++        String path = "/api/delete";
++        String expectedResponse = "Generic DELETE response.";
++
++        when(realService.deleteRequest(path)).thenReturn(CompletableFuture.completedFuture(expectedResponse));
++
++        CompletableFuture<String> responseFuture = requestServiceProxy.deleteRequest(path);
++        String result = responseFuture.get();
++
++        assertEquals(expectedResponse, result);
++
++        verify(realService, times(1)).deleteRequest(path);
++    }
++
++}
+\ No newline at end of file
+Index: app/src/main/java/com/yorku/library/app/App.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app;\r\n\r\nimport java.awt.BorderLayout;\r\nimport java.awt.EventQueue;\r\n\r\nimport javax.swing.JFrame;\r\nimport javax.swing.table.DefaultTableModel;\r\n\r\nimport com.yorku.library.app.auth.UserAuth;\r\n\r\npublic class App {\r\n\tprivate static UserAuth auth;\r\n\tprivate static AppFrame app;\r\n\tprivate static HomePanel home;\r\n\tprivate static SearchPanel search;\r\n\tprivate static CartPanel cart;\r\n\tprivate static LoginPanel login;\r\n\tprivate static RegisterPanel register;\r\n\tprivate static LoginRegisterFrame loginRegister;\r\n\tprivate static CourseListPanel course;\r\n\r\n\t\r\n\tpublic static void main(String[] args) {\r\n\t\tEventQueue.invokeLater(() -> {\t\r\n\t\t\tinitLogin();\r\n\t\t\tinitApp();\r\n\t\t});\r\n\t}\r\n\t\r\n\tprivate static void initApp() {\r\n\t\thome = new HomePanel();\r\n\t\tsearch = new SearchPanel();\r\n\t\tcart = new CartPanel();\r\n\t\tcourse = new CourseListPanel();\r\n\t\tapp = new AppFrame(home, search, cart, course);\r\n\t\tapp.setVisible(true);\r\n\t}\r\n\t\r\n\tprivate static void initLogin() {\r\n\t\tlogin = new LoginPanel();\r\n\t\tregister = new RegisterPanel();\r\n\t\tloginRegister = new LoginRegisterFrame(login, register);\r\n\t\tloginRegister.setVisible(true);\r\n\t}\r\n\t\r\n//\tprivate static void loadItems(List<ItemComponent> items) {\r\n//\t\tDefaultTableModel tblModel = new DefaultTableModel() {\r\n//\t\t\t@Override\r\n//\t\t\tpublic boolean isCellEditable(int row, int column) {\r\n//\t\t\t\treturn false;\r\n//\t\t\t}\r\n//\t\t\t\r\n//\t\t};\r\n//\t}\r\n\t\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/App.java b/app/src/main/java/com/yorku/library/app/App.java
+--- a/app/src/main/java/com/yorku/library/app/App.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/App.java	(date 1712457074490)
+@@ -6,19 +6,20 @@
+ import javax.swing.JFrame;
+ import javax.swing.table.DefaultTableModel;
+ 
+-import com.yorku.library.app.auth.UserAuth;
++//import com.yorku.library.app.auth.UserAuth;
++import com.yorku.library.app.services.requests.RequestServiceProxy;
+ 
+ public class App {
+-	private static UserAuth auth;
++	//private UserAuth auth;
++	private static RequestServiceProxy reqService;
+ 	private static AppFrame app;
+-	private static HomePanel home;
+-	private static SearchPanel search;
+-	private static CartPanel cart;
++
+ 	private static LoginPanel login;
+ 	private static RegisterPanel register;
+ 	private static LoginRegisterFrame loginRegister;
+ 	private static CourseListPanel course;
+ 
++
+ 	
+ 	public static void main(String[] args) {
+ 		EventQueue.invokeLater(() -> {	
+@@ -28,11 +29,9 @@
+ 	}
+ 	
+ 	private static void initApp() {
+-		home = new HomePanel();
+-		search = new SearchPanel();
+-		cart = new CartPanel();
++
+ 		course = new CourseListPanel();
+-		app = new AppFrame(home, search, cart, course);
++		app = new AppFrame(reqService);
+ 		app.setVisible(true);
+ 	}
+ 	
+Index: app/src/main/java/com/yorku/library/app/services/gui/items/ItemComponent.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.items;\r\n\r\npublic abstract class ItemComponent {\r\n\t\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/items/ItemComponent.java b/app/src/main/java/com/yorku/library/app/services/gui/items/ItemComponent.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/items/ItemComponent.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/items/ItemComponent.java	(date 1711385169803)
+@@ -1,5 +1,7 @@
+ package com.yorku.library.app.services.gui.items;
+ 
+-public abstract class ItemComponent {
++import java.awt.Component;
++
++public abstract class ItemComponent extends Component {
+ 	
+ }
+Index: app/src/main/java/com/yorku/library/app/services/gui/items/BookComponent.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.items;\r\n\r\npublic class BookComponent {\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/items/BookComponent.java b/app/src/main/java/com/yorku/library/app/services/gui/items/BookComponent.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/items/BookComponent.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/items/BookComponent.java	(date 1711345312147)
+@@ -1,5 +1,5 @@
+ package com.yorku.library.app.services.gui.items;
+ 
+ public class BookComponent {
+-
++	
+ }
+Index: app/src/main/java/com/yorku/library/app/services/gui/itembridge/TableItemRenderer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/itembridge/TableItemRenderer.java b/app/src/main/java/com/yorku/library/app/services/gui/itembridge/TableItemRenderer.java
+new file mode 100644
+--- /dev/null	(date 1712377268232)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/itembridge/TableItemRenderer.java	(date 1712377268232)
+@@ -0,0 +1,5 @@
++package com.yorku.library.app.services.gui.itembridge;
++
++public class TableItemRenderer {
++
++}
+Index: app/src/main/java/com/yorku/library/app/services/gui/itembridge/ListItemRenderer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ListItemRenderer.java b/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ListItemRenderer.java
+new file mode 100644
+--- /dev/null	(date 1712377086198)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ListItemRenderer.java	(date 1712377086198)
+@@ -0,0 +1,4 @@
++package com.yorku.library.app.services.gui.itembridge;
++
++public class ListItemRenderer {
++}
+Index: app/src/main/java/com/yorku/library/app/services/gui/factory/UserComponentFactory.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.factory;\r\n\r\nimport java.awt.Component;\r\n\r\npublic class UserComponentFactory extends LibraryComponentFactory {\r\n\r\n\t@Override\r\n\tpublic Component getComponent(String json) {\r\n\t\t// TODO Auto-generated method stub\r\n\t\treturn null;\r\n\t}\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/factory/UserComponentFactory.java b/app/src/main/java/com/yorku/library/app/services/gui/factory/UserComponentFactory.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/factory/UserComponentFactory.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/factory/UserComponentFactory.java	(date 1711353087942)
+@@ -2,11 +2,13 @@
+ 
+ import java.awt.Component;
+ 
++import com.fasterxml.jackson.databind.JsonNode;
++
+ public class UserComponentFactory extends LibraryComponentFactory {
+ 
+ 	@Override
+-	public Component getComponent(String json) {
+-		// TODO Auto-generated method stub
++	public Component getComponent(JsonNode json) {
++		
+ 		return null;
+ 	}
+ 
+Index: app/src/main/java/com/yorku/library/app/services/gui/factory/ComponentProducer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.factory;\r\n\r\npublic class ComponentProducer {\r\n\tpublic static LibraryComponentFactory getFactory(boolean isItem) {\r\n\t\tif(isItem) {\r\n\t\t\treturn new ItemComponentFactory();\r\n\t\t}\r\n\t\treturn new UserComponentFactory();\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/factory/ComponentProducer.java b/app/src/main/java/com/yorku/library/app/services/gui/factory/ComponentProducer.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/factory/ComponentProducer.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/factory/ComponentProducer.java	(date 1712377268222)
+@@ -1,8 +1,11 @@
+ package com.yorku.library.app.services.gui.factory;
+ 
++import com.fasterxml.jackson.databind.JsonNode;
++import com.fasterxml.jackson.databind.ObjectMapper;
++
+ public class ComponentProducer {
+-	public static LibraryComponentFactory getFactory(boolean isItem) {
+-		if(isItem) {
++	public static LibraryComponentFactory getFactory(JsonNode node) {
++		if(node.has("itemType")) {
+ 			return new ItemComponentFactory();
+ 		}
+ 		return new UserComponentFactory();
+Index: app/src/main/java/com/yorku/library/app/services/gui/factory/LibraryComponentFactory.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.factory;\r\n\r\nimport java.awt.Component;\r\n\r\npublic abstract class LibraryComponentFactory {\r\n\tpublic abstract Component getComponent(String type);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/factory/LibraryComponentFactory.java b/app/src/main/java/com/yorku/library/app/services/gui/factory/LibraryComponentFactory.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/factory/LibraryComponentFactory.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/factory/LibraryComponentFactory.java	(date 1712377268215)
+@@ -2,6 +2,9 @@
+ 
+ import java.awt.Component;
+ 
++import com.fasterxml.jackson.databind.JsonNode;
++import com.fasterxml.jackson.databind.json.JsonMapper;
++
+ public abstract class LibraryComponentFactory {
+-	public abstract Component getComponent(String type);
++	public abstract Component getComponent(JsonNode node);
+ }
+Index: app/src/main/java/com/yorku/library/app/services/gui/itembridge/ItemBridge.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.itembridge;\r\n\r\nimport java.util.List;\r\n\r\nimport javax.swing.JList;\r\nimport javax.swing.JScrollPane;\r\nimport javax.swing.JTable;\r\nimport javax.swing.ListModel;\r\n\r\nimport com.yorku.library.app.services.gui.items.ItemComponent;\r\n\r\npublic class ItemBridge extends JScrollPane {\r\n\tpublic static final int TABLE = 0;\r\n\tpublic static final int LIST = 1;\r\n\t\r\n\tpublic ItemBridge(List<ItemComponent> items, int tableType) {\r\n\t\t\r\n\t}\r\n\t\r\n\tprivate JList makeList(List<ItemComponent> items) {\r\n\t\treturn new JList(new ListModel(items));\r\n\t}\r\n\t\r\n\tprivate JTable makeTable(List<ItemComponent> items) {\r\n\t\t\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ItemBridge.java b/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ItemBridge.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ItemBridge.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ItemBridge.java	(date 1712451610900)
+@@ -1,27 +1,28 @@
+-package com.yorku.library.app.services.gui.itembridge;
+-
+-import java.util.List;
+-
+-import javax.swing.JList;
+-import javax.swing.JScrollPane;
+-import javax.swing.JTable;
+-import javax.swing.ListModel;
+-
+-import com.yorku.library.app.services.gui.items.ItemComponent;
+-
+-public class ItemBridge extends JScrollPane {
+-	public static final int TABLE = 0;
+-	public static final int LIST = 1;
+-	
+-	public ItemBridge(List<ItemComponent> items, int tableType) {
+-		
+-	}
+-	
+-	private JList makeList(List<ItemComponent> items) {
+-		return new JList(new ListModel(items));
+-	}
+-	
+-	private JTable makeTable(List<ItemComponent> items) {
+-		
+-	}
+-}
++//package com.yorku.library.app.services.gui.itembridge;
++//
++//import java.util.List;
++//
++//import javax.swing.JList;
++//import javax.swing.JScrollPane;
++//import javax.swing.JTable;
++//import javax.swing.ListModel;
++//
++//import com.yorku.library.app.services.gui.items.ItemComponent;
++//
++//public class ItemBridge extends JScrollPane {
++//	public static final int TABLE = 0;
++//	public static final int LIST = 1;
++//
++//	public ItemBridge(List<ItemComponent> items, int tableType) {
++//
++//	}
++//
++//	private JList makeList(List<ItemComponent> items) {
++//		return new JList(new ListModel(items));
++//	}
++//
++//	private JTable makeTable(List<ItemComponent> items) {
++//		return null;
++//
++//	}
++//}
+Index: app/src/main/java/com/yorku/library/app/services/gui/factory/ItemComponentFactory.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.services.gui.factory;\r\n\r\nimport java.awt.Component;\r\n\r\npublic class ItemComponentFactory extends LibraryComponentFactory {\r\n\r\n\t@Override\r\n\tpublic Component getComponent(String json) {\r\n\t\t\r\n\t}\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/services/gui/factory/ItemComponentFactory.java b/app/src/main/java/com/yorku/library/app/services/gui/factory/ItemComponentFactory.java
+--- a/app/src/main/java/com/yorku/library/app/services/gui/factory/ItemComponentFactory.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/services/gui/factory/ItemComponentFactory.java	(date 1712451601191)
+@@ -2,11 +2,14 @@
+ 
+ import java.awt.Component;
+ 
++import com.fasterxml.jackson.databind.JsonNode;
++
+ public class ItemComponentFactory extends LibraryComponentFactory {
+ 
+ 	@Override
+-	public Component getComponent(String json) {
+-		
++	public Component getComponent(JsonNode node) {
++		node.get("");
++		return null;
+ 	}
+ 
+ }
+Index: app/src/main/java/com/yorku/library/app/auth/UserAuth.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.app.auth;\r\n\r\npublic class UserAuth {\r\n\tprivate UserAuth instance;\r\n\tprivate volatile Object lock = new Object();\r\n\tprivate UserAuth() {\r\n\t\t\r\n\t}\r\n\t\r\n\tpublic static UserAuth getInstance() {\r\n\t\tif(instance == null)\r\n\t\t\treturn new UserAuth();\r\n\t\treturn instance;\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/yorku/library/app/auth/UserAuth.java b/app/src/main/java/com/yorku/library/app/auth/UserAuth.java
+--- a/app/src/main/java/com/yorku/library/app/auth/UserAuth.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/app/src/main/java/com/yorku/library/app/auth/UserAuth.java	(date 1712451582117)
+@@ -1,15 +1,15 @@
+-package com.yorku.library.app.auth;
+-
+-public class UserAuth {
+-	private UserAuth instance;
+-	private volatile Object lock = new Object();
+-	private UserAuth() {
+-		
+-	}
+-	
+-	public static UserAuth getInstance() {
+-		if(instance == null)
+-			return new UserAuth();
+-		return instance;
+-	}
+-}
++//package com.yorku.library.app.auth;
++//
++//public class UserAuth {
++//	private UserAuth instance;
++//	private volatile Object lock = new Object();
++//	private UserAuth() {
++//
++//	}
++//
++//	public static UserAuth getInstance() {
++//		if(instance == null)
++//			return new UserAuth();
++//		return instance;
++//	}
++//}
+Index: .idea/dataSources.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/dataSources.xml b/.idea/dataSources.xml
+new file mode 100644
+--- /dev/null	(date 1712365960115)
++++ b/.idea/dataSources.xml	(date 1712365960115)
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
++    <data-source source="LOCAL" name="librarydb@sql-york-library.mysql.database.azure.com" uuid="89ae07bf-b746-4ee0-b0d6-1fe150acf1f7">
++      <driver-ref>mysql.8</driver-ref>
++      <synchronize>true</synchronize>
++      <imported>true</imported>
++      <remarks>$PROJECT_DIR$/restservice/src/main/resources/application.properties</remarks>
++      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
++      <jdbc-url>jdbc:mysql://sql-york-library.mysql.database.azure.com:3306/librarydb?useSSL=true</jdbc-url>
++      <jdbc-additional-properties>
++        <property name="com.intellij.clouds.kubernetes.db.host.port" />
++        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
++        <property name="com.intellij.clouds.kubernetes.db.container.port" />
++      </jdbc-additional-properties>
++      <working-dir>$ProjectFileDir$</working-dir>
++    </data-source>
++  </component>
++</project>
+\ No newline at end of file
+Index: app/src/test/java/com/yorku/library/app/RequestServiceImplTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/test/java/com/yorku/library/app/RequestServiceImplTest.java b/app/src/test/java/com/yorku/library/app/RequestServiceImplTest.java
+new file mode 100644
+--- /dev/null	(date 1712544159119)
++++ b/app/src/test/java/com/yorku/library/app/RequestServiceImplTest.java	(date 1712544159119)
+@@ -0,0 +1,265 @@
++package com.yorku.library.app;
++import static org.junit.Assert.assertEquals;
++import static org.mockito.Mockito.*;
++
++import java.net.URI;
++import java.net.http.HttpClient;
++import java.net.http.HttpRequest;
++import java.net.http.HttpResponse;
++import java.util.concurrent.CompletableFuture;
++import java.util.concurrent.ExecutionException;
++
++import com.yorku.library.app.services.requests.RequestServiceImpl;
++import org.junit.Before;
++import org.junit.Test;
++import org.junit.jupiter.api.BeforeEach;
++import org.mockito.internal.util.Supplier;
++
++public class RequestServiceImplTest {
++    private HttpClient httpClient;
++    private String expectedResponse;
++    private HttpResponse<String> httpResponseMock;
++    private RequestServiceImpl requestService;
++
++    @Before
++    public void setUp() {
++        httpClient = mock(HttpClient.class);
++        expectedResponse = "Generic Response";
++        httpResponseMock = mock(HttpResponse.class);
++
++    }
++
++    @Test
++    public void testGetRequest() throws Exception {
++        String path = "api/get";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++
++        CompletableFuture<String> responseFuture = requestService.getRequest(path);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/api/get")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testPostRequestNoBody() throws Exception {
++        String path = "api/post";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.postRequest(path);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/api/post")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testPostRequestBody() throws Exception {
++        String path = "api/post";
++        String requestBody = "Request body";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++
++        CompletableFuture<String> responseFuture = requestService.postRequest(requestBody, path);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/api/post")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testPutRequestNoBody() throws Exception {
++        String path = "api/put";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.putRequest(path);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/api/put")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testPutRequestBody() throws Exception {
++        String path = "api/put";
++        String requestBody = "Request body";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.putRequest(requestBody, path);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/api/put")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testDeleteRequest() throws Exception {
++        String path = "api/delete";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.deleteRequest(path);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/api/delete")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testGetRequestWithCustomPath() throws Exception {
++        String customPath = "custom/path";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.getRequest(customPath);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/" + customPath)), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testGetRequestWithQueryParameters() throws Exception {
++        String pathWithQuery = "api/get?param=value";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(200);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.getRequest(pathWithQuery);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/api/get?param=value")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testGetRequestWithInvalidPath() throws Exception {
++        String invalidPath = "invalid/path";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(404);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.getRequest(invalidPath);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/invalid/path")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++
++    @Test
++    public void testGetRequestWithEmptyPath() throws Exception {
++        String emptyPath = "";
++
++        when(httpResponseMock.body()).thenReturn(expectedResponse);
++        when(httpResponseMock.statusCode()).thenReturn(501);
++
++        Supplier<CompletableFuture<HttpResponse<String>>> futureSupplier = () -> CompletableFuture.completedFuture(httpResponseMock);
++
++        when(httpClient.sendAsync(any(HttpRequest.class), any()))
++                .thenAnswer(invocation -> futureSupplier.get());
++
++        requestService = new RequestServiceImpl(httpClient);
++        CompletableFuture<String> responseFuture = requestService.getRequest(emptyPath);
++        String result = responseFuture.get();
++
++        verify(httpClient).sendAsync(argThat(request ->
++                request.uri().toString().equals("http://localhost:8080/")), any()
++        );
++
++        assertEquals(expectedResponse, result);
++    }
++}
+\ No newline at end of file
+Index: restservice/src/main/java/com/yorku/library/restservice/controllers/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.restservice.controllers;\r\n\r\nimport java.sql.Date;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.http.HttpStatus;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.web.bind.annotation.DeleteMapping;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.PutMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestParam;\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\nimport com.yorku.library.restservice.models.Course;\r\nimport com.yorku.library.restservice.models.Item;\r\nimport com.yorku.library.restservice.models.Ownership;\r\nimport com.yorku.library.restservice.models.Request;\r\nimport com.yorku.library.restservice.models.Role;\r\nimport com.yorku.library.restservice.models.User;\r\nimport com.yorku.library.restservice.repositories.CourseRepo;\r\nimport com.yorku.library.restservice.repositories.ItemRepo;\r\nimport com.yorku.library.restservice.repositories.RequestRepo;\r\nimport com.yorku.library.restservice.repositories.UserRepo;\r\nimport com.yorku.library.restservice.security.AES;\r\n\r\n@RestController\r\npublic class UserController {\r\n\r\n\t@Autowired\r\n    private UserRepo userRepo;\r\n\t@Autowired\r\n\tprivate CourseRepo courseRepo;\r\n\t@Autowired\r\n\tprivate RequestRepo requestRepo;\r\n\t@Autowired\r\n\tprivate ItemRepo itemRepo;\r\n\t\r\n\t\r\n\t@GetMapping(\"/user/login/{email}/{pw}\")\r\n\tpublic ResponseEntity<User> userLogin(@PathVariable(\"email\") String email, @PathVariable(\"pw\") String pw) throws Exception{\r\n\t\tUser user = userRepo.findByEmail(email).get(0);\r\n\t\tif (user.getPassword().equals(pw)) {\r\n\t\t\treturn new ResponseEntity<User>(user, HttpStatus.OK);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"Incorrect Password\");\r\n\t\t}\r\n\t}\r\n\t\r\n\t\r\n\t@GetMapping(\"/user/logout\")\r\n\tpublic void userLogout() {\r\n\t\t\r\n\t}\r\n\t\r\n\t@PostMapping(\"/user/register/{username}/{email}/{pw}/{role}\")\r\n\tpublic ResponseEntity<User> userRegister(@PathVariable(\"username\") String username, @PathVariable(\"email\") String email, @PathVariable(\"pw\") String pw, @PathVariable(\"role\") String role)  throws Exception {\r\n\t\tRole role1 = Role.valueOf(role);\r\n\t\tSystem.out.println(role1);\r\n\t\t\r\n\t\tUser user = new User(username, pw, email, role1);\r\n\t\tuserRepo.save(user);\r\n\t\treturn new ResponseEntity<User>(user, HttpStatus.CREATED);\r\n\t}\r\n\t\r\n\t\r\n\t@GetMapping(\"/user/{id}/items\")\r\n\tpublic ResponseEntity<List<Item>> getUserItems(@PathVariable(\"id\") Integer id) throws Exception{\r\n\t\tUser user = userRepo.findById(id).get();\r\n\t\tif (user != null) {\r\n\t\t\tList<Item> itemlist = new ArrayList<>();\r\n\t\t\tuser.getItems().forEach(useritem -> itemlist.add(useritem.getItem()));\r\n\t\t\treturn new ResponseEntity<List<Item>>(itemlist, HttpStatus.OK);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"User Doesnt Exist\");\r\n\t\t}\r\n\t}\r\n\t\r\n\t@GetMapping(\"/user/{id}/courses\")\r\n\tpublic ResponseEntity<List<Course>> getUserCourses(@PathVariable(\"id\") Integer id) throws Exception{\r\n\t\tUser user = userRepo.findById(id).get();\r\n\t\tif (user != null) {\r\n\t\t\tList<Course> courselist = new ArrayList<>();\r\n\t\t\tcourselist.addAll(user.getCourses());\r\n\t\t\treturn new ResponseEntity<List<Course>>(courselist, HttpStatus.OK);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"User Doesnt Exist\");\r\n\t\t}\r\n\t}\r\n\t\r\n\t@PostMapping(\"/user/addcourse/{code}\")\r\n\tpublic ResponseEntity<Course> addCourse(@PathVariable(\"code\") String code, @RequestBody User user) throws Exception{\r\n\t\tUser user1 = user;\r\n\t\tCourse course = courseRepo.findByCourseCode(code).get(0);\r\n\t\tif (course != null) {\r\n\t\t\tcourse.addUser(user1);\r\n\t\t\tuserRepo.save(user1);\r\n\t\t\tcourseRepo.save(course);\r\n\t\t\treturn new ResponseEntity<Course>(course, HttpStatus.CREATED);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"Course Doesnt Exist\");\r\n\t\t}\r\n\t}\r\n\t\r\n\t@DeleteMapping(\"/user/dropcourse/{code}\")\r\n\tpublic ResponseEntity<Course> removeCourse(@PathVariable(\"code\") String code, @RequestBody User user) throws Exception {\r\n\t\tUser user1 = user;\r\n\t\tCourse course = courseRepo.findByCourseCode(code).get(0);\r\n\t\tif (user1.getCourses().contains(course)) {\r\n\t\t\tcourse.removeUser(user1.getId());\r\n\t\t\tcourseRepo.save(course);\r\n\t\t\tuserRepo.save(user1);\r\n\t\t\treturn new ResponseEntity<Course>(course, HttpStatus.OK);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"Course Doesnt Exist or User Not Enrolled\");\r\n\t\t}\r\n\t}\r\n\t\r\n\t@PostMapping(\"/user/request/{id}/{priority}\")\r\n\tpublic ResponseEntity<Request> requestItem(@PathVariable(\"id\") Integer id, Integer priority, @RequestBody User user) throws Exception{\r\n\t\tUser user1 = user;\r\n\t\tItem item = itemRepo.findById(id).get();\r\n\t\tif (item != null) {\r\n\t\t\tRequest req = new Request(priority, user1, item);\r\n\t\t\tuser1.addRequest(req);\r\n\t\t\titem.setRequest(req);\r\n\t\t\titemRepo.save(item);\r\n\t\t\tuserRepo.save(user1);\r\n\t\t\trequestRepo.save(req);\r\n\t\t\treturn new ResponseEntity<Request>(req, HttpStatus.CREATED);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"Item Doesnt Exist\");\r\n\t\t}\r\n\t}\r\n\t\r\n\t@GetMapping(\"/user/notifs\")\r\n\tpublic void userNotifs() {\r\n\t\t\r\n\t}\r\n\t\r\n\t@PostMapping(\"/user/item/add/{relation}/{id}\")\r\n\tpublic ResponseEntity<Item> addItemToUser(@PathVariable(\"relation\") Ownership relation, @PathVariable(\"id\") Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{\r\n\t\tItem item = itemRepo.findById(id).get();\r\n\t\tUser user1 = user;\r\n\t\tif (user1.getItems().size() >= 10) {\r\n\t\t\tthrow new Exception(\"User Has Too Many Items Rented\");\r\n\t\t}\r\n\t\tif (item != null) {\r\n\t\t\titem.addUser(user1, relation, date);\r\n\t\t\titemRepo.save(item);\r\n\t\t\tuserRepo.save(user1);\r\n\t\t\treturn new ResponseEntity<Item>(item, HttpStatus.CREATED);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"Item Doesnt Exist\");\r\n\t\t}\r\n\t}\r\n\t\r\n\t@DeleteMapping(\"/user/item/delete/{id}\")\r\n\tpublic ResponseEntity<Item> removeItemFromUser(@PathVariable(\"id\") Integer id, @RequestBody User user) throws Exception{\r\n\t\tItem item = itemRepo.findById(id).get();\r\n\t\tUser user1 = user;\r\n\t\ttry {\r\n\t\t\titem.removeUser(user1.getId());\r\n\t\t}\r\n\t\tcatch (Exception e) {\r\n\t\t\tthrow e;\r\n\t\t}\r\n\t\titemRepo.save(item);\r\n\t\tuserRepo.save(user1);\r\n\t\treturn new ResponseEntity<Item>(item, HttpStatus.OK);\r\n\t}\r\n\t\r\n\t@PutMapping(\"/user/update/{id}\")\r\n\tpublic ResponseEntity<User> updateUser(@PathVariable(\"id\") Integer id, @RequestBody User user) throws Exception{\r\n\t\tUser user1 = userRepo.findById(id).get();\r\n\t\tif (user1 != null) {\r\n\t\t\tuser1.setUsername(user.getUsername());\r\n\t\t\tuser1.setPassword(user.getPassword());\r\n\t\t\tuser1.setEmail(user.getEmail());\r\n\t\t\treturn new ResponseEntity<User>(userRepo.save(user1), HttpStatus.OK);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"User Doesnt Exist\");\r\n\t\t}\r\n\t}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/restservice/src/main/java/com/yorku/library/restservice/controllers/UserController.java b/restservice/src/main/java/com/yorku/library/restservice/controllers/UserController.java
+--- a/restservice/src/main/java/com/yorku/library/restservice/controllers/UserController.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/restservice/src/main/java/com/yorku/library/restservice/controllers/UserController.java	(date 1711343122449)
+@@ -14,6 +14,7 @@
+ import org.springframework.web.bind.annotation.PostMapping;
+ import org.springframework.web.bind.annotation.PutMapping;
+ import org.springframework.web.bind.annotation.RequestBody;
++import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RequestParam;
+ import org.springframework.web.bind.annotation.RestController;
+ 
+@@ -27,9 +28,8 @@
+ import com.yorku.library.restservice.repositories.ItemRepo;
+ import com.yorku.library.restservice.repositories.RequestRepo;
+ import com.yorku.library.restservice.repositories.UserRepo;
+-import com.yorku.library.restservice.security.AES;
+ 
+-@RestController
++@RequestMapping("user")
+ public class UserController {
+ 
+ 	@Autowired
+@@ -42,7 +42,7 @@
+ 	private ItemRepo itemRepo;
+ 	
+ 	
+-	@GetMapping("/user/login/{email}/{pw}")
++	@GetMapping("/login/{email}/{pw}")
+ 	public ResponseEntity<User> userLogin(@PathVariable("email") String email, @PathVariable("pw") String pw) throws Exception{
+ 		User user = userRepo.findByEmail(email).get(0);
+ 		if (user.getPassword().equals(pw)) {
+@@ -54,12 +54,12 @@
+ 	}
+ 	
+ 	
+-	@GetMapping("/user/logout")
++	@GetMapping("/logout")
+ 	public void userLogout() {
+ 		
+ 	}
+ 	
+-	@PostMapping("/user/register/{username}/{email}/{pw}/{role}")
++	@PostMapping("/register/{username}/{email}/{pw}/{role}")
+ 	public ResponseEntity<User> userRegister(@PathVariable("username") String username, @PathVariable("email") String email, @PathVariable("pw") String pw, @PathVariable("role") String role)  throws Exception {
+ 		Role role1 = Role.valueOf(role);
+ 		System.out.println(role1);
+@@ -70,7 +70,7 @@
+ 	}
+ 	
+ 	
+-	@GetMapping("/user/{id}/items")
++	@GetMapping("/{id}/items")
+ 	public ResponseEntity<List<Item>> getUserItems(@PathVariable("id") Integer id) throws Exception{
+ 		User user = userRepo.findById(id).get();
+ 		if (user != null) {
+@@ -83,7 +83,7 @@
+ 		}
+ 	}
+ 	
+-	@GetMapping("/user/{id}/courses")
++	@GetMapping("/{id}/courses")
+ 	public ResponseEntity<List<Course>> getUserCourses(@PathVariable("id") Integer id) throws Exception{
+ 		User user = userRepo.findById(id).get();
+ 		if (user != null) {
+@@ -96,7 +96,7 @@
+ 		}
+ 	}
+ 	
+-	@PostMapping("/user/addcourse/{code}")
++	@PostMapping("/addcourse/{code}")
+ 	public ResponseEntity<Course> addCourse(@PathVariable("code") String code, @RequestBody User user) throws Exception{
+ 		User user1 = user;
+ 		Course course = courseRepo.findByCourseCode(code).get(0);
+@@ -111,7 +111,7 @@
+ 		}
+ 	}
+ 	
+-	@DeleteMapping("/user/dropcourse/{code}")
++	@DeleteMapping("/dropcourse/{code}")
+ 	public ResponseEntity<Course> removeCourse(@PathVariable("code") String code, @RequestBody User user) throws Exception {
+ 		User user1 = user;
+ 		Course course = courseRepo.findByCourseCode(code).get(0);
+@@ -126,7 +126,7 @@
+ 		}
+ 	}
+ 	
+-	@PostMapping("/user/request/{id}/{priority}")
++	@PostMapping("/request/{id}/{priority}")
+ 	public ResponseEntity<Request> requestItem(@PathVariable("id") Integer id, Integer priority, @RequestBody User user) throws Exception{
+ 		User user1 = user;
+ 		Item item = itemRepo.findById(id).get();
+@@ -144,12 +144,12 @@
+ 		}
+ 	}
+ 	
+-	@GetMapping("/user/notifs")
++	@GetMapping("/notifs")
+ 	public void userNotifs() {
+ 		
+ 	}
+ 	
+-	@PostMapping("/user/item/add/{relation}/{id}")
++	@PostMapping("/item/add/{relation}/{id}")
+ 	public ResponseEntity<Item> addItemToUser(@PathVariable("relation") Ownership relation, @PathVariable("id") Integer id, @RequestBody User user, @RequestParam Date date) throws Exception{
+ 		Item item = itemRepo.findById(id).get();
+ 		User user1 = user;
+@@ -167,7 +167,7 @@
+ 		}
+ 	}
+ 	
+-	@DeleteMapping("/user/item/delete/{id}")
++	@DeleteMapping("/item/delete/{id}")
+ 	public ResponseEntity<Item> removeItemFromUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
+ 		Item item = itemRepo.findById(id).get();
+ 		User user1 = user;
+@@ -182,7 +182,7 @@
+ 		return new ResponseEntity<Item>(item, HttpStatus.OK);
+ 	}
+ 	
+-	@PutMapping("/user/update/{id}")
++	@PutMapping("/update/{id}")
+ 	public ResponseEntity<User> updateUser(@PathVariable("id") Integer id, @RequestBody User user) throws Exception{
+ 		User user1 = userRepo.findById(id).get();
+ 		if (user1 != null) {
+Index: restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.yorku.library.restservice.controllers;\r\n\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\n\r\nimport com.yorku.library.restservice.models.Item;\r\nimport com.yorku.library.restservice.repositories.ItemRepo;\r\n\r\n\r\nimport java.util.List;\r\n\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.http.HttpStatus;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.web.bind.annotation.GetMapping;\r\nimport org.springframework.web.bind.annotation.PathVariable;\r\nimport org.springframework.web.bind.annotation.PutMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\n\r\n@RestController\r\npublic class ItemController {\r\n\t\r\n\t@Autowired\r\n    private ItemRepo itemRepo;\r\n\t\r\n\t@GetMapping(\"/\")\r\n\tpublic String hello() {\r\n\t\treturn \"Home Page\";\r\n\t}\r\n\t\r\n\t@GetMapping(\"/item/{id}\")\r\n\tpublic ResponseEntity<Item> getItemById(@PathVariable(\"id\") Integer id) {\r\n\t\treturn new ResponseEntity<Item>(itemRepo.findById(id).get(), HttpStatus.OK);\r\n\t}\r\n\t\r\n\t@GetMapping(\"/item/search/{title}\")\r\n\tpublic ResponseEntity<List<Item>> getItemsByTitle(@PathVariable(\"title\") String title) {\r\n\t\treturn new ResponseEntity<List<Item>>(itemRepo.findByTitleContaining(title), HttpStatus.OK);\r\n\t}\r\n\t\r\n\t@GetMapping(\"/item/search/by/{type}\")\r\n\tpublic ResponseEntity<List<Item>> getItemsByType(@PathVariable(\"type\") String type) {\r\n\t\treturn new ResponseEntity<List<Item>>(itemRepo.findByItemType(type), HttpStatus.OK);\r\n\t}\r\n\t\r\n\t@GetMapping(\"/item/all\")\r\n\tpublic ResponseEntity<List<Item>> getAllItems() {\r\n\t\treturn new ResponseEntity<List<Item>>(itemRepo.findAll(), HttpStatus.OK);\r\n\t}\r\n\t\r\n\t@PutMapping(\"/items/update/{id}\")\r\n\tpublic ResponseEntity<Item> updateItem(@PathVariable(\"id\") Integer id, @RequestBody Item item) throws Exception {\r\n\t\tItem item1 = itemRepo.findById(id).get();\r\n\t\tif (item1 != null) {\r\n\t\t\titem1.setTitle(item.getTitle());\r\n\t\t\titem1.setDescription(item.getDescription());\r\n\t\t\titem1.setLocation(item.getLocation());\r\n\t\t\treturn new ResponseEntity<Item>(itemRepo.save(item1), HttpStatus.OK);\r\n\t\t}\r\n\t\telse {\r\n\t\t\tthrow new Exception(\"Item Doesnt Exist\");\r\n\t\t}\r\n\t}\r\n\t\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java b/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java
+--- a/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java	(revision 15dba64eb00b9fa3cd80ecdd0bf963e6ca80a3dd)
++++ b/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java	(date 1711343110904)
+@@ -16,8 +16,10 @@
+ import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.PutMapping;
+ import org.springframework.web.bind.annotation.RequestBody;
++import org.springframework.web.bind.annotation.RequestMapping;
+ 
+ @RestController
++@RequestMapping("item")
+ public class ItemController {
+ 	
+ 	@Autowired
+@@ -28,27 +30,27 @@
+ 		return "Home Page";
+ 	}
+ 	
+-	@GetMapping("/item/{id}")
++	@GetMapping("/{id}")
+ 	public ResponseEntity<Item> getItemById(@PathVariable("id") Integer id) {
+ 		return new ResponseEntity<Item>(itemRepo.findById(id).get(), HttpStatus.OK);
+ 	}
+ 	
+-	@GetMapping("/item/search/{title}")
++	@GetMapping("/search/{title}")
+ 	public ResponseEntity<List<Item>> getItemsByTitle(@PathVariable("title") String title) {
+ 		return new ResponseEntity<List<Item>>(itemRepo.findByTitleContaining(title), HttpStatus.OK);
+ 	}
+ 	
+-	@GetMapping("/item/search/by/{type}")
++	@GetMapping("/search/by/{type}")
+ 	public ResponseEntity<List<Item>> getItemsByType(@PathVariable("type") String type) {
+ 		return new ResponseEntity<List<Item>>(itemRepo.findByItemType(type), HttpStatus.OK);
+ 	}
+ 	
+-	@GetMapping("/item/all")
++	@GetMapping("/all")
+ 	public ResponseEntity<List<Item>> getAllItems() {
+ 		return new ResponseEntity<List<Item>>(itemRepo.findAll(), HttpStatus.OK);
+ 	}
+ 	
+-	@PutMapping("/items/update/{id}")
++	@PutMapping("/update/{id}")
+ 	public ResponseEntity<Item> updateItem(@PathVariable("id") Integer id, @RequestBody Item item) throws Exception {
+ 		Item item1 = itemRepo.findById(id).get();
+ 		if (item1 != null) {
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1711850379558)
++++ b/.idea/vcs.xml	(date 1711850379558)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+new file mode 100644
+--- /dev/null	(date 1711850379602)
++++ b/.idea/compiler.xml	(date 1711850379602)
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <annotationProcessing>
++      <profile name="Maven default annotation processors profile" enabled="true">
++        <sourceOutputDir name="target/generated-sources/annotations" />
++        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
++        <outputRelativeToContentRoot value="true" />
++        <module name="app" />
++        <module name="restservice" />
++      </profile>
++    </annotationProcessing>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+--- /dev/null	(date 1711850379588)
++++ b/.idea/misc.xml	(date 1711850379588)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ExternalStorageConfigurationManager" enabled="true" />
++  <component name="MavenProjectsManager">
++    <option name="originalFiles">
++      <list>
++        <option value="$PROJECT_DIR$/pom.xml" />
++      </list>
++    </option>
++  </component>
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_18" default="true" project-jdk-name="18" project-jdk-type="JavaSDK" />
++</project>
+\ No newline at end of file
+Index: .idea/jarRepositories.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/jarRepositories.xml b/.idea/jarRepositories.xml
+new file mode 100644
+--- /dev/null	(date 1711850379810)
++++ b/.idea/jarRepositories.xml	(date 1711850379810)
+@@ -0,0 +1,20 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RemoteRepositoriesConfiguration">
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Central Repository" />
++      <option name="url" value="https://repo.maven.apache.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Maven Central repository" />
++      <option name="url" value="https://repo1.maven.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="jboss.community" />
++      <option name="name" value="JBoss Community repository" />
++      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
++    </remote-repository>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+new file mode 100644
+--- /dev/null	(date 1711850379755)
++++ b/.idea/encodings.xml	(date 1711850379755)
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Encoding">
++    <file url="file://$PROJECT_DIR$/app/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/app/src/main/resources" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/restservice/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/restservice/src/main/resources" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+--- /dev/null	(date 1711850381089)
++++ b/.idea/.gitignore	(date 1711850381089)
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml

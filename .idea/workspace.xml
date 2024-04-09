@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4e2489f6-ca15-432d-a038-adf17461c237" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ListItemRenderer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/itembridge/TableItemRenderer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/yorku/library/app/RequestServiceImplTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/yorku/library/app/RequestServiceProxyTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/yorku/library/app/UserAuthTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/AppFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/AppFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/CourseListPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/CourseListPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/SearchPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/SearchPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/auth/UserAuth.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/auth/UserAuth.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/ComponentProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/ComponentProducer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/ItemComponentFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/ItemComponentFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/LibraryComponentFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/LibraryComponentFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/UserComponentFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/factory/UserComponentFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ItemBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/itembridge/ItemBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/items/BookComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/items/BookComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/items/ItemComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/items/ItemComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/utils/ItemCellRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/gui/utils/ItemCellRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/requests/RequestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/requests/RequestService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceProxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/yorku/library/app/services/requests/RequestServiceProxy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/src/main/java/com/yorku/library/restservice/controllers/ItemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/restservice/src/main/java/test/ItemControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/restservice/src/main/java/test/ItemControllerTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2eQwx8Pi2ruf9YF6g3gxEgMYsZ9" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.App.executor": "Run",
+    "Attach to process.pid 15256.executor": "ProcessAttachDebug",
+    "JUnit.ItemControllerTest.contextLoads.executor": "Run",
+    "JUnit.ItemControllerTest.executor": "Run",
+    "JUnit.ItemControllerTest.testGetItemById.executor": "Run",
+    "JUnit.RequestServiceImplTest.executor": "Run",
+    "JUnit.RequestServiceImplTest.getTest.executor": "Run",
+    "JUnit.RequestServiceImplTest.testGetRequest.executor": "Run",
+    "JUnit.RequestServiceImplTest.testPostRequestNoBody.executor": "Run",
+    "JUnit.RequestServiceProxyTest.executor": "Run",
+    "JUnit.RequestServiceProxyTest.testCacheCleanupTaskRepeatedlyExecutes.executor": "Run",
+    "JUnit.RequestServiceProxyTest.testCacheCleanupTaskScheduled.executor": "Run",
+    "JUnit.RequestServiceProxyTest.testCacheExpiry.executor": "Run",
+    "JUnit.RequestServiceProxyTest.testConcurrentRequests.executor": "Run",
+    "JUnit.RequestServiceProxyTest.testDeleteRequest.executor": "Run",
+    "JUnit.RequestServiceProxyTest.testGetRequestFromCache.executor": "Run",
+    "JUnit.UserAuthTest.executor": "Run",
+    "JUnit.UserAuthTest.testNonBlockingReads.executor": "Run",
+    "JUnit.UserAuthTest.testRewriteMultiThreaded.executor": "Run",
+    "JUnit.UserAuthTest.testSingletonMultiThreadInstance.executor": "Run",
+    "JUnit.UserAuthTest.testSingletonMultiThreadInstance2.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.DatabaseTester.executor": "Run",
+    "git-widget-placeholder": "bug-fix",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/eclipse-workspace/library/restservice/src/main/java/test/ItemControllerTest.java",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.RequestServiceImplTest">
+    <configuration name="RequestServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yorku.library.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yorku.library.app" />
+      <option name="MAIN_CLASS_NAME" value="com.yorku.library.app.RequestServiceImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RequestServiceProxyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yorku.library.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yorku.library.app" />
+      <option name="MAIN_CLASS_NAME" value="com.yorku.library.app.RequestServiceProxyTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RequestServiceProxyTest.testConcurrentRequests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yorku.library.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yorku.library.app" />
+      <option name="MAIN_CLASS_NAME" value="com.yorku.library.app.RequestServiceProxyTest" />
+      <option name="METHOD_NAME" value="testConcurrentRequests" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RequestServiceProxyTest.testDeleteRequest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yorku.library.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yorku.library.app" />
+      <option name="MAIN_CLASS_NAME" value="com.yorku.library.app.RequestServiceProxyTest" />
+      <option name="METHOD_NAME" value="testDeleteRequest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserAuthTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.yorku.library.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.yorku.library.app" />
+      <option name="MAIN_CLASS_NAME" value="com.yorku.library.app.UserAuthTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DatabaseTester" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="restservice" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.yorku.library.restservice.DatabaseTester" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.RequestServiceImplTest" />
+        <item itemvalue="JUnit.RequestServiceProxyTest" />
+        <item itemvalue="JUnit.RequestServiceProxyTest.testConcurrentRequests" />
+        <item itemvalue="JUnit.RequestServiceProxyTest.testDeleteRequest" />
+        <item itemvalue="JUnit.UserAuthTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-18.0.2-corretto-18.0.2-4caba194b151-5720f15e" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4e2489f6-ca15-432d-a038-adf17461c237" name="Changes" comment="" />
+      <created>1711850354855</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711850354855</updated>
+      <workItem from="1711850356510" duration="1666000" />
+      <workItem from="1712258275475" duration="1414000" />
+      <workItem from="1712365931855" duration="4080000" />
+      <workItem from="1712428052363" duration="13788000" />
+      <workItem from="1712506187690" duration="28463000" />
+      <workItem from="1712597937908" duration="20788000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
