@@ -1,6 +1,6 @@
 package com.yorku.library.restservice.repositories;
 
-import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +12,7 @@ public interface UserRepo extends JpaRepository<User, Integer>{
 	
 	void deleteByUsername(String username);
 
-	List<User> findByEmail(String email);
+	User findByEmail(String email);
 	
 	void deleteByEmail(String email);
 	

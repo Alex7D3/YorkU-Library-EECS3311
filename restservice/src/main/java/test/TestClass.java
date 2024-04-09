@@ -24,11 +24,9 @@ import com.yorku.library.restservice.models.TextBook;
 import com.yorku.library.restservice.models.User;
 import com.yorku.library.restservice.models.UserItem;
 import com.yorku.library.restservice.models.Visitor;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@EnableWebMvc
 public class TestClass {
 	
 	@Test
