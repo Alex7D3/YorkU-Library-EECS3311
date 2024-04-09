@@ -1,4 +1,4 @@
-package test;
+package com.yorku.library.restservice;
 
 import static org.mockito.Mockito.when;
 

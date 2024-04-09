@@ -1,4 +1,4 @@
-package test;
+package com.yorku.library.restservice;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

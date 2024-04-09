@@ -1,4 +1,4 @@
-package test;
+package com.yorku.library.restservice;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
